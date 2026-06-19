@@ -135,7 +135,8 @@ export default function SettingsScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Security</Text>
       <Text style={styles.body}>
-        All notes are encrypted on-device with AES-256-GCM. Your master password is never stored.
+        All notes are encrypted on-device with AES-256-GCM. Your master password is only stored
+        locally if you opt in to biometric unlock.
       </Text>
 
       {!hasPassword ? (

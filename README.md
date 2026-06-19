@@ -4,6 +4,8 @@ Encrypted, local-first notes app built with Expo. Phase 1 MVP includes encrypted
 
 **Expo project:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 
+**GitHub:** https://github.com/totuslife/totus-secure-notes
+
 ## Install on Android (no Expo Go required)
 
 This app uses **SDK 56**. If your Expo Go app from Google Play is outdated, you do **not** need Expo Go. Install the standalone APK instead:
