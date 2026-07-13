@@ -24,8 +24,10 @@ import {
 } from '@/services/trip/tripStorage';
 import {
   createEmptyPostpartumForm,
+  createEmptyTcbTrendRow,
   INFANT_SEX_OPTIONS,
   PostpartumFormData,
+  TcbTrendRow,
   TSB_RISK_OPTIONS,
 } from '@/store/postpartumTemplate';
 import { formatDeliveryDateMdY } from '@/utils/formInputFilters';
@@ -149,6 +151,32 @@ export default function PostpartumForm() {
     });
   };
 
+  const updateTcbTrend = (index: number, field: keyof TcbTrendRow, value: string) => {
+    setFormData((current) => ({
+      ...current,
+      tcbTrends: current.tcbTrends.map((row, rowIndex) =>
+        rowIndex === index ? { ...row, [field]: value } : row,
+      ),
+    }));
+  };
+
+  const addTcbTrendRow = () => {
+    setFormData((current) => ({
+      ...current,
+      tcbTrends: [...current.tcbTrends, createEmptyTcbTrendRow()],
+    }));
+  };
+
+  const removeTcbTrendRow = (index: number) => {
+    setFormData((current) => ({
+      ...current,
+      tcbTrends:
+        current.tcbTrends.length > 1
+          ? current.tcbTrends.filter((_, rowIndex) => rowIndex !== index)
+          : current.tcbTrends,
+    }));
+  };
+
   const formattedNote = formatPostpartumNote(formData);
 
   const finalizeForExport = useCallback(async (): Promise<PostpartumFormData> => {
@@ -219,9 +247,8 @@ export default function PostpartumForm() {
         contentContainerStyle={[styles.scrollContent, { paddingBottom: 120 + insets.bottom }]}>
         <Text style={[styles.title, { color: theme.text }]}>Postpartum Nursing Note</Text>
 
-        <SectionTitle title="Postpartum Visit at Day/Week" />
         <Field
-          label="Day/Week"
+          label="Postpartum Visit at Day/Week"
           value={formData.visitDayWeek}
           onChangeText={(text) => updateField('visitDayWeek', text)}
           placeholder="e.g. Day 3 / Week 1"
@@ -253,15 +280,14 @@ export default function PostpartumForm() {
           />
         </View>
 
-        <NumericField
-          label="HX: G (Gravida)"
-          value={formData.gravida}
-          onChangeText={(text) => updateField('gravida', text)}
-        />
-        <NumericField
-          label="HX: P (Para)"
-          value={formData.para}
-          onChangeText={(text) => updateField('para', text)}
+        <PairedField
+          label="HX: G/P"
+          leftLabel="G"
+          leftValue={formData.gravida}
+          rightLabel="P"
+          rightValue={formData.para}
+          onChangeLeft={(text) => updateField('gravida', text)}
+          onChangeRight={(text) => updateField('para', text)}
         />
         <Field
           label="Date of Delivery (m/d/yyyy)"
@@ -273,7 +299,6 @@ export default function PostpartumForm() {
           }
         />
 
-        <SectionTitle title="Maternal Assessment" />
         <Field label="General" value={formData.general} onChangeText={(t) => updateField('general', t)} multiline />
         <PairedField
           label="Vitals | BP"
@@ -287,21 +312,23 @@ export default function PostpartumForm() {
         <PairedField
           label="BM | Void"
           leftLabel="BM"
-          leftValue={formData.breastfeeding}
+          leftValue={formData.bm}
           rightLabel="Void"
           rightValue={formData.voiding}
-          onChangeLeft={(t) => updateField('breastfeeding', t)}
+          onChangeLeft={(t) => updateField('bm', t)}
           onChangeRight={(t) => updateField('voiding', t)}
         />
         <Field label="Incision/Perineum" value={formData.incision} onChangeText={(t) => updateField('incision', t)} multiline />
         <Field label="Lochia" value={formData.lochia} onChangeText={(t) => updateField('lochia', t)} />
-        <Field
-          label="Breasts"
-          value={formData.breasts}
-          onChangeText={(t) => updateField('breasts', t)}
-          placeholder="Breasts | Nipples | Milk Supply"
+        <PairedField
+          label="Breasts | Nipples | Milk Supply"
+          leftLabel="Breasts"
+          leftValue={formData.breasts}
+          rightLabel="Nipples"
+          rightValue={formData.nipples}
+          onChangeLeft={(t) => updateField('breasts', t)}
+          onChangeRight={(t) => updateField('nipples', t)}
         />
-        <Field label="Nipples" value={formData.nipples} onChangeText={(t) => updateField('nipples', t)} />
         <Field label="Milk Supply" value={formData.milkSupply} onChangeText={(t) => updateField('milkSupply', t)} />
         <PairedField
           label="Medications | Supplements"
@@ -314,7 +341,13 @@ export default function PostpartumForm() {
         />
         <Field label="Follow-up" value={formData.followUp} onChangeText={(t) => updateField('followUp', t)} multiline />
 
-        <SectionTitle title="INFANT" />
+        <SectionTitle
+          title={
+            formData.infantSex.trim() || formData.infantName.trim()
+              ? `INFANT - Baby ${formData.infantSex.trim()} ${formData.infantName.trim()}`.trim()
+              : 'INFANT - Baby Girl/Boy NAME'
+          }
+        />
         <PairedField
           label="Baby Girl/Boy | Name"
           leftLabel="Girl/Boy"
@@ -339,18 +372,18 @@ export default function PostpartumForm() {
         <Field label="Complications" value={formData.complications} onChangeText={(t) => updateField('complications', t)} multiline />
 
         <SectionTitle title="NEWBORN WEIGHT TRENDS" />
-        <NumericField label="BW (birth day weight in grams)" value={formData.bw} onChangeText={(t) => updateField('bw', t)} suffix="g" />
+        <NumericField label="BW" value={formData.bw} onChangeText={(t) => updateField('bw', t)} suffix="g" />
+        <NumericField
+          label="Previous wt"
+          value={formData.previousWeight}
+          onChangeText={(t) => updateField('previousWeight', t)}
+          suffix="g"
+        />
         <Field
           label="Date of last visit (m/d/yyyy)"
           value={formData.lastVisitDate}
           onChangeText={(t) => updateField('lastVisitDate', t)}
           placeholder="m/d/yyyy"
-        />
-        <NumericField
-          label="Previous weight from last visit"
-          value={formData.previousWeight}
-          onChangeText={(t) => updateField('previousWeight', t)}
-          suffix="g"
         />
         <Field label="Date (today)" value={formData.visitDate} onChangeText={(t) => updateField('visitDate', t)} />
         <NumericField
@@ -361,17 +394,42 @@ export default function PostpartumForm() {
         />
 
         <SectionTitle title="NEWBORN TcB/TSB TRENDS" />
-        <NumericField label="@ hours" value={formData.tcbHours} onChangeText={(t) => updateField('tcbHours', t)} suffix="hrs" />
-        <Field
-          label="Risk Level"
-          value={formData.tsbRisk}
-          onChangeText={(t) => updateField('tsbRisk', t)}
-          placeholder={TSB_RISK_OPTIONS.join(' / ')}
-        />
-        <Field label="DAT" value={formData.tsbDat} onChangeText={(t) => updateField('tsbDat', t)} />
-        <Field label="Additional line" value={formData.tcbSecondLine} onChangeText={(t) => updateField('tcbSecondLine', t)} multiline />
-
-        <SectionTitle title="Newborn Care" />
+        {formData.tcbTrends.map((row, index) => (
+          <View key={`tcb-${index}`} style={styles.tcbRow}>
+            <Text style={[styles.subSectionLabel, { color: theme.textSecondary }]}>
+              Row {index + 1}
+            </Text>
+            <NumericField
+              label="@ hours"
+              value={row.hours}
+              onChangeText={(text) => updateTcbTrend(index, 'hours', text)}
+              suffix="hrs"
+            />
+            <Field
+              label="Risk Level"
+              value={row.risk}
+              onChangeText={(text) => updateTcbTrend(index, 'risk', text)}
+              placeholder={TSB_RISK_OPTIONS.join(' / ')}
+            />
+            <Field
+              label="DAT"
+              value={row.dat}
+              onChangeText={(text) => updateTcbTrend(index, 'dat', text)}
+            />
+            {formData.tcbTrends.length > 1 ? (
+              <Pressable
+                style={[styles.removeRowButton, { borderColor: theme.border }]}
+                onPress={() => removeTcbTrendRow(index)}>
+                <Text style={[styles.removeRowText, { color: theme.textMuted }]}>Remove row</Text>
+              </Pressable>
+            ) : null}
+          </View>
+        ))}
+        <Pressable
+          style={[styles.addRowButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+          onPress={addTcbTrendRow}>
+          <Text style={[styles.addRowText, { color: theme.text }]}>Add TcB/TSB row</Text>
+        </Pressable>
         <PairedField
           label="Feeding | Feeding Plan"
           leftLabel="Feeding"
@@ -394,32 +452,33 @@ export default function PostpartumForm() {
           onChangeText={(t) => updateField('metabolicResult', t)}
         />
 
-        <SectionTitle title="DISCUSSED THE FOLLOWING WITH THE PARENT(S)" />
+        <SectionTitle title="DISCUSSED THE FOLLOWING WITH THE PARENT(S):" />
         <CheckboxRow
-          label="Discussed Vitamin D drops 400 IU daily."
+          label="Vitamin D drops 400 IU daily"
           value={formData.vitaminD}
           onValueChange={(v) => updateField('vitaminD', v)}
         />
         <CheckboxRow
-          label="Has received Health Passport and immunization information from Public Health."
+          label="Health Passport and immunization information from Public Health"
           value={formData.healthPassport}
           onValueChange={(v) => updateField('healthPassport', v)}
         />
         <CheckboxRow
-          label="Aware of Period of 'PURPLE' Crying."
+          label={"Period of 'PURPLE' Crying"}
           value={formData.purpleCrying}
           onValueChange={(v) => updateField('purpleCrying', v)}
         />
 
-        <SectionTitle title="Ongoing Concerns to Follow-Up On For Mom &/or Baby" />
+        <SectionTitle title="Ongoing Concerns to Follow-Up On For Mom &/or Baby:" />
         <Field label="1." value={formData.ongoing1} onChangeText={(t) => updateField('ongoing1', t)} multiline />
         <Field label="2." value={formData.ongoing2} onChangeText={(t) => updateField('ongoing2', t)} multiline />
 
-        <SectionTitle title="Next Appointment" />
+        <SectionTitle title="Next Appointment:" />
         <NumericField
           label="Will be seen in (days)"
           value={formData.appointmentDays}
           onChangeText={(t) => updateField('appointmentDays', t)}
+          placeholder="___"
         />
         <Field
           label="Location"
@@ -514,9 +573,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   checkboxLabel: { flex: 1, paddingRight: 12, fontSize: 14 },
-  calcRow: { marginBottom: 8, gap: 4 },
-  calcLabel: { fontSize: 13, fontWeight: '600' },
-  calcValue: { fontSize: 15 },
+  tcbRow: { marginBottom: 12, gap: 4 },
+  subSectionLabel: { fontSize: 13, fontWeight: '600', marginBottom: 4 },
+  addRowButton: {
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  addRowText: { fontSize: 14, fontWeight: '600' },
+  removeRowButton: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginBottom: 4,
+  },
+  removeRowText: { fontSize: 12, fontWeight: '600' },
   footer: {
     position: 'absolute',
     left: 0,

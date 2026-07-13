@@ -1,3 +1,9 @@
+export interface TcbTrendRow {
+  hours: string;
+  risk: string;
+  dat: string;
+}
+
 export interface PostpartumFormData {
   visitDayWeek: string;
   birther: string;
@@ -10,7 +16,7 @@ export interface PostpartumFormData {
   general: string;
   vitals: string;
   bp: string;
-  breastfeeding: string;
+  bm: string;
   voiding: string;
   incision: string;
   lochia: string;
@@ -34,10 +40,7 @@ export interface PostpartumFormData {
   previousWeight: string;
   visitDate: string;
   todaysWeight: string;
-  tcbHours: string;
-  tsbRisk: string;
-  tsbDat: string;
-  tcbSecondLine: string;
+  tcbTrends: TcbTrendRow[];
   feeding: string;
   feedingPlan: string;
   sleeping: string;
@@ -64,6 +67,10 @@ function todayMdY(): string {
   return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
 }
 
+export function createEmptyTcbTrendRow(): TcbTrendRow {
+  return { hours: '', risk: '', dat: '' };
+}
+
 export function createEmptyPostpartumForm(): PostpartumFormData {
   return {
     visitDayWeek: '',
@@ -77,7 +84,7 @@ export function createEmptyPostpartumForm(): PostpartumFormData {
     general: '',
     vitals: '',
     bp: '',
-    breastfeeding: '',
+    bm: '',
     voiding: '',
     incision: '',
     lochia: '',
@@ -101,10 +108,7 @@ export function createEmptyPostpartumForm(): PostpartumFormData {
     previousWeight: '',
     visitDate: todayMdY(),
     todaysWeight: '',
-    tcbHours: '',
-    tsbRisk: '',
-    tsbDat: '',
-    tcbSecondLine: '',
+    tcbTrends: [createEmptyTcbTrendRow()],
     feeding: '',
     feedingPlan: '',
     sleeping: '',
