@@ -85,6 +85,7 @@
     "vault:prepare": "npm run vault:export && npm run vault:copy",
     "firebase:deploy": "npm run policies:build && firebase deploy --config firebase/firebase.json --only firestore:rules,hosting",
     "firebase:deploy:all": "npm run policies:build && npm run policies:seed && firebase deploy --config firebase/firebase.json",
+    "eas-build-pre-install": "node scripts/inject-firebase-config.mjs",
     "eas-build-post-install": "node scripts/inject-firebase-config.mjs"
   },
   "private": true,

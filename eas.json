@@ -27,6 +27,7 @@
     },
     "production": {
       "environment": "production",
+      "prebuildCommand": "bash scripts/inject-firebase-config.sh",
       "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"
