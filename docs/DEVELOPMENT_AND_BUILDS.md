@@ -1,3 +1,7 @@
+
+## Firebase config files (not in git)
+
+google-services.json and GoogleService-Info.plist are gitignored. Download from Firebase Console and copy to the repo root before native/EAS builds. Rotate any keys that were ever committed; see [FIREBASE_SETUP.md](./FIREBASE_SETUP.md#firebase-config-files-not-in-git).
 # Development SDK & Builds — Totus Secure Notes (Android + iOS)
 
 Totus Secure Notes uses **Expo SDK 56**. You do **not** download a separate “development SDK” installer like old Android SDK packages. Your stack is:

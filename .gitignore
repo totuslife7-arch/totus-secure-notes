@@ -1,4 +1,4 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+﻿# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
 # dependencies
 node_modules/
@@ -37,6 +37,8 @@ yarn-error.*
 
 # Play Store / Firebase credentials (never commit)
 google-play-service-account.json
+google-services.json
+GoogleService-Info.plist
 firebase/service-account.json
 totus--notes-*.json
 *-firebase-adminsdk-*.json

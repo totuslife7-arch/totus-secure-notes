@@ -16,10 +16,34 @@
 | Android | `com.totuslife.TotusSecureNotes` | `1:959875118939:android:2f111542ca1e14931ecc7e` |
 | iOS | `com.totuslife.TotusSecureNotes` | `1:959875118939:ios:4e75b45d141ce2381ecc7e` |
 
-Config files (repo root):
+## Firebase config files (not in git)
 
-- [`google-services.json`](../google-services.json) — Android  
-- [`GoogleService-Info.plist`](../GoogleService-Info.plist) — iOS  
+Client config files are **not** committed (GitHub secret scanning). Use the checked-in templates:
+
+- [`google-services.json.example`](../google-services.json.example) → copy to `google-services.json` (Android)
+- [`GoogleService-Info.plist.example`](../GoogleService-Info.plist.example) → copy to `GoogleService-Info.plist` (iOS)
+
+### Local / EAS build setup
+
+1. [Firebase Console](https://console.firebase.google.com/project/totus--notes/settings/general) → **Project settings** → **Your apps**
+2. Download **google-services.json** (Android) and **GoogleService-Info.plist** (iOS)
+3. Place both at the **repo root** before `npx expo run:android`, `npx expo run:ios`, or `eas build`
+
+### Rotate and restrict exposed keys
+
+Keys that were previously in git history must be **rotated** even after removal from the repo:
+
+1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials?project=totus--notes) → **APIs & Services** → **Credentials**
+2. For each exposed **Browser/Android/iOS API key**: create a replacement or edit restrictions, then disable/delete the old key
+3. Restrict keys by app:
+   - **Android:** package `com.totuslife.TotusSecureNotes` + SHA-1/SHA-256 from EAS credentials (see [Add EAS signing fingerprints](#add-eas-signing-fingerprints-to-firebase))
+   - **iOS:** bundle ID `com.totuslife.TotusSecureNotes`
+4. In GitHub: resolve secret scanning alerts after rotation; old keys in history are still compromised until rotated
+
+### EAS / CI (optional)
+
+For cloud builds without committing configs, use [EAS environment variables](https://docs.expo.dev/eas/environment-variables/) or **EAS Secrets** to inject file contents at build time (e.g. `GOOGLE_SERVICES_JSON` as a file secret, applied in a pre-build hook or `eas.json` env). Keep the same rotate/restrict steps for any key used in production.
+
 
 ## Public policy URLs (Play Store / App Store)
 
