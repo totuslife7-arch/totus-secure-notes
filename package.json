@@ -9,6 +9,7 @@
     "@react-native-firebase/app": "24.1.1",
     "@react-native-firebase/crashlytics": "24.1.1",
     "expo": "~56.0.12",
+    "expo-asset": "~56.0.19",
     "expo-audio": "~56.0.12",
     "expo-build-properties": "~56.0.19",
     "expo-clipboard": "~56.0.4",
@@ -83,7 +84,8 @@
     "vault:copy": "node scripts/copy-vault-to-firebase.mjs",
     "vault:prepare": "npm run vault:export && npm run vault:copy",
     "firebase:deploy": "npm run policies:build && firebase deploy --config firebase/firebase.json --only firestore:rules,hosting",
-    "firebase:deploy:all": "npm run policies:build && npm run policies:seed && firebase deploy --config firebase/firebase.json"
+    "firebase:deploy:all": "npm run policies:build && npm run policies:seed && firebase deploy --config firebase/firebase.json",
+    "eas-build-post-install": "node scripts/inject-firebase-config.mjs"
   },
   "private": true,
   "allowScripts": {
