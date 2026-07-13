@@ -1,4 +1,6 @@
+import * as FileSystem from 'expo-file-system/legacy';
 import * as ScreenCapture from 'expo-screen-capture';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -35,8 +37,14 @@ export default function AttachmentViewer({
 }: Props) {
   const { theme } = useAppTheme();
   const [dataUri, setDataUri] = useState<string | null>(null);
+  const [playbackUri, setPlaybackUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const isPhoto = attachment.type === 'photo';
+  const isPlayableAudio = attachment.type === 'audio' || attachment.type === 'voice_memo';
+  const player = useAudioPlayer(playbackUri ? { uri: playbackUri } : null);
+  const playerStatus = useAudioPlayerStatus(player);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -45,6 +53,16 @@ export default function AttachmentViewer({
       const b64 = await decryptAttachmentToBase64(attachment, password);
       const mime = attachment.mimeType || 'image/jpeg';
       setDataUri(`data:${mime};base64,${b64}`);
+
+      if (attachment.type === 'audio' || attachment.type === 'voice_memo') {
+        const tempPath = `${FileSystem.cacheDirectory}totus_playback_${attachment.id}.m4a`;
+        await FileSystem.writeAsStringAsync(tempPath, b64, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        setPlaybackUri(tempPath);
+      } else {
+        setPlaybackUri(null);
+      }
       if (auditPassword) {
         await appendAuditEvent(
           auditPassword,
@@ -62,10 +80,20 @@ export default function AttachmentViewer({
   useEffect(() => {
     if (!visible) {
       setDataUri(null);
+      setPlaybackUri(null);
+      player.pause();
       return;
     }
     load().catch(() => undefined);
-  }, [visible, load]);
+  }, [visible, load, player]);
+
+  useEffect(() => {
+    return () => {
+      if (playbackUri) {
+        FileSystem.deleteAsync(playbackUri, { idempotent: true }).catch(() => undefined);
+      }
+    };
+  }, [playbackUri]);
 
   useEffect(() => {
     if (!visible) return;
@@ -94,7 +122,14 @@ export default function AttachmentViewer({
     );
   };
 
-  const isPhoto = attachment.type === 'photo';
+  const togglePlayback = () => {
+    if (!playbackUri) return;
+    if (playerStatus.playing) {
+      player.pause();
+    } else {
+      player.play();
+    }
+  };
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
@@ -117,12 +152,30 @@ export default function AttachmentViewer({
           <Text style={[styles.center, { color: theme.danger }]}>{error}</Text>
         ) : isPhoto && dataUri ? (
           <Image source={{ uri: dataUri }} style={styles.image} resizeMode="contain" />
+        ) : isPlayableAudio && playbackUri ? (
+          <View style={styles.center}>
+            <Text style={{ color: theme.text, fontWeight: '600', marginBottom: 12 }}>
+              {attachment.type === 'voice_memo' ? 'Voice memo' : 'Audio'} · {attachment.filename}
+            </Text>
+            <Pressable
+              style={[styles.playButton, { backgroundColor: theme.primary }]}
+              onPress={togglePlayback}>
+              <Text style={{ color: '#fff', fontWeight: '700' }}>
+                {playerStatus.playing ? 'Pause' : 'Play'}
+              </Text>
+            </Pressable>
+            <Text style={{ color: theme.textMuted, marginTop: 12, fontSize: 13 }}>
+              {playerStatus.duration
+                ? `${Math.floor(playerStatus.currentTime)}s / ${Math.floor(playerStatus.duration)}s`
+                : 'Encrypted playback inside Totus only'}
+            </Text>
+          </View>
         ) : (
           <View style={styles.center}>
             <Text style={{ color: theme.textMuted, textAlign: 'center', padding: 24 }}>
-              {attachment.type === 'video' ? 'Video' : 'Audio'} attachment encrypted in vault.
+              Video attachment encrypted in vault.
               {'\n'}Filename: {attachment.filename}
-              {'\n\n'}Playback in-app coming soon. Export via note backup if needed.
+              {'\n\n'}Export via note backup if needed.
             </Text>
           </View>
         )}
@@ -148,5 +201,6 @@ const styles = StyleSheet.create({
   title: { flex: 1, textAlign: 'center', fontWeight: '600', marginHorizontal: 8 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   image: { flex: 1, width: '100%' },
+  playButton: { borderRadius: 10, paddingHorizontal: 24, paddingVertical: 12 },
   footer: { fontSize: 12, textAlign: 'center', padding: 12 },
 });

@@ -68,6 +68,9 @@
 
 | [MASTER_DEVELOPMENT_AUDIT_PROMPT.md](./MASTER_DEVELOPMENT_AUDIT_PROMPT.md) | **Copy-paste prompt** — full audit: Template AI, IAP, GUI Phase 0, builds |
 | [MASTER_SOFO_PRODUCTION_RESCUE_PROMPT.md](./MASTER_SOFO_PRODUCTION_RESCUE_PROMPT.md) | **Copy-paste prompt** — P0 rescue: SoFo Postpartum HV, About, saves, AI unlock, voice, ship tomorrow |
+| [MASTER_PRODUCTION_ENGINE_PROMPT.md](./MASTER_PRODUCTION_ENGINE_PROMPT.md) | **Copy-paste prompt** — 4-agent production engine: navigation map, saves, AI readiness, voice memos |
+| [UI_NAVIGATION_TREE.md](./UI_NAVIGATION_TREE.md) | Full app navigation map (tabs, settings, About, deep links) |
+| [PRODUCTION_ENGINE_DELIVERABLES.md](./PRODUCTION_ENGINE_DELIVERABLES.md) | Production engine run — files changed and verification checklist |
 | [AUDIT_REPORT.md](./AUDIT_REPORT.md) | **v1.2.11 audit** — feature matrix (Works/Gated/Broken), root causes, fixes |
 | [FOUNDER_FOLLOWUP.md](./FOUNDER_FOLLOWUP.md) | **Founder handoff** — device test, Play Console, build artifact table |
 

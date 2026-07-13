@@ -12,6 +12,7 @@ import {
   getLlamaContext,
   isExpoGo,
   isNativeLlamaSupported,
+  releaseLlamaContext,
 } from './llamaContext';
 import { recordInferenceDiagnostic } from './inferenceDiagnostics';
 import { isModelReady } from './modelManager';
@@ -106,6 +107,10 @@ export async function getTemplateAiReadiness(): Promise<TemplateAiReadiness> {
   const supported = isNativeLlamaSupported();
   const expoGo = isExpoGo();
   const modelReady = supported ? await isModelReady() : false;
+
+  if (supported && !modelReady) {
+    await releaseLlamaContext();
+  }
 
   let llamaAvailable = false;
   let llamaError: string | null = null;

@@ -16,13 +16,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AttachmentViewer from '@/components/AttachmentViewer';
 import KeyboardAwareScrollView from '@/components/KeyboardAwareScrollView';
+import NoteEditorErrorBoundary from '@/components/NoteEditorErrorBoundary';
 import ThemedTextInput from '@/components/ThemedTextInput';
+import VoiceMemoRecorder from '@/components/VoiceMemoRecorder';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useVault } from '@/context/VaultContext';
 import {
   pickAndEncryptAudio,
   pickAndEncryptPhoto,
   pickAndEncryptPhotoFromLibrary,
+  recordAndEncryptVoiceMemo,
   secureDeleteAttachment,
 } from '@/services/attachments';
 import { ensureNotificationPermissions } from '@/services/notifications';
@@ -60,6 +63,21 @@ function noteFingerprint(note: Note): string {
 }
 
 export default function NoteEditorScreen() {
+  const { theme } = useAppTheme();
+
+  return (
+    <NoteEditorErrorBoundary
+      backgroundColor={theme.background}
+      textColor={theme.text}
+      primaryColor={theme.primary}>
+      <NoteEditorScreenInner />
+    </NoteEditorErrorBoundary>
+  );
+}
+
+type SaveResult = 'saved' | 'unchanged' | 'locked' | 'error';
+
+function NoteEditorScreenInner() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getNote, saveNote, isUnlocked, isSaving, sessionPassword } = useVault();
   const { theme } = useAppTheme();
@@ -115,11 +133,11 @@ export default function NoteEditorScreen() {
   }, [id, getNote]);
 
   const persistDraft = useCallback(
-    async (options?: { noteId?: string; snapshot?: Note | null }) => {
+    async (options?: { noteId?: string; snapshot?: Note | null }): Promise<SaveResult> => {
       const targetId = options?.noteId ?? draftRef.current?.id;
       const snapshot = options?.snapshot ?? null;
 
-      const run = async () => {
+      const run = async (): Promise<SaveResult> => {
         const current = draftRef.current;
         const toSave =
           current && current.id === targetId
@@ -128,13 +146,18 @@ export default function NoteEditorScreen() {
               ? snapshot
               : null;
 
-        if (!toSave || !isUnlocked) {
-          return;
+        if (!toSave) {
+          return 'error';
+        }
+
+        if (!isUnlocked || !sessionPassword) {
+          setSaveError('Vault locked — unlock to save.');
+          return 'locked';
         }
 
         const fingerprint = noteFingerprint(toSave);
         if (fingerprint === lastSavedRef.current) {
-          return;
+          return 'unchanged';
         }
 
         try {
@@ -146,15 +169,28 @@ export default function NoteEditorScreen() {
               setSavedAt(new Date().toLocaleTimeString());
             }
           }
-        } catch {
-          setSaveError('Could not save note. Vault may be locked.');
+          return 'saved';
+        } catch (err) {
+          const message =
+            err instanceof Error && err.message.includes('locked')
+              ? 'Vault locked — unlock to save.'
+              : 'Could not save note. Try again.';
+          setSaveError(message);
+          if (__DEV__) {
+            console.warn('[NoteEditor] save failed', err);
+          }
+          return 'error';
         }
       };
 
-      persistChainRef.current = persistChainRef.current.then(run).catch(() => undefined);
-      await persistChainRef.current;
+      const chain = persistChainRef.current.then(run, run);
+      persistChainRef.current = chain.then(
+        () => undefined,
+        () => undefined,
+      );
+      return chain;
     },
-    [isUnlocked, saveNote],
+    [isUnlocked, saveNote, sessionPassword],
   );
 
   useEffect(() => {
@@ -200,11 +236,25 @@ export default function NoteEditorScreen() {
   }, [persistDraft]);
 
   const handleSaveNow = useCallback(async () => {
+    if (!isUnlocked || !sessionPassword) {
+      Alert.alert('Vault locked', 'Unlock the vault before saving notes.');
+      setSaveError('Vault locked — unlock to save.');
+      return;
+    }
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-    await persistDraft();
-  }, [persistDraft]);
+    const result = await persistDraft();
+    if (result === 'saved') {
+      Alert.alert('Saved', 'Note saved to your encrypted vault.');
+    } else if (result === 'unchanged') {
+      Alert.alert('Up to date', 'No changes to save.');
+    } else if (result === 'locked') {
+      Alert.alert('Vault locked', 'Unlock the vault before saving notes.');
+    } else if (result === 'error') {
+      Alert.alert('Save failed', saveError || 'Could not save note. Try again.');
+    }
+  }, [isUnlocked, persistDraft, saveError, sessionPassword]);
 
   const updateDraft = useCallback((patch: Partial<Note>) => {
     setDraft((current) => (current ? { ...current, ...patch } : current));
@@ -246,6 +296,20 @@ export default function NoteEditorScreen() {
         },
       },
     ]);
+  };
+
+  const handleVoiceMemoRecorded = async (uri: string) => {
+    if (!sessionPassword || !draft) {
+      Alert.alert('Vault locked', 'Unlock the vault before attaching voice memos.');
+      return;
+    }
+    const result = await recordAndEncryptVoiceMemo(sessionPassword, draft.id, uri, sessionPassword);
+    if (!result) {
+      Alert.alert('Recording failed', 'Could not encrypt voice memo into vault.');
+      return;
+    }
+    updateDraft({ attachments: [...(draft.attachments ?? []), result.attachment] });
+    Alert.alert('Secured', 'Voice memo encrypted in your vault.');
   };
 
   const handleAddAudio = async () => {
@@ -441,9 +505,14 @@ export default function NoteEditorScreen() {
             <Text style={styles.attachButtonText}>Photo</Text>
           </Pressable>
           <Pressable style={[styles.attachButton, { backgroundColor: theme.surfaceSecondary }]} onPress={handleAddAudio}>
-            <Text style={{ color: theme.text, fontWeight: '600' }}>Audio</Text>
+            <Text style={{ color: theme.text, fontWeight: '600' }}>Import</Text>
           </Pressable>
         </View>
+
+        <VoiceMemoRecorder
+          disabled={!sessionPassword || !isUnlocked}
+          onRecorded={handleVoiceMemoRecorded}
+        />
 
         {(draft.attachments ?? []).length > 0 ? (
           <View style={styles.attachmentList}>

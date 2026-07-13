@@ -58,6 +58,33 @@ async function scrubGalleryAsset(assetId: string | null | undefined): Promise<bo
   }
 }
 
+async function encryptBytesToVault(
+  password: string,
+  noteId: string,
+  bytes: Uint8Array,
+  type: EncryptedAttachment['type'],
+  filename: string,
+  mimeType: string,
+  sourceAssetId?: string | null,
+): Promise<EncryptedAttachment> {
+  const payload = await encryptBytesWithSessionKey(bytes, password);
+
+  await ensureAttachmentsDir();
+  const attachmentId = createNoteId().replace('note_', 'att_');
+  const encryptedPath = `${getVaultAttachmentsDir()}${noteId}_${attachmentId}.enc`;
+  await FileSystem.writeAsStringAsync(encryptedPath, JSON.stringify(payload));
+
+  return {
+    id: attachmentId,
+    type,
+    filename,
+    mimeType,
+    encryptedPath,
+    createdAt: new Date().toISOString(),
+    sourceAssetId: sourceAssetId ?? null,
+  };
+}
+
 async function encryptAssetToVault(
   password: string,
   noteId: string,
@@ -69,22 +96,65 @@ async function encryptAssetToVault(
   const tempUri = asset.uri;
   const b64 = await readFileAsBase64(tempUri);
   const bytes = base64ToBytes(b64);
-  const payload = await encryptBytesWithSessionKey(bytes, password);
 
-  await ensureAttachmentsDir();
-  const attachmentId = createNoteId().replace('note_', 'att_');
-  const encryptedPath = `${getVaultAttachmentsDir()}${noteId}_${attachmentId}.enc`;
-  await FileSystem.writeAsStringAsync(encryptedPath, JSON.stringify(payload));
+  try {
+    return await encryptBytesToVault(
+      password,
+      noteId,
+      bytes,
+      type,
+      asset.fileName ?? defaultFilename,
+      asset.mimeType ?? defaultMime,
+      asset.assetId ?? null,
+    );
+  } finally {
+    await deleteTempFile(tempUri);
+  }
+}
 
-  return {
-    id: attachmentId,
-    type,
-    filename: asset.fileName ?? defaultFilename,
-    mimeType: asset.mimeType ?? defaultMime,
-    encryptedPath,
-    createdAt: new Date().toISOString(),
-    sourceAssetId: asset.assetId ?? null,
-  };
+export async function encryptFileUriToVault(
+  password: string,
+  noteId: string,
+  uri: string,
+  type: EncryptedAttachment['type'],
+  filename: string,
+  mimeType: string,
+  auditPassword?: string,
+): Promise<EncryptedAttachment | null> {
+  try {
+    const b64 = await readFileAsBase64(uri);
+    const bytes = base64ToBytes(b64);
+    const attachment = await encryptBytesToVault(password, noteId, bytes, type, filename, mimeType);
+    if (auditPassword) {
+      await appendAuditEvent(auditPassword, 'attachment_add', `${attachment.type}:${attachment.id}`);
+    }
+    return attachment;
+  } catch {
+    return null;
+  } finally {
+    await deleteTempFile(uri);
+  }
+}
+
+export async function recordAndEncryptVoiceMemo(
+  password: string,
+  noteId: string,
+  recordingUri: string,
+  auditPassword?: string,
+): Promise<AttachmentPickResult | null> {
+  const attachment = await encryptFileUriToVault(
+    password,
+    noteId,
+    recordingUri,
+    'voice_memo',
+    `voice_${Date.now()}.m4a`,
+    'audio/mp4',
+    auditPassword,
+  );
+  if (!attachment) {
+    return null;
+  }
+  return { attachment, sourceScrubbed: false };
 }
 
 export async function pickAndEncryptPhoto(
@@ -131,8 +201,9 @@ export async function pickAndEncryptPhoto(
     }
 
     return { attachment, sourceScrubbed };
-  } finally {
+  } catch {
     await deleteTempFile(tempUri);
+    return null;
   }
 }
 
@@ -180,8 +251,9 @@ export async function pickAndEncryptPhotoFromLibrary(
     }
 
     return { attachment, sourceScrubbed };
-  } finally {
+  } catch {
     await deleteTempFile(tempUri);
+    return null;
   }
 }
 

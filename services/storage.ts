@@ -26,7 +26,7 @@ const VAULT_FILE = `${VAULT_DIR}notes.enc`;
 
 export interface EncryptedAttachment {
   id: string;
-  type: 'photo' | 'audio' | 'video';
+  type: 'photo' | 'audio' | 'video' | 'voice_memo';
   filename: string;
   mimeType: string;
   encryptedPath: string;

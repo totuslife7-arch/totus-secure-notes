@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import ScreenHeader from '@/components/ui/ScreenHeader';
 import AiOnboardingSheet from '@/components/AiOnboardingSheet';
 import KeyboardAwareScrollView from '@/components/KeyboardAwareScrollView';
 import PaywallSheet from '@/components/PaywallSheet';
@@ -19,6 +20,8 @@ import { useAppTheme } from '@/context/ThemeContext';
 import { useMonetization } from '@/context/MonetizationContext';
 import { useTemplateAiReadiness } from '@/hooks/useTemplateAiReadiness';
 import { hasTemplateAi } from '@/services/monetization';
+import { getTemplateAiReadiness } from '@/services/templateAi/generateTemplateDraft';
+import { releaseLlamaContext } from '@/services/templateAi/llamaContext';
 import { downloadModel } from '@/services/templateAi/modelManager';
 import { shouldShowAiOnboarding } from '@/components/AiOnboardingSheet';
 
@@ -50,12 +53,28 @@ export default function TotusAiSettingsScreen() {
     setDownloading(true);
     try {
       await downloadModel((p) => setDownloadPct(p.fraction));
+      await releaseLlamaContext();
       await refresh();
-      Alert.alert('Ready', 'On-device model is on this device. Open Template Studio → AI assist.');
+      const updated = await getTemplateAiReadiness();
+      if (updated.canRun) {
+        Alert.alert('Ready', 'On-device AI engine initialized. Open Template Studio → AI assist.');
+      } else if (updated.modelReady) {
+        Alert.alert(
+          'Model saved',
+          updated.llamaError ??
+            'Model downloaded but AI engine is not ready. Restart the app or tap Re-download model.',
+        );
+      } else {
+        Alert.alert(
+          'Download incomplete',
+          'Model file failed verification. Check Wi‑Fi and storage, then try again.',
+        );
+      }
       const show = await shouldShowAiOnboarding();
-      if (show) setOnboardingVisible(true);
-    } catch {
-      Alert.alert('Download failed', 'Check Wi‑Fi and storage, then try again.');
+      if (show && updated.canRun) setOnboardingVisible(true);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Check Wi‑Fi and storage, then try again.';
+      Alert.alert('Download failed', message);
     } finally {
       setDownloading(false);
       setDownloadPct(0);
@@ -68,10 +87,10 @@ export default function TotusAiSettingsScreen() {
         style={[styles.container, { backgroundColor: theme.background }]}
         extraBottomInset={insets.bottom}
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}>
-        <Text style={[styles.pageTitle, { color: theme.text }]}>Totus Assist</Text>
-        <Text style={{ color: theme.textMuted, marginBottom: 8 }}>
-          On-device AI for templates and notes. Nothing is sent to the cloud.
-        </Text>
+        <ScreenHeader
+          title="Totus Assist"
+          subtitle="On-device AI for templates and notes. Nothing is sent to the cloud."
+        />
         <View style={[styles.unlockBanner, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>How to unlock Pro for testing</Text>
           <Text style={{ color: theme.textMuted, fontSize: 13, lineHeight: 20 }}>
