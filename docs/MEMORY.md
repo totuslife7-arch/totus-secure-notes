@@ -38,7 +38,7 @@ On unlock, `primeSessionVaultCrypto` derives the vault key once from the encrypt
 
 ## Attachments
 
-Binary files are encrypted with the session vault key and stored under `vault/attachments/`. Temp camera/picker files are deleted after import.
+Binary files are encrypted with the session vault key and stored under `vault/attachments/`. Types: `photo`, `audio`, `video`, `voice_memo`. Temp camera/picker/recording files are deleted after import. Voice memos use `expo-audio` → `recordAndEncryptVoiceMemo()` in `services/attachments.ts`.
 
 ## Security features
 
@@ -96,7 +96,8 @@ Encrypted trip plans under `vault/trips.enc`. GPS recorder in `services/trip/gps
 | Path | Purpose |
 |------|---------|
 | `app/note/[id].tsx` | Note editor |
-| `components/templates/PostpartumForm.tsx` | Postpartum template (manual weight fields) |
+| `components/templates/PostpartumForm.tsx` | SoFo Postpartum HV template |
+| `app/(tabs)/settings/about.tsx` | About & Legal, policies, dev unlock |
 | `components/TripPlannerScreen.tsx` | Mileage / trip UI |
 | `context/VaultContext.tsx` | Vault state |
 | `services/storage.ts` | Vault I/O |

@@ -1,7 +1,7 @@
 # Data Deletion — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** June 20, 2026  
+**Last updated:** July 13, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/data-deletion  
 **Contact:** totuslife7@gmail.com
@@ -29,7 +29,7 @@ Alternatively, **uninstall** the app to remove local data.
 1. Delete the app from your home screen  
 2. Or **Settings → General → iPhone Storage → Totus Secure Notes → Delete App**
 
-This removes the encrypted vault, trip data, settings, and local entitlements cache.
+This removes the encrypted vault, trip data, voice memo attachments, downloaded Template AI model (if any), settings, and local entitlements cache.
 
 ---
 

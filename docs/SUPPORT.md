@@ -12,7 +12,7 @@ We aim to respond within **3–5 business days**.
 
 ## What to include in support requests
 
-1. App version (Settings or store listing — currently **1.2.8**, Android versionCode **34**)  
+1. App version (**Settings → About & Legal** — currently **1.2.12**, Android versionCode **52**)  
 2. Device model and OS version (Android / iOS)  
 3. Description of the issue  
 4. Steps to reproduce  
@@ -49,7 +49,15 @@ Use **Restore purchases** in Settings (when available). If still failing, contac
 
 ### Template AI not working
 
-Requires **Pro Lifetime** and a **store/EAS build** (not Expo Go). Download the SmolLM2 model in Settings → Template AI. If download fails, check storage space and network; Studio still works with rules-based parsing.
+Requires **Pro Lifetime** (or store-review / tester unlock) and a **store/EAS build** (not Expo Go). Open **Settings → Totus Assist** — download SmolLM2 when entitled. **Ready** appears only when the model file passes verification and the on-device engine initializes. For testing: **Settings → About & Legal** → tap version **7 times** → enter `TOTUS-DEV-2026`. Studio still works with rules-based **Quick parse** when AI is unavailable.
+
+### Voice memos not recording
+
+Grant **microphone** permission when prompted. Unlock the vault first. Voice memos encrypt into your vault as attachments — they are not uploaded to Totus servers.
+
+### SoFo Postpartum HV template
+
+**Home** quick action or **Templates → SoFo Postpartum HV**. Draft auto-saves while unlocked. Use **Preview & Copy** before pasting into your EMR.
 
 ### Web vault viewer
 

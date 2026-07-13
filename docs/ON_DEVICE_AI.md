@@ -7,7 +7,7 @@
 | **Hermes** | JavaScript engine bundled with React Native/Expo. Already in use. Not an AI model. |
 | **On-device AI** | Native `llama.rn` + SmolLM2-360M for Template AI and Note Assist. **Requires EAS/dev build — not Expo Go.** |
 
-## Capability matrix (v1.2.11)
+## Capability matrix (v1.2.12)
 
 | Feature | Where | Tech | Tier |
 |---------|-------|------|------|
@@ -26,10 +26,14 @@
 
 - Entitlement (`hasTemplateAi`)
 - Platform support (not Expo Go, native llama available)
-- Model bytes on disk (`isModelReady()` — >50 MB)
+- Model bytes on disk (`verifyModelFile()` — size + GGUF header magic; rejects corrupt downloads)
 - Llama context init (`getLlamaContext()` / `getLastLlamaInitError()`)
 
-`hooks/useTemplateAiReadiness.ts` refreshes on **every screen focus** (`useFocusEffect`). Studio paste and Settings Totus AI both use this hook.
+**Entitlement paths:** Pro Lifetime purchase, **Settings → About & Legal** → tap version 7× → `TOTUS-DEV-2026`, or store-review build (`EXPO_PUBLIC_STORE_REVIEW_MODE`).
+
+Stale llama context is released when the model file fails verification so UI cannot show Ready with a broken engine.
+
+`hooks/useTemplateAiReadiness.ts` refreshes on **every screen focus** (`useFocusEffect`). Studio paste and Settings Totus Assist both use this hook.
 
 On failure, `services/templateAi/readinessUi.ts` shows actionable recovery (re-download, dev unlock, EAS build, copy error).
 

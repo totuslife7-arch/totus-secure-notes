@@ -69,3 +69,6 @@ Record on a real phone with the v1.2.8 APK:
 5. Keep under 30 seconds; upload same way  
 
 Use Android **Screen recorder** or OBS with phone mirrored via scrcpy.
+
+
+h 1.2.12-hotfix if needed (versionCode 45)

@@ -2,7 +2,7 @@
 
 Complete before **production** release on Google Play and Apple App Store.
 
-**Current release:** v1.2.8 (versionCode 34) — **Totus Secure Notes**
+**Current release:** v1.2.12 (versionCode 52) — **Totus Secure Notes**
 
 ---
 
@@ -12,7 +12,7 @@ Complete before **production** release on Google Play and Apple App Store.
 |------|---------|
 | [../store/GOOGLE_PLAY_LISTING.md](../store/GOOGLE_PLAY_LISTING.md) | Short + full Google Play description |
 | [../store/APP_STORE_LISTING.md](../store/APP_STORE_LISTING.md) | Subtitle, keywords, Apple description |
-| [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) | Release notes / What's New for v1.2.8 |
+| [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) | Release notes / What's New for v1.2.12 |
 | [../store/README.md](../store/README.md) | Index of store assets |
 
 ---

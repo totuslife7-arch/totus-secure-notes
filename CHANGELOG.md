@@ -6,6 +6,30 @@ All notable changes to Totus Secure Notes.
 
 
 
+## [1.2.12] — 2026-07-13
+
+### Added
+
+- **SoFo Postpartum HV** — Pinned first in Templates; voice-friendly fields, draft auto-save, preview-before-copy, clinical EMR export format
+- **Settings → About & Legal** — Version, policies, store-review banner, tester unlock (tap version 7× → `TOTUS-DEV-2026`)
+- **Encrypted voice memos** — Record in note editor via `expo-audio`; stored as `voice_memo` attachments with in-app playback
+- **Note editor error boundary** — Crash recovery with retry instead of blank screen
+- **Production Engine docs** — `MASTER_PRODUCTION_ENGINE_PROMPT.md`, `UI_NAVIGATION_TREE.md`, `PRODUCTION_ENGINE_DELIVERABLES.md`
+
+### Fixed
+
+- **Note Save feedback** — Manual Save shows saved / unchanged / vault-locked alerts; serialized persist chain returns status
+- **Template AI readiness** — GGUF header verification; UI shows Ready only when `canRun === true`; stale llama context cleared on bad model
+- **Mapbox API key save** — Settings no longer shadows `setMapboxApiKey` import
+- **Vault-locked actions** — Copy, save, and attachments alert when vault is locked
+- **EAS Firebase inject** — `prebuildCommand` + `environment: production` loads file secrets for cloud builds
+
+### Changed
+
+- Firebase client configs (`google-services.json`, `GoogleService-Info.plist`) gitignored; EAS file secrets required for builds
+- Postpartum template renamed **SoFo Postpartum HV**; Home quick action added
+- Version **1.2.12** (Android versionCode **52**)
+
 ## [1.2.11] — 2026-07-12
 
 ### Added

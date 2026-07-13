@@ -1,7 +1,7 @@
 # Permissions — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** June 20, 2026  
+**Last updated:** July 13, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/permissions  
 **Contact:** totuslife7@gmail.com
@@ -20,6 +20,7 @@ This document explains why Totus Secure Notes requests each Android/iOS permissi
 |------------|-----------|----------------|---------|------------------|
 | **Location (when in use)** | Optional | Starting GPS trip / Trips tab | Record mileage between visits | Encrypted on device only |
 | **Location (background)** | Optional | Active GPS trip recording | Continue mileage if app backgrounded during trip | Encrypted on device only |
+| **Microphone** | Optional | Recording voice memo in note editor | Encrypted voice memo attachment | Encrypted on device only |
 | **Camera** | Optional | Adding photo attachment | Capture encrypted photo for a note | Encrypted on device only |
 | **Photos / media library** | Optional | Adding photo attachment | Import encrypted photo for a note | Encrypted on device only |
 | **Notifications** | Optional | Setting a note reminder | Local reminder alerts | On device; via OS notification service |
@@ -28,7 +29,7 @@ This document explains why Totus Secure Notes requests each Android/iOS permissi
 | **Internet** | Yes | App launch, ads, IAP, policy check | AdMob, Play Billing, Firebase Hosting/Firestore, maps API (Pro) | Third parties as described in Privacy Policy |
 | **Vibrate** | Optional | Reminders | Notification alert | On device |
 
-We do **not** request: contacts, SMS, call logs, microphone (unless OS bundles with camera), calendar, or broad storage access beyond media picker.
+We do **not** request: contacts, SMS, call logs, calendar, or broad storage access beyond media picker. Microphone is used **only** when you tap Record on a voice memo in the note editor.
 
 ---
 
@@ -38,6 +39,7 @@ Before sensitive access, the app explains usage in context:
 
 - **Trips / GPS:** “Totus Secure Notes records trip mileage between patient visits for reimbursement logs.” (also in system location dialog)  
 - **Camera / photos:** “Allow Totus Secure Notes to attach encrypted photos to notes.”  
+- **Microphone:** “Allow Totus Secure Notes to record encrypted voice memos for clinical notes.”  
 - **Notifications:** “Remind you about note follow-ups.”  
 - **Biometrics:** “Allow Totus Secure Notes to use Face ID / fingerprint to unlock your encrypted vault.”
 

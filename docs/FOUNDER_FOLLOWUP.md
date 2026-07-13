@@ -1,4 +1,4 @@
-# Founder Follow-Up — Totus Secure Notes v1.2.11
+# Founder Follow-Up — Totus Secure Notes v1.2.12
 
 **After the Master Development Audit** — step-by-step actions for the founder.  
 **Audit report:** [AUDIT_REPORT.md](./AUDIT_REPORT.md)  
@@ -33,15 +33,21 @@ npm run build:aab          # Android production AAB
 npm run build:ios          # iOS production IPA
 ```
 
-### EAS build URLs (v1.2.11 audit)
+### EAS build URLs (v1.2.12)
 
 | Build | Profile | URL | Status |
 |-------|---------|-----|--------|
-| Android AAB (Play review) | `store-review` | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/01d6d60e-a7b1-4b2a-a435-14c61a2f9a95 | **Queued** (versionCode 42) |
-| Android APK (sideload) | `store-review-apk` | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/2a380d93-f3c5-40e4-9572-098554c5284a | **Queued** (versionCode 43) |
+| Android AAB (Play review) | `store-review` | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/5ce77c98-bfec-47bc-a827-7ae8697fac61 | **Success** (versionCode 52) |
+| Android APK (sideload) | `store-review-apk` | — | Pending — run after AAB upload |
 | iOS IPA (TestFlight) | `store-review` | — | **Blocked** — iOS credentials need interactive setup (see below) |
 
-**Prior store-review APK (may still work for testing):**  
+**AAB artifact:** https://expo.dev/artifacts/eas/rHFXBByXY-utX_8ilZSrv5PDGhf9O2XHT6yOsrhAsIc.aab
+
+**Superseded builds (versionCode 49):**
+- AAB: https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/6fcfdf54-9705-45f9-89e6-b8ffa036d62f
+- APK: https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/8a33c14e-0d5a-4cf9-bdc3-1508aed381a5
+
+**Prior store-review APK (v1.2.11, may still work for testing):**  
 https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/3975b88e-0d37-4a5e-b84d-725208ca7d27
 
 **EAS dashboard:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
@@ -121,7 +127,7 @@ Upload in Play Console → App content → Sensitive permissions.
 ### Release upload
 
 1. **Internal testing** → Create release → Upload **store-review AAB** (not APK).
-2. Paste release notes from [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) (v1.2.11 section).
+2. Paste release notes from [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) (v1.2.12 section).
 3. Add testers → Install from Play Store link.
 4. After review approval, ship **production AAB** (`npm run build:aab`) to Production track.
 
@@ -192,4 +198,4 @@ npm run firebase:deploy:all
 
 ---
 
-*Master Development Audit v1.2.11 — founder handoff*
+*Production Engine + SoFo rescue v1.2.12 — founder handoff*

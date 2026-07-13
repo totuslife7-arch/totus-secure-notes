@@ -22,7 +22,7 @@
   <p class="meta"><strong>Totus Secure Notes</strong> · Firebase Hosting · Built 2026-07-13</p>
   <h1>Security — Totus Secure Notes</h1>
 <p><strong>Effective date:</strong> June 20, 2026</p>
-<p><strong>Last updated:</strong> July 11, 2026</p>
+<p><strong>Last updated:</strong> July 13, 2026</p>
 <p><strong>App:</strong> Totus Secure Notes · <code>com.totuslife.TotusSecureNotes</code></p>
 <p><strong>Public URL:</strong> https://totus--notes.web.app/security</p>
 <p><strong>Contact:</strong> totuslife7@gmail.com</p>
@@ -70,7 +70,7 @@
 <tr><td>Key derivation (new)</td><td>Argon2id (default: t=3, m=16384 KiB, p=1)</td></tr>
 <tr><td>Key derivation (legacy)</td><td>PBKDF2-SHA256 (100,000 iterations)</td></tr>
 <tr><td>Session</td><td>Derived keys zeroized on lock (<code>utils/zeroize.ts</code>)</td></tr>
-<tr><td>Attachments</td><td>Encrypted with vault session DEK</td></tr>
+<tr><td>Attachments</td><td>Encrypted with vault session DEK (photos, audio, video, voice memos)</td></tr>
 <tr><td>Trip data</td><td>Separate encrypted store (<code>trips.enc</code>)</td></tr>
 <tr><td><code>.totus</code> bundle export</td><td>HMAC-SHA256 integrity tag (tamper detection)</td></tr>
 </tbody></table>

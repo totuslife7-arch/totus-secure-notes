@@ -13,7 +13,7 @@ Use this when filling out **Google Play Console → App content → Data safety*
 
 ---
 
-## Data types — current release (v1.2.8)
+## Data types — current release (v1.2.12)
 
 | Data type | Collected by developer? | Shared? | Purpose | Required? |
 |-----------|-------------------------|---------|---------|-----------|
@@ -22,14 +22,17 @@ Use this when filling out **Google Play Console → App content → Data safety*
 | GPS trip track points | No (local encrypted) | No | Mileage on device | Optional |
 | Passwords | No (verifier on device only) | No | — | — |
 | Name, email | No | No | — | — |
-| Crash logs | Yes (Firebase Crashlytics) | Google | App stability |
-| Diagnostics | Yes (Firebase Analytics — screens only) | Google | App functionality |
+| Photos / voice memos | No (local encrypted attachments) | No | Note attachments | Optional |
+| Crash logs | Yes (Firebase Crashlytics) | Google | App stability | No |
+| Diagnostics | Yes (Firebase Analytics — screens only) | Google | App functionality | No |
 
 **Play Console selection (v1.2.0+ with ads + IAP):**
 
 - **Location:** User may grant location for GPS mileage. Data stays **on device**; not transmitted to Totus Life servers. If using Pro route planning with your own Google/Mapbox key, addresses are sent **directly to that provider** (declare third-party processing in Data safety if required).
 - **Ads (free tier):** Declare device/advertising IDs collected by **Google AdMob** for banner ads.
 - **Purchases:** Google Play processes IAP; we store entitlement flags locally only.
+
+- **Microphone (optional):** Used only when you record a **voice memo** in the note editor. Audio is encrypted and stored on device; not sent to Totus servers. Declare under **Photos and videos** or **Audio files** in Data safety if prompted — collected only when user initiates recording.
 
 When **Pro maps API** is used, also declare:
 

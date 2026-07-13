@@ -1,7 +1,7 @@
 # Security — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** July 11, 2026  
+**Last updated:** July 13, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/security  
 **Contact:** totuslife7@gmail.com
@@ -66,7 +66,7 @@ This viewer is a **productivity tool**, not HIPAA/PIPEDA-certified infrastructur
 | Key derivation (new) | Argon2id (default: t=3, m=16384 KiB, p=1) |
 | Key derivation (legacy) | PBKDF2-SHA256 (100,000 iterations) |
 | Session | Derived keys zeroized on lock (`utils/zeroize.ts`) |
-| Attachments | Encrypted with vault session DEK |
+| Attachments | Encrypted with vault session DEK (photos, audio, video, voice memos) |
 | Trip data | Separate encrypted store (`trips.enc`) |
 | `.totus` bundle export | HMAC-SHA256 integrity tag (tamper detection) |
 

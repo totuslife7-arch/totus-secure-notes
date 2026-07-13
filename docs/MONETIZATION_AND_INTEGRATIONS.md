@@ -10,8 +10,8 @@ This document defines the **commercial and platform architecture** for Totus Sec
 |------|-------|-----|----------|
 | **Free** | $0 | Yes (banner on Notes/Settings) | Core notes, built-in templates, GPS trips |
 | **Pro** | Monthly / annual / lifetime | No | Trip Planner Pro, premium templates |
-| **Template Studio (Pro+)** | Add-on subscription or lifetime | No | Custom templates, briefcase, paste parser |
-| **Template AI (Pro+AI)** | Add-on subscription or lifetime | No | On-device AI template builder (coming soon) |
+| **Template Studio (Pro+)** | Included in Pro Lifetime | No | Custom templates, briefcase, paste parser |
+| **Template AI (Pro+AI)** | Included in Pro Lifetime | No | On-device SmolLM2 template builder (shipped) |
 | **Promotions** | Intro pricing | — | Store-managed offers |
 
 Product IDs (configure in Play Console & App Store Connect):
@@ -28,7 +28,9 @@ See [`store/products.json`](../store/products.json) and [`store/IAP_SETUP.md`](.
 | Ads (AdMob) | `react-native-google-mobile-ads` | **Shipped** (test IDs in dev; replace for production) |
 | Secure storage | `expo-secure-store` | ✅ Shipped |
 | Biometrics | `expo-local-authentication` + SecureStore | ✅ Shipped |
-| Play Billing | via `expo-iap` → Play Billing 8.x | Phase 2 |
+| On-device AI (llama.rn) | `llama.rn` + SmolLM2 | **Shipped** (Pro Lifetime; EAS build required) |
+| Voice memos | `expo-audio` | **Shipped** (encrypted attachments) |
+| Play Billing | via `expo-iap` → Play Billing 8.x | **Shipped** |
 | StoreKit 2 | via `expo-iap` | Phase 2 |
 | Google Play Games | Native module / config plugin | **Phase 3 — optional** |
 | Game Center (Apple) | Native module | Phase 3 — optional |

@@ -2,7 +2,7 @@
 
 **App:** Totus Secure Notes  
 **Package / Bundle ID:** `com.totuslife.TotusSecureNotes`  
-**Version:** 1.2.9 (Android versionCode **38**)  
+**Version:** 1.2.12 (Android versionCode **52**)  
 **Privacy policy:** https://totus--notes.web.app/privacy
 
 Use this document when submitting builds for Google Play and Apple App Store review.
@@ -16,7 +16,7 @@ Dedicated **store-review** EAS builds set `EXPO_PUBLIC_STORE_REVIEW_MODE=true` a
 - All **Pro Lifetime** entitlements are active (no purchase required)
 - **No banner ads**
 - **Template Studio**, **Template AI**, **Note Assist**, **Trip Planner Pro**, and premium templates are unlocked
-- Settings → About shows: *"Store review mode — Pro features unlocked for app review."*
+- Settings → **About & Legal** shows: *"Store review mode — Pro features unlocked for app review."*
 
 **Production builds** (`production` profile) do **not** set this flag. Normal users must purchase `pro_monthly` or `pro_lifetime` via IAP.
 
@@ -66,7 +66,7 @@ RETURNING SESSION:
 PRO FEATURES (this build):
 - This is a store-review build. Pro Lifetime is pre-unlocked:
   Template Studio, Template AI, Note Assist, Trip Planner Pro, premium templates, no ads.
-- Confirm in Settings → About: "Store review mode — Pro features unlocked for app review."
+- Confirm in Settings → **About & Legal**: "Store review mode — Pro features unlocked for app review."
 - IAP can still be tested: Settings → Pro → purchase or Restore purchases.
 
 FREE TIER (production builds only):
@@ -85,7 +85,7 @@ NO TEST ACCOUNT / NO SERVER:
 
 For QA on **production** or **development** builds (not store-review), Pro Lifetime can be unlocked without purchase:
 
-1. Unlock vault → **Settings** → **About**
+1. Unlock vault → **Settings** → **About & Legal**
 2. Tap the **version label** **7 times**
 3. Enter code: `TOTUS-DEV-2026`
 4. Pro Lifetime entitlements activate (Trip Planner Pro, Template Studio, Template AI, Note Assist, no ads)
@@ -159,7 +159,7 @@ If reviewers need to test purchase flow instead of pre-unlocked Pro:
 | Trip Planner Pro | Trips tab | Driving routes, in-app OSM map, external Google/Apple Maps (no API key) |
 | Built-in templates | Templates | Home visit, wound care, etc. |
 | IAP | Settings → Pro | Products load; purchase/restore works in sandbox |
-| Privacy links | Settings → About | Opens https://totus--notes.web.app/... |
+| Privacy links | Settings → About & Legal | Opens https://totus--notes.web.app/... |
 | Sync to desktop | Settings → Sync to desktop | Export .totus + Open web vault link; not live sync |
 
 ---

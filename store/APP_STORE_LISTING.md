@@ -1,6 +1,6 @@
 # Apple App Store Listing — Totus Secure Notes
 
-**Version:** 1.2.9  
+**Version:** 1.2.12  
 **Bundle ID:** `com.totuslife.TotusSecureNotes`  
 **Category:** Productivity  
 **Secondary category (optional):** Medical  
@@ -39,7 +39,7 @@ Secure notes for mobile work
 **Character count:** 169
 
 ```
-v1.2.9: Totus Assist hub, Note Assist, secure attachments, template library, task digest with optional AI summary, and local note reminders. On-device AI optional (Pro).
+v1.2.12: SoFo Postpartum HV template, encrypted voice memos, About & Legal in Settings, Save/vault-locked alerts, and Template AI readiness fixes. On-device AI optional (Pro).
 ```
 
 ---
@@ -134,7 +134,7 @@ https://totus--notes.web.app/privacy
 
 See [../docs/APP_STORE_REQUIREMENTS.md](../docs/APP_STORE_REQUIREMENTS.md).
 
-**v1.2.9:** Data not collected by developer for notes. Location optional, on-device for GPS mileage. Template AI and Note Assist on-device only.
+**v1.2.12:** Data not collected by developer for notes. Location optional, on-device for GPS mileage. Voice memos and attachments local-only. Template AI and Note Assist on-device only.
 
 ---
 

@@ -1,7 +1,7 @@
 # Terms and Conditions — Totus Secure Notes
 
 **Effective date:** June 19, 2026  
-**Last updated:** July 11, 2026  
+**Last updated:** July 13, 2026  
 **App name:** Totus Secure Notes  
 **Developer:** Totus Life  
 **Public URL:** https://totus--notes.web.app/terms
@@ -16,7 +16,7 @@ By downloading, installing, or using Totus Secure Notes (“the App”), you agr
 
 ## 2. Description of service
 
-Totus Secure Notes provides encrypted, local storage for notes and templates on your mobile device. Features include optional biometric unlock, vault export/import, clinical-style templates (including postpartum nursing notes with manual weight fields), trip/mileage planning with optional GPS tracking, themes, reminders, encrypted attachments, advertising on the free tier, in-app purchases, on-device Template AI (Pro Lifetime), and maps-based route planning without required API keys.
+Totus Secure Notes provides encrypted, local storage for notes and templates on your mobile device. Features include optional biometric unlock, vault export/import, clinical-style templates (including SoFo Postpartum HV home-visit notes with manual weight fields and EMR copy), encrypted voice memos, trip/mileage planning with optional GPS tracking, themes, reminders, encrypted attachments, advertising on the free tier, in-app purchases, on-device Template AI (Pro Lifetime), and maps-based route planning without required API keys.
 
 ---
 

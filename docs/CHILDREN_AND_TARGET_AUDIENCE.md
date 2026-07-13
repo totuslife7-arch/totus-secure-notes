@@ -1,7 +1,7 @@
 # Children & Target Audience — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** June 20, 2026  
+**Last updated:** July 13, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/children  
 **Contact:** totuslife7@gmail.com

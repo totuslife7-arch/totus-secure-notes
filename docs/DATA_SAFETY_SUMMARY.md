@@ -1,7 +1,7 @@
 # Data Safety Summary — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** July 11, 2026  
+**Last updated:** July 13, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/data-safety  
 **Contact:** totuslife7@gmail.com
@@ -35,7 +35,7 @@ This page mirrors the information declared in **Google Play Console → App cont
 | **Health / clinical notes** | No (local only) | No | — | — | Yes |
 | **Precise location** | Yes (if user starts GPS trip) | No to Totus servers | Trip mileage | Yes | Yes (local vault) |
 | **Approximate location** | Possible via AdMob | Yes (AdMob) | Advertising (free tier) | Yes (use Pro to remove ads) | N/A |
-| **Photos** | Yes (if user attaches) | No | Note attachments | Yes | Yes |
+| **Photos / voice memos** | Yes (if user attaches or records) | No | Note attachments | Yes | Yes |
 | **Purchase history** | Yes (via Play/Apple) | With store | IAP entitlements | No for paid features | Local entitlement cache |
 | **App interactions (ads)** | Yes (AdMob) | Yes (AdMob) | Advertising | Yes | N/A |
 | **Device or other IDs** | Yes (AdMob, Firebase) | Yes (Google) | Ads, analytics, crashes | Partially optional | N/A |

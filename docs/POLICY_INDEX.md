@@ -1,6 +1,6 @@
 # Policy Index — Totus Secure Notes (Play Store URLs)
 
-**Last updated:** July 11, 2026  
+**Last updated:** July 13, 2026  
 **Base URL:** https://totus--notes.web.app
 
 Use these **public HTTPS links** in Google Play Console, App Store Connect, and in-app Settings.
@@ -36,6 +36,10 @@ Use these **public HTTPS links** in Google Play Console, App Store Connect, and 
 | **Web vault viewer** | https://totus--notes.web.app/vault | Read-only `.totus` import (not live sync) |
 
 ---
+
+## v1.2.12 policy updates
+
+SoFo Postpartum HV clinical template, encrypted **voice memos** (microphone permission), Settings → **About & Legal** hub (policies + tester unlock). Template AI readiness gated on GGUF verification. Firebase client configs removed from git — hosted policy URLs unchanged.
 
 ## v1.2.8 policy updates
 

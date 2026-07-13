@@ -35,15 +35,15 @@ Install the **development** build on your device first (see build commands below
 
 | | |
 |--|--|
-| **Version** | 1.2.11 |
-| **Android versionCode** | 41 |
+| **Version** | 1.2.12 |
+| **Android versionCode** | 52 |
 | **Package** | com.totuslife.TotusSecureNotes |
 
 ## Developer unlock (testing only — not for store listings)
 
 For local testing before IAP is fully wired, you can unlock Pro Lifetime + Template AI on a device without a purchase:
 
-1. Open **Settings → About**
+1. Open **Settings → About & Legal**
 2. Tap the **version line 7 times** to reveal the code entry
 3. Enter the developer code (stored in `constants/devUnlock.ts`, default `TOTUS-DEV-2026`)
 4. Settings shows **Developer unlock active** while enabled

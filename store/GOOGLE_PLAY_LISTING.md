@@ -1,6 +1,6 @@
 # Google Play Store Listing — Totus Secure Notes
 
-**Version:** 1.2.9  
+**Version:** 1.2.12  
 **Package:** `com.totuslife.TotusSecureNotes`  
 **Category:** Productivity (recommended) or Medical (only if listing emphasizes templates carefully)  
 **Contact:** totuslife7@gmail.com
@@ -60,10 +60,11 @@ NOTES & TOTUS ASSIST
 • Note Assist (Pro Lifetime): bulletize, shorten, expand, or summarize note text on-device
 • Contextual Assist chips on Notes, Templates, and Trips — quick links to on-device AI and rules fallbacks
 • Light, dark, and system theme
-• Encrypted photo, audio, and video attachments
+• Encrypted photo, audio, video, and voice memo attachments (record in-app)
 • Local note reminders with notification permission requested in context; re-sync on vault unlock
 
 TEMPLATES & LIBRARY
+• SoFo Postpartum HV — pinned postpartum home-visit template with voice-friendly fields, draft auto-save, preview-before-copy, and EMR export
 • Postpartum nursing template — manual weight fields for copy/paste into work software
 • Built-in briefcase templates: home visit, wound care, psychosocial, discharge, intake
 • Template library — curated public templates (metadata only); import and review locally
@@ -133,6 +134,7 @@ See [../docs/DATA_SAFETY_GOOGLE_PLAY.md](../docs/DATA_SAFETY_GOOGLE_PLAY.md).
 - Free tier: banner ads (AdMob test IDs in dev builds; replace for production)
 - IAP: Pro Monthly and Pro Lifetime via Google Play Billing
 - Template AI / Note Assist: on-device model download; no note content to Totus servers
+- Voice memos: microphone optional; audio encrypted on device only
 - Web vault: user-exported .totus bundles; browser-only decryption
 
 ---

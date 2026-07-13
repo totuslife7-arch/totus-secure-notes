@@ -1,6 +1,6 @@
 # Totus Secure Notes
 
-Encrypted, local-first notes app built with Expo SDK 56. **v1.2.9** adds the Totus Assist hub, Note Assist, secure attachment lifecycle, template library, task digest with optional AI summary, Assist chips across tabs, local note reminders, and Template AI readiness fixes — plus store review mode, iOS multi-stop Google Maps routes, Settings → **Sync to desktop**, three-layer encryption, built-in clinical templates, on-device Template AI (Pro Lifetime), Plexia/EMR copy, and a read-only web vault viewer.
+Encrypted, local-first notes app built with Expo SDK 56. **v1.2.12** adds SoFo Postpartum HV (pinned clinical template), encrypted voice memos, Settings → About & Legal, Production Engine save/AI fixes, and EAS Firebase file-secret builds — plus Totus Assist, Note Assist, secure attachments, Template Studio AI, trip planner, and read-only web vault at https://totus--notes.web.app/vault.
 
 **Expo project:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 
@@ -27,17 +27,18 @@ Store legal docs, build guides, and monetization roadmap: **[docs/README.md](./d
 - [Changelog](./CHANGELOG.md)
 - [Store listing & release notes](./store/README.md)
 
-## Features (v1.2.9)
+## Features (v1.2.12)
 
 - Three-layer encryption: Argon2id KDF, hardware-backed session key, envelope + HMAC on `.totus` exports
 - Master password with biometrics, show/hide password, strong password policy
 - Light / dark / system theme
-- Markdown notes, flags, local reminders, task digest, encrypted photo/audio/video attachments
+- **SoFo Postpartum HV** — pinned postpartum home-visit template with draft auto-save and EMR copy
+- Markdown notes, flags, local reminders, task digest, encrypted photo/audio/video/**voice memo** attachments
 - **Secure attachments:** gallery scrub after encrypt, in-app viewer, multi-pass secure delete
 - **Note Assist** (Pro Lifetime): bulletize, shorten, expand, summarize on-device
 - **Totus Assist hub** (Settings → Totus Assist): model status, capabilities, troubleshooting
 - **Assist chips** on Notes, Templates, and Trips tabs
-- Postpartum nursing template (featured at top of Templates gallery) with manual weight fields
+- Postpartum / **SoFo Postpartum HV** nursing template (featured at top of Templates gallery)
 - **Built-in briefcase templates** (home visit, wound care, psychosocial, discharge, intake)
 - **Template library** — curated public templates (metadata only); import locally
 - **Template Studio + Template AI** (Pro Lifetime): paste forms, on-device SmolLM2 field suggestions, review before save
@@ -66,8 +67,8 @@ Download builds: https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 
 | Field | Value |
 |-------|--------|
-| Version | **1.2.9** |
-| Android versionCode | **38** |
+| Version | **1.2.12** |
+| Android versionCode | **52** |
 | Package | `com.totuslife.TotusSecureNotes` |
 
 ## Security Notes

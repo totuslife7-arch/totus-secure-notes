@@ -5,20 +5,57 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 | Field | Value |
 |-------|--------|
 | Version | **1.2.12** |
-| Android versionCode | **44** |
+| Android versionCode | **52** |
 | Build date | July 13, 2026 |
 | Package | `com.totuslife.TotusSecureNotes` |
 | Web vault URL | https://totus--notes.web.app/vault |
-| Store review build | EAS profile `store-review-apk` — sideload for SoFo nursing workflow QA |
+| Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
+
+### EAS build URLs (v1.2.12)
+
+| Build | Profile | URL |
+|-------|---------|-----|
+| Android AAB (Play review) | `store-review` | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/5ce77c98-bfec-47bc-a827-7ae8697fac61 |
+| Android APK (sideload) | `store-review-apk` | _Pending — run `npm run build:store-review-apk` after AAB upload_ |
+
+**AAB artifact:** https://expo.dev/artifacts/eas/rHFXBByXY-utX_8ilZSrv5PDGhf9O2XHT6yOsrhAsIc.aab
+
+**Superseded builds (versionCode 49, failed or incomplete):**
+- AAB: https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/6fcfdf54-9705-45f9-89e6-b8ffa036d62f
+- APK: https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/8a33c14e-0d5a-4cf9-bdc3-1508aed381a5
+
+**EAS dashboard:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
 
 ---
 
 ## Google Play — Release notes (1.2.12)
 
-**Limit:** 500 characters per language (en-US below)
+**Limit:** 500 characters per language (en-US below ≈ 480 chars)
 
 ```
-SoFo Postpartum HV is pinned first in Templates — voice-friendly fields, preview-before-copy, and clinical export format aligned for EMR paste. New Settings → About & Legal screen (tap version 7× for tester unlock). Save and copy buttons now alert when the vault is locked. Trip Mapbox key save fix. Version 1.2.12.
+What's new in 1.2.12:
+
+• SoFo Postpartum HV pinned first — voice-friendly fields, draft auto-save, preview-before-copy, EMR export
+• Encrypted voice memos in notes — record and play back inside your vault
+• Settings → About & Legal — policies, version, tester unlock (tap version 7×)
+• Note Save alerts when vault locked; Template AI shows Ready only when engine initializes
+• Totus Assist diagnostics and Mapbox key save fix
+```
+
+---
+
+## Apple App Store — What's New (1.2.12)
+
+**Limit:** 4000 characters (en-US below ≈ 450 chars)
+
+```
+What's New in 1.2.12
+
+• SoFo Postpartum HV — pinned clinical template with voice-friendly fields and EMR copy
+• Encrypted voice memos — record and play back in the note editor
+• About & Legal — version, policies, and tester unlock in Settings
+• Clear Save feedback and vault-locked alerts across notes and templates
+• Template AI readiness — Ready only when the on-device model is verified
 ```
 
 ---

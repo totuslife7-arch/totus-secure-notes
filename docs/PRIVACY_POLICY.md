@@ -1,7 +1,7 @@
 # Privacy Policy — Totus Secure Notes
 
 **Effective date:** June 19, 2026  
-**Last updated:** July 11, 2026  
+**Last updated:** July 13, 2026  
 **App name:** Totus Secure Notes  
 **Developer:** Totus Life (`totuslife7@gmail.com`)  
 **Package / Bundle ID:** `com.totuslife.TotusSecureNotes`  
@@ -38,7 +38,7 @@ We do **not** collect, store, or sell on our own servers:
 
 - Your notes, vault contents, or master password  
 - Clinical or health note content you enter  
-- Contacts, SMS, call logs, or microphone/camera content (except photos/audio you explicitly attach to notes, stored locally)  
+- Contacts, SMS, call logs, or microphone content except **voice memos you explicitly record** for notes (stored encrypted locally)  
 
 Your encrypted vault exists only on your device unless **you** export or share an encrypted backup file.
 
@@ -57,6 +57,7 @@ We do **not sell** personal or sensitive user data.
 | Maps API keys (Pro, optional) | Route planning | SecureStore |
 | IAP entitlements | Pro / Template Studio / Template AI access | SecureStore |
 | Template AI model weights (Pro, optional) | On-device field suggestions | Local file (not bundled in APK) |
+| Voice memo recordings (optional) | Encrypted note attachments | Yes (vault attachment store) |
 | `.totus` web vault export (optional) | Read-only desktop viewer | Encrypted bundle; user-controlled |
 | App settings & audit log | Security & preferences | Yes (audit log encrypted) |
 
@@ -121,6 +122,7 @@ Per Google Play requirements, the app shows runtime permission dialogs **before*
 
 - **Location** — for GPS trip mileage (with explanation in the Trips tab)  
 - **Camera / photos** — for encrypted note attachments  
+- **Microphone** — for encrypted voice memos in notes (optional)  
 - **Notifications** — for note reminders  
 - **Biometrics** — optional unlock convenience  
 

@@ -1,4 +1,4 @@
-# User Guide — Totus Secure Notes (v1.2.9)
+# User Guide — Totus Secure Notes (v1.2.12)
 
 Totus Secure Notes is a **local-first encrypted notes app** for mobile work. Your vault stays on your device. This guide covers everyday use, premium features, and **desktop access** via manual export (not live cloud sync).
 
@@ -28,7 +28,7 @@ Settings → **Appearance** → Light, Dark, or System.
 
 - Tap **+** on the Notes tab to create a markdown note.
 - Use **flags**, **reminders**, **follow-up status**, and **extra notes** for workflow tracking.
-- Attach **encrypted photos, audio, or video** from the note editor. After import, Totus **removes the original from your gallery** when the OS allows (best-effort per platform).
+- Attach **encrypted photos, audio, video, or voice memos** from the note editor. **Voice memos** use the in-app recorder (microphone permission). After import, Totus **removes the original from your gallery** when the OS allows (best-effort per platform).
 - View attachments in-app only; screenshots are blocked while viewing. **Secure delete** shreds the encrypted vault copy.
 - **Note Assist** (Pro Lifetime): bulletize, shorten, expand, or summarize note text on-device. Rules fallback when AI unavailable.
 - Set **reminders** with an ISO date/time; Totus requests notification permission in context when you add one.
@@ -38,13 +38,15 @@ Settings → **Appearance** → Light, Dark, or System.
 
 ---
 
-## 3. Postpartum template
+## 3. SoFo Postpartum HV template
 
-Templates tab → **Postpartum**.
+**Home → SoFo Postpartum HV** or Templates tab → **SoFo Postpartum HV** (★ Pinned).
 
-- Structured nursing note formatted for copy/paste.
+- Structured postpartum home-visit note formatted for copy/paste into Plexia or your EMR.
+- Voice dictation friendly — use your keyboard's microphone on any field.
+- **Draft auto-save** while the vault is unlocked (restored when you reopen the template).
+- **Preview & Copy** before pasting — clinical export skeleton aligned for nursing workflows.
 - Enter **birth weight**, **last visit date**, **previous weight**, **visit date**, and **today's weight** manually.
-- v1.2.2+ does **not** auto-calculate WL%, WG, or gain — you control the numbers shown in copied output.
 - Optional **patient address** with “Include in today's trip” to add the visit to your trip plan.
 
 ---
@@ -272,14 +274,16 @@ These are separate from the `.totus` desktop viewer export in **Sync to desktop*
 
 ---
 
-## 12. Policy links & support
+## 12. About, policies & support
 
-In-app Settings links to hosted policies at https://totus--notes.web.app/
+**Settings → About & Legal** — app version, Android build number, policy links, **Check for policy updates**, and tester unlock (tap version **7 times** → `TOTUS-DEV-2026` for Pro Lifetime testing).
+
+Hosted policies at https://totus--notes.web.app/
 
 - Privacy, Terms, Data deletion, Permissions, Data safety, Ads, Security, Legal disclaimer
 - **Web vault viewer:** https://totus--notes.web.app/vault
 
-**Support:** totuslife7@gmail.com (include app version **1.2.9**, device model, OS — never send master password or unencrypted notes).
+**Support:** totuslife7@gmail.com (include app version from About & Legal — currently **1.2.12** / Android **49** — device model, OS — never send master password or unencrypted notes).
 
 **GitHub issues:** https://github.com/totuslife7-arch/totus-secure-notes/issues
 
@@ -299,4 +303,4 @@ See [DEVELOPMENT_AND_BUILDS.md](./DEVELOPMENT_AND_BUILDS.md) for full build matr
 
 ---
 
-*Last updated: July 11, 2026 · v1.2.9 · Android versionCode 38*
+*Last updated: July 13, 2026 · v1.2.12 · Android versionCode 52*
