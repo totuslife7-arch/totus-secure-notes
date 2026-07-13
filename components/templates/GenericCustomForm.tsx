@@ -52,6 +52,10 @@ export default function GenericCustomForm({
   };
 
   const handleCopy = async () => {
+    if (!sessionPassword && !onClipboardCopy) {
+      Alert.alert('Vault locked', 'Unlock the vault before copying.');
+      return;
+    }
     const text = formatCustomTemplateNote(template, formData);
     if (onClipboardCopy) {
       await onClipboardCopy(text);
@@ -80,6 +84,10 @@ export default function GenericCustomForm({
   };
 
   const handleSaveNote = async () => {
+    if (!sessionPassword) {
+      Alert.alert('Vault locked', 'Unlock the vault before saving notes.');
+      return;
+    }
     const content = formatCustomTemplateNote(template, formData);
     const note = await createNote(template.title, content, `custom:${template.id}`);
     await saveNote({

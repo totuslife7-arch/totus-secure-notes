@@ -59,9 +59,14 @@ export default function TemplateGallery({ onSelectMarkdown }: TemplateGalleryPro
               onPress={() => handlePress(item)}>
               <View style={styles.rowHeader}>
                 <Text style={[styles.title, { color: theme.text }]}>{item.title}</Text>
-                <Text style={[styles.badge, styles.badgeFeatured]}>Form</Text>
+                <Text style={[styles.badge, styles.badgeFeatured]}>★ Pinned</Text>
               </View>
               <Text style={[styles.description, { color: theme.textMuted }]}>{item.description}</Text>
+              {item.id === 'sofo_postpartum_hv' ? (
+                <Text style={[styles.featuredHint, { color: theme.primary }]}>
+                  Used by SoFo nurses — voice fill, copy to EMR
+                </Text>
+              ) : null}
             </Pressable>
           ))}
         </>
@@ -222,5 +227,10 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
+  },
+  featuredHint: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: 6,
   },
 });

@@ -6,7 +6,7 @@ import PostpartumForm from '@/components/templates/PostpartumForm';
 
 export default function PostpartumScreen() {
   return (
-    <AuthGate title="Unlock Postpartum Template">
+    <AuthGate title="Unlock SoFo Postpartum HV">
       <View style={styles.container}>
         <PostpartumForm />
       </View>

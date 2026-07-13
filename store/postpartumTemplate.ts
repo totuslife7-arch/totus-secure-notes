@@ -1,3 +1,8 @@
+export const SOFO_POSTPARTUM_TITLE = 'SoFo Postpartum HV';
+export const SOFO_TEMPLATE_ID = 'sofo_postpartum_hv';
+export const SOFO_DRAFT_TITLE = 'SoFo HV draft';
+export const SOFO_DRAFT_FORM_KEY = '_sofoDraft';
+
 export interface TcbTrendRow {
   hours: string;
   risk: string;

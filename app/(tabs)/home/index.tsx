@@ -71,6 +71,11 @@ function HomeContent() {
       <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick actions</Text>
       <View style={styles.actionGrid}>
         <Pressable
+          style={[styles.action, styles.actionFeatured, { backgroundColor: theme.surface, borderColor: theme.primary }]}
+          onPress={() => router.push('/templates/postpartum' as never)}>
+          <Text style={{ color: theme.primary, fontWeight: '700' }}>SoFo Postpartum HV</Text>
+        </Pressable>
+        <Pressable
           style={[styles.action, { backgroundColor: theme.surface, borderColor: theme.border }]}
           onPress={handleNewNote}>
           <Text style={{ color: theme.primary, fontWeight: '700' }}>New note</Text>
@@ -152,6 +157,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 14,
     alignItems: 'center',
+  },
+  actionFeatured: {
+    width: '100%',
+    borderWidth: 2,
   },
   recentHeader: {
     flexDirection: 'row',

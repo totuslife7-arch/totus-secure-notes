@@ -2,7 +2,7 @@
   "expo": {
     "name": "Totus Secure Notes",
     "slug": "totus-secure-notes",
-    "version": "1.2.11",
+    "version": "1.2.12",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "totussecurenotes",
@@ -28,7 +28,7 @@
     },
     "android": {
       "package": "com.totuslife.TotusSecureNotes",
-      "versionCode": 43,
+      "versionCode": 44,
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "resize",
       "permissions": [

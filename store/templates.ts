@@ -63,11 +63,12 @@ export const MARKDOWN_TEMPLATES: TemplateDefinition[] = [
 
 export const FORM_TEMPLATES: TemplateDefinition[] = [
   {
-    id: 'postpartum',
-    title: 'Postpartum Nursing Note',
-    description: 'Fill clinical fields and copy into work software',
+    id: 'sofo_postpartum_hv',
+    title: 'SoFo Postpartum HV',
+    description: 'Postpartum home visit — voice fill, copy to EMR',
     type: 'form',
     route: '/templates/postpartum',
+    category: 'Clinical',
   },
 ];
 

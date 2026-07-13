@@ -212,6 +212,7 @@ export default function NoteEditorScreen() {
 
   const handleAddPhoto = async () => {
     if (!sessionPassword || !draft) {
+      Alert.alert('Vault locked', 'Unlock the vault before attaching photos.');
       return;
     }
     Alert.alert('Add photo', 'Capture a new photo or import from gallery. Original is scrubbed when possible.', [
@@ -249,6 +250,7 @@ export default function NoteEditorScreen() {
 
   const handleAddAudio = async () => {
     if (!sessionPassword || !draft) {
+      Alert.alert('Vault locked', 'Unlock the vault before attaching media.');
       return;
     }
     const result = await pickAndEncryptAudio(sessionPassword, draft.id, sessionPassword);
@@ -264,6 +266,7 @@ export default function NoteEditorScreen() {
 
   const handleRemoveAttachment = async (attachmentId: string) => {
     if (!draft || !sessionPassword) {
+      Alert.alert('Vault locked', 'Unlock the vault before deleting attachments.');
       return;
     }
     const target = draft.attachments?.find((item) => item.id === attachmentId);

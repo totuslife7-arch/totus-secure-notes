@@ -4,7 +4,7 @@ export default function TemplatesLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ title: 'Templates' }} />
-      <Stack.Screen name="postpartum" options={{ title: 'Postpartum Note' }} />
+      <Stack.Screen name="postpartum" options={{ title: 'SoFo Postpartum HV' }} />
       <Stack.Screen name="builtin/[id]" options={{ title: 'Built-in Template' }} />
       <Stack.Screen name="studio/index" options={{ title: 'Template Studio' }} />
       <Stack.Screen name="studio/paste" options={{ title: 'Paste Form' }} />

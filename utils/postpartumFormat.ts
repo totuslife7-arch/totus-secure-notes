@@ -7,48 +7,57 @@ import { formatDeliveryDateMdY } from '@/utils/formInputFilters';
 
 const TSB_RISK_PLACEHOLDER = TSB_RISK_OPTIONS.join('/');
 
-function joinPair(left: string, right: string, separator = ' | '): string {
-  if (!left.trim() && !right.trim()) {
-    return '';
+function inlineValue(label: string, value?: string): string {
+  const trimmed = value?.trim();
+  if (trimmed) {
+    return `— ${label}: ${trimmed}`;
   }
-  return `${left.trim()}${separator}${right.trim()}`.replace(/^ \| | \| $/g, '').trim();
+  return `— ${label}:`;
 }
 
-function dashSection(label: string, value?: string): string[] {
-  if (!value?.trim()) {
-    return [`— ${label}`];
+function inlinePair(label: string, left: string, right: string): string {
+  const leftTrim = left.trim();
+  const rightTrim = right.trim();
+  if (!leftTrim && !rightTrim) {
+    return `— ${label}:`;
   }
-  return [`— ${label}`, value.trim()];
+  if (leftTrim && rightTrim) {
+    return `— ${label}: ${leftTrim} | ${rightTrim}`;
+  }
+  return `— ${label}: ${leftTrim || rightTrim}`;
 }
 
-function dashPair(label: string, left: string, right: string): string[] {
-  const combined = joinPair(left, right);
-  if (!combined) {
-    return [`— ${label}`];
+function inlineBmVoid(bm: string, voiding: string): string {
+  const bmTrim = bm.trim();
+  const voidTrim = voiding.trim();
+  if (!bmTrim && !voidTrim) {
+    return '— BM:| Void:';
   }
-  return [`— ${label}`, combined];
+  if (bmTrim && voidTrim) {
+    return `— BM: ${bmTrim} | Void: ${voidTrim}`;
+  }
+  if (bmTrim) {
+    return `— BM: ${bmTrim} | Void:`;
+  }
+  return `— BM:| Void: ${voidTrim}`;
 }
 
-function dashTriple(label: string, a: string, b: string, c: string): string[] {
+function inlineTriple(label: string, a: string, b: string, c: string): string {
   const combined = [a, b, c]
     .map((v) => v.trim())
     .filter(Boolean)
     .join(' | ');
   if (!combined) {
-    return [`— ${label}`];
+    return `— ${label}:`;
   }
-  return [`— ${label}`, combined];
-}
-
-function educationLine(label: string, checked: boolean): string {
-  return checked ? `${label} ✓` : label;
+  return `— ${label}: ${combined}`;
 }
 
 function formatTcbTrendRow(row: TcbTrendRow): string {
   const hours = row.hours.trim() || '__';
   const risk = row.risk.trim() || TSB_RISK_PLACEHOLDER;
   const dat = row.dat.trim();
-  return `— @ ${hours}hrs (${risk})${dat ? `, DAT ${dat}` : ', DAT'}`;
+  return `—  @ ${hours}hrs (${risk})${dat ? `, DAT ${dat}` : ', DAT'}`;
 }
 
 export function formatPostpartumNote(data: PostpartumFormData): string {
@@ -57,99 +66,72 @@ export function formatPostpartumNote(data: PostpartumFormData): string {
       ? `${data.gravida.trim()}/${data.para.trim()}`.replace(/^\/|\/$/g, '')
       : '';
 
-  const birtherParent = joinPair(data.birther, data.parent);
   const deliveryFormatted = formatDeliveryDateMdY(data.deliveryDate) || data.deliveryDate;
   const infantHeader =
     data.infantName.trim() || data.infantSex.trim()
-      ? `INFANT - Baby ${data.infantSex.trim()} ${data.infantName.trim()}`.trim()
-      : 'INFANT - Baby Girl/Boy NAME';
-  const appointmentLocation = data.appointmentLocation.trim() || 'home/clinic';
+      ? `INFANT- Baby ${data.infantSex.trim()} ${data.infantName.trim()}`.trim()
+      : 'INFANT- Baby Girl/Boy NAME';
   const appointmentDays = data.appointmentDays.trim() || '___';
+  const appointmentLocation = data.appointmentLocation.trim() || 'home/clinic';
+
+  const birtherParent = [data.birther.trim(), data.parent.trim()].filter(Boolean).join(' | ');
 
   const tcbLines =
     data.tcbTrends.length > 0
       ? data.tcbTrends.map(formatTcbTrendRow)
-      : [`— @ __hrs (${TSB_RISK_PLACEHOLDER}), DAT`];
-
-  const weightTrendLines: string[] = [
-    ...dashSection('BW', data.bw),
-    ...dashSection('Previous wt', data.previousWeight),
-  ];
-  if (data.lastVisitDate.trim()) {
-    weightTrendLines.push(`— date of last visit: ${data.lastVisitDate.trim()}`);
-  }
-  if (data.visitDate.trim() || data.todaysWeight.trim()) {
-    weightTrendLines.push(...dashSection('Date', data.visitDate));
-    if (data.todaysWeight.trim()) {
-      weightTrendLines.push(`— Today's Weight: ${data.todaysWeight.trim()}`);
-    } else {
-      weightTrendLines.push("— Today's Weight");
-    }
-  }
+      : [`—  @ __hrs (${TSB_RISK_PLACEHOLDER}), DAT`];
 
   const sections = [
-    data.visitDayWeek.trim()
-      ? `Postpartum Visit at Day/Week ${data.visitDayWeek.trim()}`
-      : 'Postpartum Visit at Day/Week',
-    '',
     'BIRTHER | PARENT',
     birtherParent,
-    data.address.trim() ? `— address - ${data.address.trim()}` : '',
-    '— HX: G/P',
-    gp,
-    ...dashSection('Date of Delivery', deliveryFormatted),
-    ...dashSection('General', data.general),
-    ...dashPair('Vitals | BP', data.vitals, data.bp),
-    ...dashPair('BM | Void', data.bm, data.voiding),
-    ...dashSection('Incision/Perineum', data.incision),
-    ...dashSection('Lochia', data.lochia),
-    ...dashTriple('Breasts | Nipples | Milk Supply', data.breasts, data.nipples, data.milkSupply),
-    ...dashPair('Medications | Supplements', data.medications, data.supplements),
-    ...dashSection('Follow-up', data.followUp),
+    gp ? `— HX: ${gp}` : '— HX: G/P',
+    inlineValue('Date of Delivery', deliveryFormatted),
+    inlineValue('General', data.general),
+    inlinePair('Vitals | BP', data.vitals, data.bp),
+    inlineBmVoid(data.bm, data.voiding),
+    inlineValue('Incision/Perineum', data.incision),
+    inlineValue('Lochia', data.lochia),
+    inlineTriple('Breasts | Nipples | Milk Supply', data.breasts, data.nipples, data.milkSupply),
+    inlinePair('Medications | Supplements', data.medications, data.supplements),
+    inlineValue('Follow-up', data.followUp),
     '',
     infantHeader,
-    ...dashSection('DOB', data.infantDob),
-    ...dashSection(
-      'Birth Weight',
-      data.birthWeight.trim() ? `${data.birthWeight.trim()} (grams)` : '',
-    ),
-    ...dashSection('Apgar', data.apgar),
-    ...dashSection('HC', data.headCircumference),
-    ...dashSection('Length', data.length),
-    ...dashSection('PHN', data.phn),
-    ...dashSection('Complications', data.complications),
+    inlineValue('DOB', data.infantDob),
+    inlineValue('Birth Weight', data.birthWeight),
+    inlineValue('Apgar', data.apgar),
+    inlineValue('HC', data.headCircumference),
+    inlineValue('Length', data.length),
+    inlineValue('PHN', data.phn),
+    inlineValue('Complications', data.complications),
     '',
-    'NEWBORN WEIGHT TRENDS',
-    ...weightTrendLines,
+    'NEWBORN WEIGHT TRENDS:',
+    inlineValue('BW', data.bw),
+    inlineValue('Previous wt', data.previousWeight),
     '',
-    'NEWBORN TcB/TSB TRENDS',
+    'NEWBORN TcB/TSB TRENDS:',
     ...tcbLines,
-    '',
-    ...dashPair('Feeding | Feeding Plan', data.feeding, data.feedingPlan),
-    ...dashSection('Sleeping', data.sleeping),
-    ...dashSection('Stools', data.stools),
-    ...dashSection('Voids', data.voids),
-    ...dashSection('Exam | Vitals | Hips', data.examHips),
-    ...dashSection('Color | Skin', data.colorSkin),
-    ...dashSection('Red Reflex', data.redReflex),
-    ...dashSection('Umbilicus', data.umbilicus),
-    ...dashSection('Newborn Metabolic screen result', data.metabolicResult),
+    '— ',
+    inlinePair('Feeding | Feeding Plan', data.feeding, data.feedingPlan),
+    inlineValue('Sleeping', data.sleeping),
+    inlineValue('Stools', data.stools),
+    inlineValue('Voids', data.voids),
+    inlineValue('Exam | Vitals | Hips', data.examHips),
+    inlineValue('Color | Skin', data.colorSkin),
+    inlineValue('Red Reflex', data.redReflex),
+    inlineValue('Umbilicus', data.umbilicus),
+    inlineValue('Newborn Metabolic screen result', data.metabolicResult),
     '',
     'DISCUSSED THE FOLLOWING WITH THE PARENT(S):',
-    educationLine('— Vitamin D drops 400 IU daily', data.vitaminD),
-    educationLine(
-      '— Health Passport and immunization information from Public Health',
-      data.healthPassport,
-    ),
-    educationLine("— Period of 'PURPLE' Crying", data.purpleCrying),
+    '— Discussed Vitamin D drops 400 IU daily.',
+    '— Has received Health Passport and immunization information from Public Health.',
+    "— Aware of Period of 'PURPLE' Crying.",
     '',
     'Ongoing Concerns to Follow-Up On For Mom &/or Baby:',
     `1. ${data.ongoing1.trim()}`,
     `2. ${data.ongoing2.trim()}`,
     '',
     'Next Appointment:',
-    `Will be seen in ${appointmentDays} days at ${appointmentLocation}.`,
-    data.mileageSummary?.trim() ? `\n${data.mileageSummary.trim()}` : '',
+    `1. Will be seen in ${appointmentDays} days at ${appointmentLocation}.`,
   ].filter((section) => section !== '');
 
   return sections.join('\n');

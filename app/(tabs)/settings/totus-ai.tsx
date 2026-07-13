@@ -69,9 +69,17 @@ export default function TotusAiSettingsScreen() {
         extraBottomInset={insets.bottom}
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}>
         <Text style={[styles.pageTitle, { color: theme.text }]}>Totus Assist</Text>
-        <Text style={{ color: theme.textMuted, marginBottom: 16 }}>
+        <Text style={{ color: theme.textMuted, marginBottom: 8 }}>
           On-device AI for templates and notes. Nothing is sent to the cloud.
         </Text>
+        <View style={[styles.unlockBanner, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>How to unlock Pro for testing</Text>
+          <Text style={{ color: theme.textMuted, fontSize: 13, lineHeight: 20 }}>
+            • Store review APK: Pro auto-unlocked{'\n'}
+            • Settings → About & Legal → tap version 7× → enter TOTUS-DEV-2026{'\n'}
+            • Production: purchase Pro Lifetime (pro_lifetime)
+          </Text>
+        </View>
 
         <TotusAiHubCard
           onDownloadModel={handleDownload}
@@ -147,6 +155,12 @@ export default function TotusAiSettingsScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   pageTitle: { fontSize: 24, fontWeight: '700', marginBottom: 4 },
+  unlockBanner: {
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 14,
+    marginBottom: 16,
+  },
   section: { borderRadius: 12, borderWidth: 1, padding: 14, marginTop: 16, gap: 6 },
   sectionTitle: { fontSize: 15, fontWeight: '600' },
   linkButton: {

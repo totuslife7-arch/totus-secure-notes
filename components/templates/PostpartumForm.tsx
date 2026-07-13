@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Modal,
@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import NumericField from '@/components/form/NumericField';
 import KeyboardAwareScrollView from '@/components/KeyboardAwareScrollView';
+import ScreenHeader from '@/components/ui/ScreenHeader';
 import ThemedTextInput from '@/components/ThemedTextInput';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useVault } from '@/context/VaultContext';
@@ -27,12 +28,35 @@ import {
   createEmptyTcbTrendRow,
   INFANT_SEX_OPTIONS,
   PostpartumFormData,
+  SOFO_DRAFT_FORM_KEY,
+  SOFO_DRAFT_TITLE,
+  SOFO_POSTPARTUM_TITLE,
+  SOFO_TEMPLATE_ID,
   TcbTrendRow,
   TSB_RISK_OPTIONS,
 } from '@/store/postpartumTemplate';
 import { formatDeliveryDateMdY } from '@/utils/formInputFilters';
 import { formatEmrExport } from '@/utils/formatEmrExport';
 import { formatPostpartumNote } from '@/utils/postpartumFormat';
+
+function vaultLockedAlert(): void {
+  Alert.alert('Vault locked', 'Unlock the vault from Settings before copying or saving.');
+}
+
+function serializeSoFoDraft(data: PostpartumFormData): Record<string, string> {
+  return { [SOFO_DRAFT_FORM_KEY]: JSON.stringify(data) };
+}
+
+function deserializeSoFoDraft(raw?: Record<string, string>): PostpartumFormData | null {
+  if (!raw?.[SOFO_DRAFT_FORM_KEY]) {
+    return null;
+  }
+  try {
+    return JSON.parse(raw[SOFO_DRAFT_FORM_KEY]) as PostpartumFormData;
+  } catch {
+    return null;
+  }
+}
 
 function Field({
   label,
@@ -76,6 +100,7 @@ function PairedField({
   rightValue,
   onChangeLeft,
   onChangeRight,
+  onBlur,
 }: {
   label: string;
   leftLabel: string;
@@ -84,6 +109,7 @@ function PairedField({
   rightValue: string;
   onChangeLeft: (v: string) => void;
   onChangeRight: (v: string) => void;
+  onBlur?: () => void;
 }) {
   const { theme } = useAppTheme();
 
@@ -93,11 +119,11 @@ function PairedField({
       <View style={styles.pairedRow}>
         <View style={styles.pairedCol}>
           <Text style={[styles.subLabel, { color: theme.textMuted }]}>{leftLabel}</Text>
-          <ThemedTextInput style={styles.input} value={leftValue} onChangeText={onChangeLeft} />
+          <ThemedTextInput style={styles.input} value={leftValue} onChangeText={onChangeLeft} onBlur={onBlur} />
         </View>
         <View style={styles.pairedCol}>
           <Text style={[styles.subLabel, { color: theme.textMuted }]}>{rightLabel}</Text>
-          <ThemedTextInput style={styles.input} value={rightValue} onChangeText={onChangeRight} />
+          <ThemedTextInput style={styles.input} value={rightValue} onChangeText={onChangeRight} onBlur={onBlur} />
         </View>
       </View>
     </View>
@@ -129,14 +155,40 @@ function CheckboxRow({
 }
 
 export default function PostpartumForm() {
-  const { createNote, isUnlocked, sessionPassword } = useVault();
+  const { createNote, isUnlocked, sessionPassword, notes, saveNote, getNote } = useVault();
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
   const [formData, setFormData] = useState<PostpartumFormData>(createEmptyPostpartumForm());
+  const formDataRef = useRef(formData);
+  const [draftNoteId, setDraftNoteId] = useState<string | null>(null);
+  const draftLoadedRef = useRef(false);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewText, setPreviewText] = useState('');
   const [emrPreviewVisible, setEmrPreviewVisible] = useState(false);
   const [emrPreviewText, setEmrPreviewText] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
+  useEffect(() => {
+    if (draftLoadedRef.current) {
+      return;
+    }
+    const draft = notes.find(
+      (note) => note.templateId === SOFO_TEMPLATE_ID && note.title === SOFO_DRAFT_TITLE,
+    );
+    if (!draft) {
+      return;
+    }
+    const restored = deserializeSoFoDraft(draft.formData);
+    if (restored) {
+      setFormData(restored);
+      setDraftNoteId(draft.id);
+    }
+    draftLoadedRef.current = true;
+  }, [notes]);
 
   const updateField = <K extends keyof PostpartumFormData>(
     field: K,
@@ -179,6 +231,45 @@ export default function PostpartumForm() {
 
   const formattedNote = formatPostpartumNote(formData);
 
+  const persistDraftOnBlur = useCallback(async () => {
+    if (!sessionPassword || !isUnlocked) {
+      return;
+    }
+    const data = formDataRef.current;
+    const content = formatPostpartumNote(data);
+    const formPayload = serializeSoFoDraft(data);
+    try {
+      if (draftNoteId) {
+        const existing = getNote(draftNoteId);
+        if (existing) {
+          await saveNote({
+            ...existing,
+            title: SOFO_DRAFT_TITLE,
+            content,
+            templateId: SOFO_TEMPLATE_ID,
+            formData: formPayload,
+          });
+          return;
+        }
+      }
+      const note = await createNote(SOFO_DRAFT_TITLE, content, SOFO_TEMPLATE_ID);
+      await saveNote({ ...note, formData: formPayload });
+      setDraftNoteId(note.id);
+    } catch {
+      // Auto-save is best-effort; explicit Save still alerts on failure.
+    }
+  }, [createNote, draftNoteId, getNote, isUnlocked, saveNote, sessionPassword]);
+
+  useEffect(() => {
+    if (!sessionPassword || !isUnlocked) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      void persistDraftOnBlur();
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [formData, isUnlocked, persistDraftOnBlur, sessionPassword]);
+
   const finalizeForExport = useCallback(async (): Promise<PostpartumFormData> => {
     let data = formData;
 
@@ -205,14 +296,32 @@ export default function PostpartumForm() {
     return data;
   }, [formData, sessionPassword]);
 
-  const handleCopy = async () => {
+  const handleOpenCopyPreview = async () => {
+    if (!sessionPassword) {
+      vaultLockedAlert();
+      return;
+    }
     const data = await finalizeForExport();
-    await copyToClipboard(formatPostpartumNote(data), sessionPassword, 'postpartum');
+    setPreviewText(formatPostpartumNote(data));
+    setPreviewVisible(true);
+  };
+
+  const handleConfirmCopy = async () => {
+    if (!sessionPassword) {
+      vaultLockedAlert();
+      return;
+    }
+    await copyToClipboard(previewText, sessionPassword, 'postpartum');
+    setPreviewVisible(false);
     setStatusMessage('Copied — ready to paste into work software.');
     setTimeout(() => setStatusMessage(''), 3000);
   };
 
   const handleCopyForEmr = async () => {
+    if (!sessionPassword) {
+      vaultLockedAlert();
+      return;
+    }
     const data = await finalizeForExport();
     const text = formatEmrExport({ plainText: formatPostpartumNote(data) });
     setEmrPreviewText(text);
@@ -220,6 +329,10 @@ export default function PostpartumForm() {
   };
 
   const confirmEmrCopy = async () => {
+    if (!sessionPassword) {
+      vaultLockedAlert();
+      return;
+    }
     await copyToClipboard(emrPreviewText, sessionPassword, 'postpartum-emr');
     setEmrPreviewVisible(false);
     setStatusMessage('Copied for EMR — review before pasting into Plexia.');
@@ -227,31 +340,44 @@ export default function PostpartumForm() {
   };
 
   const handleSave = async () => {
-    if (!isUnlocked) {
-      Alert.alert('Vault locked', 'Unlock the vault from Settings before saving notes.');
+    if (!isUnlocked || !sessionPassword) {
+      vaultLockedAlert();
       return;
     }
 
     const data = await finalizeForExport();
     const title = data.birther.trim()
-      ? `Postpartum - ${data.birther.trim()}`
-      : 'Postpartum Nursing Note';
-    await createNote(title, formatPostpartumNote(data), 'postpartum');
+      ? `${SOFO_POSTPARTUM_TITLE} - ${data.birther.trim()}`
+      : SOFO_POSTPARTUM_TITLE;
+    await createNote(title, formatPostpartumNote(data), SOFO_TEMPLATE_ID);
     Alert.alert('Saved', 'Note saved to your encrypted vault.');
+  };
+
+  const fieldBlur = () => {
+    void persistDraftOnBlur();
   };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <ScreenHeader
+        title={SOFO_POSTPARTUM_TITLE}
+        subtitle="Postpartum home visit — voice fill, copy to EMR"
+      />
       <KeyboardAwareScrollView
         extraBottomInset={insets.bottom + 78}
         contentContainerStyle={[styles.scrollContent, { paddingBottom: 120 + insets.bottom }]}>
-        <Text style={[styles.title, { color: theme.text }]}>Postpartum Nursing Note</Text>
+        <View style={[styles.voiceTip, { backgroundColor: theme.surface, borderColor: theme.primary }]}>
+          <Text style={[styles.voiceTipText, { color: theme.textSecondary }]}>
+            Voice tip: Tap any field → microphone on keyboard → speak values.
+          </Text>
+        </View>
 
         <Field
           label="Postpartum Visit at Day/Week"
           value={formData.visitDayWeek}
           onChangeText={(text) => updateField('visitDayWeek', text)}
           placeholder="e.g. Day 3 / Week 1"
+          onBlur={fieldBlur}
         />
 
         <SectionTitle title="BIRTHER | PARENT" />
@@ -263,12 +389,14 @@ export default function PostpartumForm() {
           rightValue={formData.parent}
           onChangeLeft={(text) => updateField('birther', text)}
           onChangeRight={(text) => updateField('parent', text)}
+          onBlur={fieldBlur}
         />
         <Field
           label="Address"
           value={formData.address}
           onChangeText={(text) => updateField('address', text)}
           placeholder="Patient address for visit / trip planning"
+          onBlur={fieldBlur}
         />
         <View style={[styles.checkboxRow, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <Text style={[styles.checkboxLabel, { color: theme.textSecondary }]}>
@@ -288,18 +416,20 @@ export default function PostpartumForm() {
           rightValue={formData.para}
           onChangeLeft={(text) => updateField('gravida', text)}
           onChangeRight={(text) => updateField('para', text)}
+          onBlur={fieldBlur}
         />
         <Field
           label="Date of Delivery (m/d/yyyy)"
           value={formData.deliveryDate}
           onChangeText={(text) => updateField('deliveryDate', text)}
           placeholder="m/d/yyyy"
-          onBlur={() =>
-            updateField('deliveryDate', formatDeliveryDateMdY(formData.deliveryDate))
-          }
+          onBlur={() => {
+            updateField('deliveryDate', formatDeliveryDateMdY(formData.deliveryDate));
+            fieldBlur();
+          }}
         />
 
-        <Field label="General" value={formData.general} onChangeText={(t) => updateField('general', t)} multiline />
+        <Field label="General" value={formData.general} onChangeText={(t) => updateField('general', t)} multiline onBlur={fieldBlur} />
         <PairedField
           label="Vitals | BP"
           leftLabel="Vitals"
@@ -344,8 +474,8 @@ export default function PostpartumForm() {
         <SectionTitle
           title={
             formData.infantSex.trim() || formData.infantName.trim()
-              ? `INFANT - Baby ${formData.infantSex.trim()} ${formData.infantName.trim()}`.trim()
-              : 'INFANT - Baby Girl/Boy NAME'
+              ? `INFANT- Baby ${formData.infantSex.trim()} ${formData.infantName.trim()}`.trim()
+              : 'INFANT- Baby Girl/Boy NAME'
           }
         />
         <PairedField
@@ -371,7 +501,7 @@ export default function PostpartumForm() {
         <Field label="PHN" value={formData.phn} onChangeText={(t) => updateField('phn', t)} />
         <Field label="Complications" value={formData.complications} onChangeText={(t) => updateField('complications', t)} multiline />
 
-        <SectionTitle title="NEWBORN WEIGHT TRENDS" />
+        <SectionTitle title="NEWBORN WEIGHT TRENDS:" />
         <NumericField label="BW" value={formData.bw} onChangeText={(t) => updateField('bw', t)} suffix="g" />
         <NumericField
           label="Previous wt"
@@ -393,7 +523,7 @@ export default function PostpartumForm() {
           suffix="g"
         />
 
-        <SectionTitle title="NEWBORN TcB/TSB TRENDS" />
+        <SectionTitle title="NEWBORN TcB/TSB TRENDS:" />
         {formData.tcbTrends.map((row, index) => (
           <View key={`tcb-${index}`} style={styles.tcbRow}>
             <Text style={[styles.subSectionLabel, { color: theme.textSecondary }]}>
@@ -503,28 +633,41 @@ export default function PostpartumForm() {
           styles.footer,
           { backgroundColor: theme.surface, borderTopColor: theme.border, paddingBottom: 12 + insets.bottom },
         ]}>
-        <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={() => setPreviewVisible(true)}>
-          <Text style={styles.secondaryButtonText}>Preview</Text>
+        <Pressable style={[styles.copyPrimaryButton, { backgroundColor: theme.primary }]} onPress={handleOpenCopyPreview}>
+          <Text style={styles.copyPrimaryText}>Copy to clipboard</Text>
         </Pressable>
-        <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={handleCopyForEmr}>
-          <Text style={styles.secondaryButtonText}>Plexia</Text>
-        </Pressable>
-        <Pressable style={styles.footerButton} onPress={handleCopy}>
-          <Text style={styles.footerButtonText}>Copy</Text>
-        </Pressable>
-        <Pressable style={[styles.footerButton, styles.saveButton]} onPress={handleSave}>
-          <Text style={styles.footerButtonText}>Save Note</Text>
-        </Pressable>
+        <View style={styles.footerRow}>
+          <Pressable
+            style={[styles.footerButton, styles.secondaryButton]}
+            onPress={() => {
+              setPreviewText(formattedNote);
+              setPreviewVisible(true);
+            }}>
+            <Text style={styles.secondaryButtonText}>Preview</Text>
+          </Pressable>
+          <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={handleCopyForEmr}>
+            <Text style={styles.secondaryButtonText}>Plexia</Text>
+          </Pressable>
+          <Pressable style={[styles.footerButton, styles.saveButton]} onPress={handleSave}>
+            <Text style={styles.footerButtonText}>Save Note</Text>
+          </Pressable>
+        </View>
       </View>
 
       <Modal visible={previewVisible} animationType="slide" onRequestClose={() => setPreviewVisible(false)}>
-        <View style={[styles.previewContainer, { backgroundColor: theme.background }]}>
-          <Text style={[styles.previewTitle, { color: theme.text }]}>Formatted Note Preview</Text>
+        <View style={[styles.previewContainer, { backgroundColor: theme.background, paddingTop: insets.top + 16 }]}>
+          <Text style={[styles.previewTitle, { color: theme.text }]}>Copy preview</Text>
+          <Text style={[styles.hint, { color: theme.textMuted, marginBottom: 8 }]}>
+            Review exact clipboard text before copying into your EMR.
+          </Text>
           <ScrollView style={styles.previewScroll}>
-            <Text style={[styles.previewText, { color: theme.text }]}>{formattedNote}</Text>
+            <Text style={[styles.previewText, { color: theme.text }]}>{previewText || formattedNote}</Text>
           </ScrollView>
-          <Pressable style={styles.footerButton} onPress={() => setPreviewVisible(false)}>
-            <Text style={styles.footerButtonText}>Close</Text>
+          <Pressable style={styles.footerButton} onPress={handleConfirmCopy}>
+            <Text style={styles.footerButtonText}>Copy to clipboard</Text>
+          </Pressable>
+          <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={() => setPreviewVisible(false)}>
+            <Text style={styles.secondaryButtonText}>Close</Text>
           </Pressable>
         </View>
       </Modal>
@@ -552,8 +695,14 @@ export default function PostpartumForm() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { padding: 16 },
-  title: { fontSize: 24, fontWeight: '700', marginBottom: 8 },
+  scrollContent: { padding: 16, paddingTop: 0 },
+  voiceTip: {
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 12,
+    marginBottom: 12,
+  },
+  voiceTipText: { fontSize: 13, lineHeight: 18 },
   sectionTitle: { fontSize: 18, fontWeight: '700', marginTop: 16, marginBottom: 8 },
   field: { marginBottom: 10 },
   label: { fontSize: 14, fontWeight: '600', marginBottom: 6 },
@@ -597,11 +746,17 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    flexDirection: 'row',
-    gap: 8,
     padding: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
+  copyPrimaryButton: {
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  copyPrimaryText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  footerRow: { flexDirection: 'row', gap: 8 },
   footerButton: {
     flex: 1,
     backgroundColor: '#2563eb',

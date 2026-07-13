@@ -67,6 +67,7 @@
 | [MASTER_GUI_ARCHITECT_PROMPT.md](./MASTER_GUI_ARCHITECT_PROMPT.md) | **Copy-paste prompt** — full-app GUI/UX redesign (Home tab, design system, IA) |
 
 | [MASTER_DEVELOPMENT_AUDIT_PROMPT.md](./MASTER_DEVELOPMENT_AUDIT_PROMPT.md) | **Copy-paste prompt** — full audit: Template AI, IAP, GUI Phase 0, builds |
+| [MASTER_SOFO_PRODUCTION_RESCUE_PROMPT.md](./MASTER_SOFO_PRODUCTION_RESCUE_PROMPT.md) | **Copy-paste prompt** — P0 rescue: SoFo Postpartum HV, About, saves, AI unlock, voice, ship tomorrow |
 | [AUDIT_REPORT.md](./AUDIT_REPORT.md) | **v1.2.11 audit** — feature matrix (Works/Gated/Broken), root causes, fixes |
 | [FOUNDER_FOLLOWUP.md](./FOUNDER_FOLLOWUP.md) | **Founder handoff** — device test, Play Console, build artifact table |
 

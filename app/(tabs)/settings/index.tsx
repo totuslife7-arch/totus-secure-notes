@@ -1,5 +1,4 @@
 import * as DocumentPicker from 'expo-document-picker';
-import Constants from 'expo-constants';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as ScreenCapture from 'expo-screen-capture';
 import * as Sharing from 'expo-sharing';
@@ -23,7 +22,6 @@ import KeyboardAwareScrollView from '@/components/KeyboardAwareScrollView';
 import PaywallSheet from '@/components/PaywallSheet';
 import PasswordInput from '@/components/PasswordInput';
 import ThemedTextInput from '@/components/ThemedTextInput';
-import { DEV_UNLOCK_VERSION_TAP_COUNT } from '@/constants/devUnlock';
 import { ThemeMode } from '@/constants/theme';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useVault } from '@/context/VaultContext';
@@ -42,10 +40,8 @@ import {
   isBiometricUnlockEnabled,
 } from '@/services/biometrics';
 import { useMonetization } from '@/context/MonetizationContext';
-import { disableDevUnlock, toggleDevUnlock } from '@/services/devUnlock';
 import {
   hasTripPlannerPro,
-  isStoreReviewMode,
 } from '@/services/monetization';
 import {
   DrivingRouteEngine,
@@ -61,7 +57,7 @@ import {
   setExternalMapsApp,
   setGoogleMapsApiKey,
   setInAppMapEnabled,
-  setMapboxApiKey,
+  setMapboxApiKey as persistMapboxApiKey,
 } from '@/services/trip/mapsSettings';
 import { shareEncryptedVault, shareFullVaultBundle } from '@/services/export';
 import {
@@ -77,9 +73,8 @@ import {
   getMasterPasswordRequirementsText,
   getMasterPasswordValidationMessage,
 } from '@/services/passwordPolicy';
-import { POLICY_LINKS, POLICY_URLS } from '@/constants/policyUrls';
+import { POLICY_URLS } from '@/constants/policyUrls';
 import { VAULT_WEB_URL } from '@/constants/vaultWebUrl';
-import { fetchAllPolicyVersions, type PolicyDocument } from '@/services/firebase';
 import { openVaultWebUrl } from '@/services/openVaultWebUrl';
 
 const THEME_OPTIONS: ThemeMode[] = ['system', 'light', 'dark'];
@@ -118,35 +113,12 @@ export default function SettingsScreen() {
   const [mapsAdvancedOpen, setMapsAdvancedOpen] = useState(false);
   const [googleApiKey, setGoogleApiKey] = useState('');
   const [mapboxApiKey, setMapboxApiKey] = useState('');
-  const [policyVersions, setPolicyVersions] = useState<Record<string, PolicyDocument | null> | null>(
-    null
-  );
-  const [policyCheckStatus, setPolicyCheckStatus] = useState<string | null>(null);
-  const [versionTapCount, setVersionTapCount] = useState(0);
-  const [showDevUnlockEntry, setShowDevUnlockEntry] = useState(false);
-  const [devUnlockCode, setDevUnlockCode] = useState('');
 
   const openPolicy = (url: string, label?: string) => {
     if (sessionPassword && label) {
       appendAuditEvent(sessionPassword, 'policy_view', label).catch(() => undefined);
     }
     WebBrowser.openBrowserAsync(url).catch(() => undefined);
-  };
-
-  const handleCheckPolicyUpdates = async () => {
-    setPolicyCheckStatus('Checking…');
-    try {
-      const docs = await fetchAllPolicyVersions();
-      setPolicyVersions(docs);
-      const privacy = docs.privacy;
-      setPolicyCheckStatus(
-        privacy?.updatedAt
-          ? `Privacy policy version ${privacy.version} (updated ${privacy.updatedAt.slice(0, 10)})`
-          : `Policies available online (version ${privacy?.version ?? 'hosted'})`,
-      );
-    } catch {
-      setPolicyCheckStatus('Could not reach Firebase. Open links below for hosted policies.');
-    }
   };
 
   useEffect(() => {
@@ -293,40 +265,6 @@ export default function SettingsScreen() {
     }
   };
 
-  const handleVersionTap = () => {
-    const next = versionTapCount + 1;
-    setVersionTapCount(next);
-    if (next >= DEV_UNLOCK_VERSION_TAP_COUNT) {
-      setShowDevUnlockEntry(true);
-      setVersionTapCount(0);
-    }
-  };
-
-  const handleDevUnlockSubmit = async () => {
-    const result = await toggleDevUnlock(devUnlockCode);
-    if (result === 'invalid') {
-      Alert.alert('Invalid code', 'That developer code was not recognized.');
-      return;
-    }
-    setDevUnlockCode('');
-    setShowDevUnlockEntry(false);
-    await refresh();
-    Alert.alert(
-      result === 'activated' ? 'Developer unlock active' : 'Developer unlock disabled',
-      result === 'activated'
-        ? 'Pro Lifetime and Trip Planner Pro unlocked for testing on this device.'
-        : 'Premium features now follow store purchases again.',
-    );
-  };
-
-  const handleDisableDevUnlock = async () => {
-    await disableDevUnlock();
-    setShowDevUnlockEntry(false);
-    setDevUnlockCode('');
-    await refresh();
-    Alert.alert('Developer unlock disabled', 'Premium features now follow store purchases again.');
-  };
-
   const handleImport = async () => {
     if (!importPassword.trim()) {
       Alert.alert('Password required', 'Enter the password used to encrypt the vault file.');
@@ -375,100 +313,25 @@ export default function SettingsScreen() {
         styles.container,
         { backgroundColor: theme.background, paddingBottom: insets.bottom + 16 },
       ]}>
-      <Text style={[styles.heading, { color: theme.text }]}>About</Text>
-      <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-        <Text style={[styles.cardTitle, { color: theme.text }]}>Totus Secure Notes</Text>
-        <Pressable onPress={handleVersionTap}>
-          <Text style={[styles.body, { color: theme.textMuted }]}>
-            Version {Constants.expoConfig?.version ?? '1.2.2'}
-            {Constants.expoConfig?.android?.versionCode
-              ? ` (build ${Constants.expoConfig.android.versionCode})`
-              : ''}
-          </Text>
-        </Pressable>
-        {isStoreReviewMode() ? (
-          <Text style={[styles.body, { color: theme.textMuted, fontStyle: 'italic' }]}>
-            Store review mode — Pro features unlocked for app review.
-          </Text>
-        ) : null}
-        {monetization.devUnlockActive ? (
-          <Text style={[styles.body, { color: theme.textMuted, fontStyle: 'italic' }]}>
-            Developer unlock active — Pro Lifetime + Template AI for testing.
-          </Text>
-        ) : null}
-        {showDevUnlockEntry ? (
-          <View style={{ gap: 8, marginTop: 8 }}>
-            <Text style={[styles.body, { color: theme.textMuted }]}>
-              Enter developer unlock code (testing only):
-            </Text>
-            <ThemedTextInput
-              style={styles.input}
-              value={devUnlockCode}
-              onChangeText={setDevUnlockCode}
-              placeholder="Developer code"
-              autoCapitalize="characters"
-              autoCorrect={false}
-            />
-            <Pressable
-              style={[styles.button, { backgroundColor: theme.primary }]}
-              onPress={handleDevUnlockSubmit}>
-              <Text style={[styles.buttonText, { color: theme.primaryText }]}>Apply code</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button, { backgroundColor: theme.surfaceSecondary }]}
-              onPress={() => {
-                setShowDevUnlockEntry(false);
-                setDevUnlockCode('');
-              }}>
-              <Text style={[styles.secondaryButtonText, { color: theme.text }]}>Cancel</Text>
-            </Pressable>
-          </View>
-        ) : null}
-        {monetization.devUnlockActive ? (
-          <Pressable
-            style={[styles.button, { backgroundColor: theme.surfaceSecondary }]}
-            onPress={handleDisableDevUnlock}>
-            <Text style={[styles.secondaryButtonText, { color: theme.text }]}>
-              Disable developer unlock
-            </Text>
-          </Pressable>
-        ) : null}
-        <Text style={[styles.body, { color: theme.textMuted }]}>
-          Local-first encrypted notes, trip mileage, and clinical templates. Notes and vault data stay
-          on your device.
+      <Text style={[styles.heading, { color: theme.text }]}>Settings</Text>
+
+      <Pressable
+        style={[styles.hubCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
+        onPress={() => router.push('/settings/about' as never)}>
+        <Text style={[styles.hubTitle, { color: theme.text }]}>About & Legal</Text>
+        <Text style={[styles.hubHint, { color: theme.textMuted }]}>
+          Version, policies, tester unlock (tap version 7×)
         </Text>
-        <Pressable
-          style={[styles.button, { backgroundColor: theme.surfaceSecondary }]}
-          onPress={() => openPolicy(POLICY_URLS.support)}>
-          <Text style={[styles.secondaryButtonText, { color: theme.text }]}>Contact support</Text>
-        </Pressable>
-        {POLICY_LINKS.map((link) => (
-          <Pressable
-            key={link.id}
-            style={[styles.button, { backgroundColor: theme.surfaceSecondary }]}
-            onPress={() => openPolicy(link.url, link.label)}>
-            <Text style={[styles.secondaryButtonText, { color: theme.text }]}>{link.label}</Text>
-          </Pressable>
-        ))}
-        <Pressable
-          style={[styles.button, { backgroundColor: theme.primary }]}
-          onPress={handleCheckPolicyUpdates}>
-          <Text style={[styles.buttonText, { color: theme.primaryText }]}>Check for policy updates</Text>
-        </Pressable>
-        {policyCheckStatus ? (
-          <Text style={[styles.body, { color: theme.textMuted }]}>{policyCheckStatus}</Text>
-        ) : null}
-        {policyVersions?.privacy?.version ? (
-          <Text style={[styles.body, { color: theme.textMuted }]}>
-            Firestore privacy version: {policyVersions.privacy.version}
-          </Text>
-        ) : null}
-        <Pressable
-          style={[styles.button, { backgroundColor: theme.surfaceSecondary }]}
-          onPress={() => openPolicy(POLICY_URLS.home)}>
-          <Text style={[styles.secondaryButtonText, { color: theme.text }]}>All policies (web index)</Text>
-        </Pressable>
-      </View>
+      </Pressable>
+
+      <Pressable
+        style={[styles.hubCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
+        onPress={() => router.push('/settings/totus-ai' as never)}>
+        <Text style={[styles.hubTitle, { color: theme.text }]}>Totus Assist</Text>
+        <Text style={[styles.hubHint, { color: theme.textMuted }]}>
+          On-device AI model download, diagnostics, unlock help
+        </Text>
+      </Pressable>
 
       <Text style={[styles.heading, { color: theme.text }]}>Appearance</Text>
       <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
@@ -825,7 +688,7 @@ export default function SettingsScreen() {
                   if (routeEngine === 'google') {
                     await setGoogleMapsApiKey(googleApiKey);
                   } else {
-                    await setMapboxApiKey(mapboxApiKey);
+                    await persistMapboxApiKey(mapboxApiKey);
                   }
                   Alert.alert('Saved', 'Routing API key stored securely on this device.');
                 }}>
@@ -996,6 +859,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     marginTop: 8,
+  },
+  hubCard: {
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    gap: 4,
+  },
+  hubTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  hubHint: {
+    fontSize: 13,
+    lineHeight: 18,
   },
   body: {
     fontSize: 14,

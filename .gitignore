@@ -47,3 +47,6 @@ totus--notes-*.json
 # generated native folders
 /ios
 /android
+
+# local EAS/build debug dumps
+build-log-decompressed.txt

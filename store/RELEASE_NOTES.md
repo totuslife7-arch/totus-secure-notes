@@ -1,3 +1,28 @@
+# Release Notes — Totus Secure Notes v1.2.12
+
+Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
+
+| Field | Value |
+|-------|--------|
+| Version | **1.2.12** |
+| Android versionCode | **44** |
+| Build date | July 13, 2026 |
+| Package | `com.totuslife.TotusSecureNotes` |
+| Web vault URL | https://totus--notes.web.app/vault |
+| Store review build | EAS profile `store-review-apk` — sideload for SoFo nursing workflow QA |
+
+---
+
+## Google Play — Release notes (1.2.12)
+
+**Limit:** 500 characters per language (en-US below)
+
+```
+SoFo Postpartum HV is pinned first in Templates — voice-friendly fields, preview-before-copy, and clinical export format aligned for EMR paste. New Settings → About & Legal screen (tap version 7× for tester unlock). Save and copy buttons now alert when the vault is locked. Trip Mapbox key save fix. Version 1.2.12.
+```
+
+---
+
 # Release Notes — Totus Secure Notes v1.2.11
 
 Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.

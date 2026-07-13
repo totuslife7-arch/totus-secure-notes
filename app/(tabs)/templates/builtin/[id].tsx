@@ -40,6 +40,10 @@ export default function BuiltinTemplateScreen() {
   };
 
   const handleCopyFilled = async (formData: Record<string, string>) => {
+    if (!sessionPassword) {
+      Alert.alert('Vault locked', 'Unlock the vault before copying.');
+      return;
+    }
     const text = formatCustomTemplateForEmr(template, formData);
     await copyToClipboard(text, sessionPassword, `builtin:${template.id}`);
     Alert.alert('Copied', 'EMR-safe text copied — ready to paste into Plexia or your charting system.');
@@ -93,6 +97,10 @@ export default function BuiltinTemplateScreen() {
           <Pressable
             style={[styles.previewClose, { backgroundColor: theme.primary }]}
             onPress={async () => {
+              if (!sessionPassword) {
+                Alert.alert('Vault locked', 'Unlock the vault before copying.');
+                return;
+              }
               await copyToClipboard(previewText, sessionPassword, `builtin-emr:${template.id}`);
               setPreviewVisible(false);
               Alert.alert('Copied', 'Empty template structure copied for EMR.');
