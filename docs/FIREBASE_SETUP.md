@@ -42,7 +42,24 @@ Keys that were previously in git history must be **rotated** even after removal 
 
 ### EAS file secrets (required for cloud builds)
 
-EAS only uploads git-tracked files. The `eas-build-post-install` script in `package.json` runs `node scripts/inject-firebase-config.mjs` after install to copy Firebase configs from file environment variables. Build profiles set `"environment": "production"` (or `preview` / `development`) so EAS loads file secrets during the job.
+EAS only uploads git-tracked files. Firebase client configs are gitignored, so cloud builds rely on **EAS file secrets** plus dynamic config in [`app.config.js`](../app.config.js).
+
+**Primary mechanism — `app.config.js`**
+
+[`app.config.js`](../app.config.js) reads [`app.json`](../app.json) and sets platform paths from EAS file-secret env vars (absolute paths on the builder):
+
+- `android.googleServicesFile` ← `GOOGLE_SERVICES_JSON` (fallback: `./google-services.json`)
+- `ios.googleServicesFile` ← `GOOGLE_SERVICE_INFO_PLIST` (fallback: `./GoogleService-Info.plist`)
+
+This is the [Expo-recommended pattern](https://docs.expo.dev/build-reference/variables/#file-environment-variables) for file secrets during prebuild.
+
+**Backup — EAS lifecycle hooks**
+
+`package.json` also runs `node scripts/inject-firebase-config.mjs` via `eas-build-pre-install` and `eas-build-post-install`, copying file secrets into the repo root as a fallback. Build profiles set `"environment": "production"` (or `preview` / `development`) so EAS loads file secrets during the job.
+
+**Do not use `prebuildCommand` in `eas.json`**
+
+EAS wraps `prebuildCommand` as `npx expo <command> --platform <platform>`, which breaks shell scripts (e.g. `npx expo bash scripts/inject-firebase-config.sh --platform android` → *unknown or unexpected option: --platform*). Use `app.config.js` + file secrets instead.
 
 **One-time setup** (from repo root, with local configs present):
 
