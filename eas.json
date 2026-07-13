@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "environment": "development",
       "prebuildCommand": "node scripts/inject-firebase-config.mjs",
       "developmentClient": true,
       "distribution": "internal",
@@ -16,6 +17,7 @@
       }
     },
     "preview": {
+      "environment": "preview",
       "prebuildCommand": "node scripts/inject-firebase-config.mjs",
       "distribution": "internal",
       "android": {
@@ -26,6 +28,7 @@
       }
     },
     "production": {
+      "environment": "production",
       "prebuildCommand": "node scripts/inject-firebase-config.mjs",
       "autoIncrement": true,
       "android": {

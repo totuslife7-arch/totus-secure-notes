@@ -42,7 +42,7 @@ Keys that were previously in git history must be **rotated** even after removal 
 
 ### EAS file secrets (required for cloud builds)
 
-EAS only uploads git-tracked files. All `eas.json` build profiles run `node scripts/inject-firebase-config.mjs` before prebuild to copy Firebase configs from file environment variables.
+EAS only uploads git-tracked files. All `eas.json` build profiles run `node scripts/inject-firebase-config.mjs` before prebuild to copy Firebase configs from file environment variables. Build profiles set `"environment": "production"` (or `preview` / `development`) so EAS loads file secrets during the job.
 
 **One-time setup** (from repo root, with local configs present):
 

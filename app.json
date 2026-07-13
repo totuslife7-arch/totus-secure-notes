@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.totuslife.TotusSecureNotes",
-      "versionCode": 46,
+      "versionCode": 48,
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "resize",
       "permissions": [
