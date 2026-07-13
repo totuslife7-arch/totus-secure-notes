@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "prebuildCommand": "node scripts/inject-firebase-config.mjs",
       "developmentClient": true,
       "distribution": "internal",
       "android": {
@@ -15,6 +16,7 @@
       }
     },
     "preview": {
+      "prebuildCommand": "node scripts/inject-firebase-config.mjs",
       "distribution": "internal",
       "android": {
         "buildType": "apk"
@@ -24,6 +26,7 @@
       }
     },
     "production": {
+      "prebuildCommand": "node scripts/inject-firebase-config.mjs",
       "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"

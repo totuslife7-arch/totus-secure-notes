@@ -40,9 +40,27 @@ Keys that were previously in git history must be **rotated** even after removal 
    - **iOS:** bundle ID `com.totuslife.TotusSecureNotes`
 4. In GitHub: resolve secret scanning alerts after rotation; old keys in history are still compromised until rotated
 
-### EAS / CI (optional)
+### EAS file secrets (required for cloud builds)
 
-For cloud builds without committing configs, use [EAS environment variables](https://docs.expo.dev/eas/environment-variables/) or **EAS Secrets** to inject file contents at build time (e.g. `GOOGLE_SERVICES_JSON` as a file secret, applied in a pre-build hook or `eas.json` env). Keep the same rotate/restrict steps for any key used in production.
+EAS only uploads git-tracked files. All `eas.json` build profiles run `node scripts/inject-firebase-config.mjs` before prebuild to copy Firebase configs from file environment variables.
+
+**One-time setup** (from repo root, with local configs present):
+
+```powershell
+eas env:create --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json --environment production --visibility secret
+eas env:create --name GOOGLE_SERVICE_INFO_PLIST --type file --value ./GoogleService-Info.plist --environment production --visibility secret
+```
+
+Repeat for `preview` / `development` environments if you build those profiles from CI.
+
+Then re-run store-review builds:
+
+```powershell
+npm run build:store-review
+npm run build:store-review-apk
+```
+
+Keep the same rotate/restrict steps for any key used in production.
 
 
 ## Public policy URLs (Play Store / App Store)
