@@ -1,0 +1,44 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      {
+        "source": "/vault/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" },
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+          },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "no-referrer" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+      }
+    ],
+    "rewrites": [
+      { "source": "/privacy", "destination": "/privacy/index.html" },
+      { "source": "/terms", "destination": "/terms/index.html" },
+      { "source": "/support", "destination": "/support/index.html" },
+      { "source": "/data-deletion", "destination": "/data-deletion/index.html" },
+      { "source": "/permissions", "destination": "/permissions/index.html" },
+      { "source": "/data-safety", "destination": "/data-safety/index.html" },
+      { "source": "/ads-monetization", "destination": "/ads-monetization/index.html" },
+      { "source": "/security", "destination": "/security/index.html" },
+      { "source": "/children", "destination": "/children/index.html" },
+      { "source": "/legal-disclaimer", "destination": "/legal-disclaimer/index.html" },
+      { "source": "/vault", "destination": "/vault/index.html" },
+      { "source": "/vault/notes", "destination": "/vault/notes.html" },
+      { "source": "/vault/templates", "destination": "/vault/templates.html" },
+      { "source": "/vault/template/**", "destination": "/vault/template/[id].html" }
+    ]
+  }
+}

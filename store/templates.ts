@@ -1,4 +1,6 @@
-export type TemplateType = 'markdown' | 'form';
+import { BUILTIN_TEMPLATES } from '@/store/builtinTemplates';
+
+export type TemplateType = 'markdown' | 'form' | 'builtin';
 
 export interface TemplateDefinition {
   id: string;
@@ -7,6 +9,7 @@ export interface TemplateDefinition {
   type: TemplateType;
   route?: string;
   content?: string;
+  category?: string;
 }
 
 export const MARKDOWN_TEMPLATES: TemplateDefinition[] = [
@@ -68,8 +71,27 @@ export const FORM_TEMPLATES: TemplateDefinition[] = [
   },
 ];
 
-export const ALL_TEMPLATES: TemplateDefinition[] = [...FORM_TEMPLATES, ...MARKDOWN_TEMPLATES];
+export const BUILTIN_TEMPLATE_DEFINITIONS: TemplateDefinition[] = BUILTIN_TEMPLATES.map((t) => ({
+  id: t.id,
+  title: t.title,
+  description: t.description ?? '',
+  type: 'builtin' as const,
+  route: `/templates/builtin/${t.id}`,
+  category: t.category,
+}));
+
+export const BUILTIN_CATEGORIES = ['Nursing', 'Social Work', 'Other'] as const;
+
+export const ALL_TEMPLATES: TemplateDefinition[] = [
+  ...FORM_TEMPLATES,
+  ...BUILTIN_TEMPLATE_DEFINITIONS,
+  ...MARKDOWN_TEMPLATES,
+];
 
 export function getTemplateById(id: string): TemplateDefinition | undefined {
   return ALL_TEMPLATES.find((template) => template.id === id);
+}
+
+export function getBuiltinTemplatesForGallery(): TemplateDefinition[] {
+  return BUILTIN_TEMPLATE_DEFINITIONS;
 }

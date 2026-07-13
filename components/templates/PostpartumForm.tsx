@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Alert,
   Modal,
@@ -7,18 +7,29 @@ import {
   StyleSheet,
   Switch,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import NumericField from '@/components/form/NumericField';
+import KeyboardAwareScrollView from '@/components/KeyboardAwareScrollView';
+import ThemedTextInput from '@/components/ThemedTextInput';
+import { useAppTheme } from '@/context/ThemeContext';
 import { useVault } from '@/context/VaultContext';
 import { copyToClipboard } from '@/services/export';
+import {
+  addStopToTodayTrip,
+  buildMileageSummary,
+  getTripForDate,
+} from '@/services/trip/tripStorage';
 import {
   createEmptyPostpartumForm,
   INFANT_SEX_OPTIONS,
   PostpartumFormData,
   TSB_RISK_OPTIONS,
 } from '@/store/postpartumTemplate';
+import { formatDeliveryDateMdY } from '@/utils/formInputFilters';
+import { formatEmrExport } from '@/utils/formatEmrExport';
 import { formatPostpartumNote } from '@/utils/postpartumFormat';
 
 function Field({
@@ -27,30 +38,73 @@ function Field({
   onChangeText,
   multiline = false,
   placeholder,
+  onBlur,
 }: {
   label: string;
   value: string;
   onChangeText: (text: string) => void;
   multiline?: boolean;
   placeholder?: string;
+  onBlur?: () => void;
 }) {
+  const { theme } = useAppTheme();
+
   return (
     <View style={styles.field}>
-      <Text style={styles.label}>{label}</Text>
-      <TextInput
+      <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
+      <ThemedTextInput
         style={[styles.input, multiline && styles.multiline]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         multiline={multiline}
+        scrollEnabled={false}
         textAlignVertical={multiline ? 'top' : 'center'}
+        onBlur={onBlur}
       />
     </View>
   );
 }
 
+function PairedField({
+  label,
+  leftLabel,
+  leftValue,
+  rightLabel,
+  rightValue,
+  onChangeLeft,
+  onChangeRight,
+}: {
+  label: string;
+  leftLabel: string;
+  leftValue: string;
+  rightLabel: string;
+  rightValue: string;
+  onChangeLeft: (v: string) => void;
+  onChangeRight: (v: string) => void;
+}) {
+  const { theme } = useAppTheme();
+
+  return (
+    <View style={styles.field}>
+      <Text style={[styles.label, { color: theme.textSecondary }]}>{label}</Text>
+      <View style={styles.pairedRow}>
+        <View style={styles.pairedCol}>
+          <Text style={[styles.subLabel, { color: theme.textMuted }]}>{leftLabel}</Text>
+          <ThemedTextInput style={styles.input} value={leftValue} onChangeText={onChangeLeft} />
+        </View>
+        <View style={styles.pairedCol}>
+          <Text style={[styles.subLabel, { color: theme.textMuted }]}>{rightLabel}</Text>
+          <ThemedTextInput style={styles.input} value={rightValue} onChangeText={onChangeRight} />
+        </View>
+      </View>
+    </View>
+  );
+}
+
 function SectionTitle({ title }: { title: string }) {
-  return <Text style={styles.sectionTitle}>{title}</Text>;
+  const { theme } = useAppTheme();
+  return <Text style={[styles.sectionTitle, { color: theme.text }]}>{title}</Text>;
 }
 
 function CheckboxRow({
@@ -62,29 +116,85 @@ function CheckboxRow({
   value: boolean;
   onValueChange: (next: boolean) => void;
 }) {
+  const { theme } = useAppTheme();
+
   return (
-    <View style={styles.checkboxRow}>
-      <Text style={styles.checkboxLabel}>{label}</Text>
+    <View style={[styles.checkboxRow, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+      <Text style={[styles.checkboxLabel, { color: theme.textSecondary }]}>{label}</Text>
       <Switch value={value} onValueChange={onValueChange} />
     </View>
   );
 }
 
 export default function PostpartumForm() {
-  const { createNote, isUnlocked } = useVault();
+  const { createNote, isUnlocked, sessionPassword } = useVault();
+  const { theme } = useAppTheme();
+  const insets = useSafeAreaInsets();
   const [formData, setFormData] = useState<PostpartumFormData>(createEmptyPostpartumForm());
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [emrPreviewVisible, setEmrPreviewVisible] = useState(false);
+  const [emrPreviewText, setEmrPreviewText] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
 
-  const formattedNote = useMemo(() => formatPostpartumNote(formData), [formData]);
-
-  const updateField = <K extends keyof PostpartumFormData>(field: K, value: PostpartumFormData[K]) => {
-    setFormData((current) => ({ ...current, [field]: value }));
+  const updateField = <K extends keyof PostpartumFormData>(
+    field: K,
+    value: PostpartumFormData[K],
+  ) => {
+    setFormData((current) => {
+      const next = { ...current, [field]: value };
+      if (field === 'birthWeight' && typeof value === 'string') {
+        next.bw = value;
+      }
+      return next;
+    });
   };
 
+  const formattedNote = formatPostpartumNote(formData);
+
+  const finalizeForExport = useCallback(async (): Promise<PostpartumFormData> => {
+    let data = formData;
+
+    if (data.addToTrip && data.address.trim() && sessionPassword) {
+      const trip = await addStopToTodayTrip(
+        sessionPassword,
+        data.address,
+        data.birther.trim() || undefined,
+      );
+      data = {
+        ...data,
+        linkedTripId: trip.id,
+        mileageSummary: buildMileageSummary(trip),
+      };
+      setFormData(data);
+    } else if (sessionPassword) {
+      const today = new Date().toISOString().slice(0, 10);
+      const trip = await getTripForDate(sessionPassword, today);
+      if (trip) {
+        data = { ...data, mileageSummary: buildMileageSummary(trip) };
+      }
+    }
+
+    return data;
+  }, [formData, sessionPassword]);
+
   const handleCopy = async () => {
-    await copyToClipboard(formattedNote);
+    const data = await finalizeForExport();
+    await copyToClipboard(formatPostpartumNote(data), sessionPassword, 'postpartum');
     setStatusMessage('Copied — ready to paste into work software.');
+    setTimeout(() => setStatusMessage(''), 3000);
+  };
+
+  const handleCopyForEmr = async () => {
+    const data = await finalizeForExport();
+    const text = formatEmrExport({ plainText: formatPostpartumNote(data) });
+    setEmrPreviewText(text);
+    setEmrPreviewVisible(true);
+  };
+
+  const confirmEmrCopy = async () => {
+    await copyToClipboard(emrPreviewText, sessionPassword, 'postpartum-emr');
+    setEmrPreviewVisible(false);
+    setStatusMessage('Copied for EMR — review before pasting into Plexia.');
     setTimeout(() => setStatusMessage(''), 3000);
   };
 
@@ -94,19 +204,22 @@ export default function PostpartumForm() {
       return;
     }
 
-    const title = formData.birther.trim()
-      ? `Postpartum - ${formData.birther.trim()}`
+    const data = await finalizeForExport();
+    const title = data.birther.trim()
+      ? `Postpartum - ${data.birther.trim()}`
       : 'Postpartum Nursing Note';
-    await createNote(title, formattedNote, 'postpartum');
+    await createNote(title, formatPostpartumNote(data), 'postpartum');
     Alert.alert('Saved', 'Note saved to your encrypted vault.');
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Postpartum Nursing Note</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <KeyboardAwareScrollView
+        extraBottomInset={insets.bottom + 78}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 120 + insets.bottom }]}>
+        <Text style={[styles.title, { color: theme.text }]}>Postpartum Nursing Note</Text>
 
-        <SectionTitle title="Visit" />
+        <SectionTitle title="Postpartum Visit at Day/Week" />
         <Field
           label="Day/Week"
           value={formData.visitDayWeek}
@@ -114,121 +227,231 @@ export default function PostpartumForm() {
           placeholder="e.g. Day 3 / Week 1"
         />
 
-        <SectionTitle title="Birther | Parent" />
-        <Field label="Birther" value={formData.birther} onChangeText={(text) => updateField('birther', text)} />
-        <Field label="Parent" value={formData.parent} onChangeText={(text) => updateField('parent', text)} />
-        <Field label="Gravida (G)" value={formData.gravida} onChangeText={(text) => updateField('gravida', text)} />
-        <Field label="Para (P)" value={formData.para} onChangeText={(text) => updateField('para', text)} />
+        <SectionTitle title="BIRTHER | PARENT" />
+        <PairedField
+          label="Birther | Parent"
+          leftLabel="Birther"
+          leftValue={formData.birther}
+          rightLabel="Parent"
+          rightValue={formData.parent}
+          onChangeLeft={(text) => updateField('birther', text)}
+          onChangeRight={(text) => updateField('parent', text)}
+        />
         <Field
-          label="Date of Delivery"
+          label="Address"
+          value={formData.address}
+          onChangeText={(text) => updateField('address', text)}
+          placeholder="Patient address for visit / trip planning"
+        />
+        <View style={[styles.checkboxRow, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.checkboxLabel, { color: theme.textSecondary }]}>
+            Include in today&apos;s trip
+          </Text>
+          <Switch
+            value={formData.addToTrip}
+            onValueChange={(value) => updateField('addToTrip', value)}
+          />
+        </View>
+
+        <NumericField
+          label="HX: G (Gravida)"
+          value={formData.gravida}
+          onChangeText={(text) => updateField('gravida', text)}
+        />
+        <NumericField
+          label="HX: P (Para)"
+          value={formData.para}
+          onChangeText={(text) => updateField('para', text)}
+        />
+        <Field
+          label="Date of Delivery (m/d/yyyy)"
           value={formData.deliveryDate}
           onChangeText={(text) => updateField('deliveryDate', text)}
+          placeholder="m/d/yyyy"
+          onBlur={() =>
+            updateField('deliveryDate', formatDeliveryDateMdY(formData.deliveryDate))
+          }
         />
 
         <SectionTitle title="Maternal Assessment" />
-        <Field label="General" value={formData.general} onChangeText={(text) => updateField('general', text)} multiline />
-        <Field label="Vitals" value={formData.vitals} onChangeText={(text) => updateField('vitals', text)} />
-        <Field label="BP" value={formData.bp} onChangeText={(text) => updateField('bp', text)} />
-        <Field label="BM (Breastfeeding)" value={formData.breastfeeding} onChangeText={(text) => updateField('breastfeeding', text)} />
-        <Field label="Void" value={formData.voiding} onChangeText={(text) => updateField('voiding', text)} />
-        <Field label="Incision/Perineum" value={formData.incision} onChangeText={(text) => updateField('incision', text)} multiline />
-        <Field label="Lochia" value={formData.lochia} onChangeText={(text) => updateField('lochia', text)} />
-        <Field label="Breasts" value={formData.breasts} onChangeText={(text) => updateField('breasts', text)} />
-        <Field label="Nipples" value={formData.nipples} onChangeText={(text) => updateField('nipples', text)} />
-        <Field label="Milk Supply" value={formData.milkSupply} onChangeText={(text) => updateField('milkSupply', text)} />
-        <Field label="Medications" value={formData.medications} onChangeText={(text) => updateField('medications', text)} />
-        <Field label="Supplements" value={formData.supplements} onChangeText={(text) => updateField('supplements', text)} />
-        <Field label="Follow-up" value={formData.followUp} onChangeText={(text) => updateField('followUp', text)} multiline />
-
-        <SectionTitle title="Infant" />
-        <Field
-          label="Sex (Girl/Boy)"
-          value={formData.infantSex}
-          onChangeText={(text) => updateField('infantSex', text)}
-          placeholder={INFANT_SEX_OPTIONS.join(' / ')}
+        <Field label="General" value={formData.general} onChangeText={(t) => updateField('general', t)} multiline />
+        <PairedField
+          label="Vitals | BP"
+          leftLabel="Vitals"
+          leftValue={formData.vitals}
+          rightLabel="BP"
+          rightValue={formData.bp}
+          onChangeLeft={(t) => updateField('vitals', t)}
+          onChangeRight={(t) => updateField('bp', t)}
         />
-        <Field label="Name" value={formData.infantName} onChangeText={(text) => updateField('infantName', text)} />
-        <Field label="DOB" value={formData.infantDob} onChangeText={(text) => updateField('infantDob', text)} />
-        <Field label="Birth Weight" value={formData.birthWeight} onChangeText={(text) => updateField('birthWeight', text)} />
-        <Field label="Apgar" value={formData.apgar} onChangeText={(text) => updateField('apgar', text)} />
-        <Field label="HC" value={formData.headCircumference} onChangeText={(text) => updateField('headCircumference', text)} />
-        <Field label="Length" value={formData.length} onChangeText={(text) => updateField('length', text)} />
-        <Field label="PHN" value={formData.phn} onChangeText={(text) => updateField('phn', text)} />
-        <Field label="Complications" value={formData.complications} onChangeText={(text) => updateField('complications', text)} multiline />
+        <PairedField
+          label="BM | Void"
+          leftLabel="BM"
+          leftValue={formData.breastfeeding}
+          rightLabel="Void"
+          rightValue={formData.voiding}
+          onChangeLeft={(t) => updateField('breastfeeding', t)}
+          onChangeRight={(t) => updateField('voiding', t)}
+        />
+        <Field label="Incision/Perineum" value={formData.incision} onChangeText={(t) => updateField('incision', t)} multiline />
+        <Field label="Lochia" value={formData.lochia} onChangeText={(t) => updateField('lochia', t)} />
+        <Field
+          label="Breasts"
+          value={formData.breasts}
+          onChangeText={(t) => updateField('breasts', t)}
+          placeholder="Breasts | Nipples | Milk Supply"
+        />
+        <Field label="Nipples" value={formData.nipples} onChangeText={(t) => updateField('nipples', t)} />
+        <Field label="Milk Supply" value={formData.milkSupply} onChangeText={(t) => updateField('milkSupply', t)} />
+        <PairedField
+          label="Medications | Supplements"
+          leftLabel="Medications"
+          leftValue={formData.medications}
+          rightLabel="Supplements"
+          rightValue={formData.supplements}
+          onChangeLeft={(t) => updateField('medications', t)}
+          onChangeRight={(t) => updateField('supplements', t)}
+        />
+        <Field label="Follow-up" value={formData.followUp} onChangeText={(t) => updateField('followUp', t)} multiline />
 
-        <SectionTitle title="Newborn Weight Trends" />
-        <Field label="BW" value={formData.bw} onChangeText={(text) => updateField('bw', text)} />
-        <Field label="Previous wt" value={formData.previousWeight} onChangeText={(text) => updateField('previousWeight', text)} />
+        <SectionTitle title="INFANT" />
+        <PairedField
+          label="Baby Girl/Boy | Name"
+          leftLabel="Girl/Boy"
+          leftValue={formData.infantSex}
+          rightLabel="Name"
+          rightValue={formData.infantName}
+          onChangeLeft={(t) => updateField('infantSex', t)}
+          onChangeRight={(t) => updateField('infantName', t)}
+        />
+        <Text style={[styles.hint, { color: theme.textMuted }]}>{INFANT_SEX_OPTIONS.join(' / ')}</Text>
+        <Field label="DOB" value={formData.infantDob} onChangeText={(t) => updateField('infantDob', t)} />
+        <NumericField
+          label="Birth Weight"
+          value={formData.birthWeight}
+          onChangeText={(t) => updateField('birthWeight', t)}
+          suffix="grams"
+        />
+        <NumericField label="Apgar" value={formData.apgar} onChangeText={(t) => updateField('apgar', t)} />
+        <Field label="HC" value={formData.headCircumference} onChangeText={(t) => updateField('headCircumference', t)} />
+        <Field label="Length" value={formData.length} onChangeText={(t) => updateField('length', t)} />
+        <Field label="PHN" value={formData.phn} onChangeText={(t) => updateField('phn', t)} />
+        <Field label="Complications" value={formData.complications} onChangeText={(t) => updateField('complications', t)} multiline />
 
-        <SectionTitle title="Newborn TcB/TSB Trends" />
-        <Field label="Hours" value={formData.tcbHours} onChangeText={(text) => updateField('tcbHours', text)} placeholder="e.g. 24" />
+        <SectionTitle title="NEWBORN WEIGHT TRENDS" />
+        <NumericField label="BW (birth day weight in grams)" value={formData.bw} onChangeText={(t) => updateField('bw', t)} suffix="g" />
+        <Field
+          label="Date of last visit (m/d/yyyy)"
+          value={formData.lastVisitDate}
+          onChangeText={(t) => updateField('lastVisitDate', t)}
+          placeholder="m/d/yyyy"
+        />
+        <NumericField
+          label="Previous weight from last visit"
+          value={formData.previousWeight}
+          onChangeText={(t) => updateField('previousWeight', t)}
+          suffix="g"
+        />
+        <Field label="Date (today)" value={formData.visitDate} onChangeText={(t) => updateField('visitDate', t)} />
+        <NumericField
+          label="Today's Weight"
+          value={formData.todaysWeight}
+          onChangeText={(t) => updateField('todaysWeight', t)}
+          suffix="g"
+        />
+
+        <SectionTitle title="NEWBORN TcB/TSB TRENDS" />
+        <NumericField label="@ hours" value={formData.tcbHours} onChangeText={(t) => updateField('tcbHours', t)} suffix="hrs" />
         <Field
           label="Risk Level"
           value={formData.tsbRisk}
-          onChangeText={(text) => updateField('tsbRisk', text)}
+          onChangeText={(t) => updateField('tsbRisk', t)}
           placeholder={TSB_RISK_OPTIONS.join(' / ')}
         />
-        <Field label="DAT" value={formData.tsbDat} onChangeText={(text) => updateField('tsbDat', text)} />
-        <Field label="Additional TcB/TSB line" value={formData.tcbSecondLine} onChangeText={(text) => updateField('tcbSecondLine', text)} multiline />
+        <Field label="DAT" value={formData.tsbDat} onChangeText={(t) => updateField('tsbDat', t)} />
+        <Field label="Additional line" value={formData.tcbSecondLine} onChangeText={(t) => updateField('tcbSecondLine', t)} multiline />
 
         <SectionTitle title="Newborn Care" />
-        <Field label="Feeding" value={formData.feeding} onChangeText={(text) => updateField('feeding', text)} />
-        <Field label="Feeding Plan" value={formData.feedingPlan} onChangeText={(text) => updateField('feedingPlan', text)} multiline />
-        <Field label="Sleeping" value={formData.sleeping} onChangeText={(text) => updateField('sleeping', text)} />
-        <Field label="Stools" value={formData.stools} onChangeText={(text) => updateField('stools', text)} />
-        <Field label="Voids" value={formData.voids} onChangeText={(text) => updateField('voids', text)} />
-        <Field label="Exam | Vitals | Hips" value={formData.examHips} onChangeText={(text) => updateField('examHips', text)} multiline />
-        <Field label="Color | Skin" value={formData.colorSkin} onChangeText={(text) => updateField('colorSkin', text)} />
-        <Field label="Red Reflex" value={formData.redReflex} onChangeText={(text) => updateField('redReflex', text)} />
-        <Field label="Umbilicus" value={formData.umbilicus} onChangeText={(text) => updateField('umbilicus', text)} />
+        <PairedField
+          label="Feeding | Feeding Plan"
+          leftLabel="Feeding"
+          leftValue={formData.feeding}
+          rightLabel="Feeding Plan"
+          rightValue={formData.feedingPlan}
+          onChangeLeft={(t) => updateField('feeding', t)}
+          onChangeRight={(t) => updateField('feedingPlan', t)}
+        />
+        <Field label="Sleeping" value={formData.sleeping} onChangeText={(t) => updateField('sleeping', t)} />
+        <Field label="Stools" value={formData.stools} onChangeText={(t) => updateField('stools', t)} />
+        <Field label="Voids" value={formData.voids} onChangeText={(t) => updateField('voids', t)} />
+        <Field label="Exam | Vitals | Hips" value={formData.examHips} onChangeText={(t) => updateField('examHips', t)} multiline />
+        <Field label="Color | Skin" value={formData.colorSkin} onChangeText={(t) => updateField('colorSkin', t)} />
+        <Field label="Red Reflex" value={formData.redReflex} onChangeText={(t) => updateField('redReflex', t)} />
+        <Field label="Umbilicus" value={formData.umbilicus} onChangeText={(t) => updateField('umbilicus', t)} />
         <Field
           label="Newborn Metabolic screen result"
           value={formData.metabolicResult}
-          onChangeText={(text) => updateField('metabolicResult', text)}
+          onChangeText={(t) => updateField('metabolicResult', t)}
         />
 
-        <SectionTitle title="Parent Education Discussed" />
+        <SectionTitle title="DISCUSSED THE FOLLOWING WITH THE PARENT(S)" />
         <CheckboxRow
-          label="Discussed Vitamin D drops 400 IU daily"
+          label="Discussed Vitamin D drops 400 IU daily."
           value={formData.vitaminD}
-          onValueChange={(value) => updateField('vitaminD', value)}
+          onValueChange={(v) => updateField('vitaminD', v)}
         />
         <CheckboxRow
-          label="Received Health Passport and immunization information"
+          label="Has received Health Passport and immunization information from Public Health."
           value={formData.healthPassport}
-          onValueChange={(value) => updateField('healthPassport', value)}
+          onValueChange={(v) => updateField('healthPassport', v)}
         />
         <CheckboxRow
-          label="Aware of Period of 'PURPLE' Crying"
+          label="Aware of Period of 'PURPLE' Crying."
           value={formData.purpleCrying}
-          onValueChange={(value) => updateField('purpleCrying', value)}
+          onValueChange={(v) => updateField('purpleCrying', v)}
         />
 
-        <SectionTitle title="Follow-Up" />
-        <Field label="Ongoing concern 1" value={formData.ongoing1} onChangeText={(text) => updateField('ongoing1', text)} multiline />
-        <Field label="Ongoing concern 2" value={formData.ongoing2} onChangeText={(text) => updateField('ongoing2', text)} multiline />
-        <Field
-          label="Next appointment (days)"
+        <SectionTitle title="Ongoing Concerns to Follow-Up On For Mom &/or Baby" />
+        <Field label="1." value={formData.ongoing1} onChangeText={(t) => updateField('ongoing1', t)} multiline />
+        <Field label="2." value={formData.ongoing2} onChangeText={(t) => updateField('ongoing2', t)} multiline />
+
+        <SectionTitle title="Next Appointment" />
+        <NumericField
+          label="Will be seen in (days)"
           value={formData.appointmentDays}
-          onChangeText={(text) => updateField('appointmentDays', text)}
-          placeholder="e.g. 3"
+          onChangeText={(t) => updateField('appointmentDays', t)}
         />
         <Field
-          label="Next appointment location"
+          label="Location"
           value={formData.appointmentLocation}
-          onChangeText={(text) => updateField('appointmentLocation', text)}
+          onChangeText={(t) => updateField('appointmentLocation', t)}
           placeholder="home/clinic"
         />
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
-      {statusMessage ? <Text style={styles.status}>{statusMessage}</Text> : null}
+      {statusMessage ? (
+        <Text
+          style={[
+            styles.status,
+            { backgroundColor: theme.successSurface, color: theme.success, bottom: 78 + insets.bottom },
+          ]}>
+          {statusMessage}
+        </Text>
+      ) : null}
 
-      <View style={styles.footer}>
+      <View
+        style={[
+          styles.footer,
+          { backgroundColor: theme.surface, borderTopColor: theme.border, paddingBottom: 12 + insets.bottom },
+        ]}>
         <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={() => setPreviewVisible(true)}>
           <Text style={styles.secondaryButtonText}>Preview</Text>
         </Pressable>
+        <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={handleCopyForEmr}>
+          <Text style={styles.secondaryButtonText}>Plexia</Text>
+        </Pressable>
         <Pressable style={styles.footerButton} onPress={handleCopy}>
-          <Text style={styles.footerButtonText}>Copy to Clipboard</Text>
+          <Text style={styles.footerButtonText}>Copy</Text>
         </Pressable>
         <Pressable style={[styles.footerButton, styles.saveButton]} onPress={handleSave}>
           <Text style={styles.footerButtonText}>Save Note</Text>
@@ -236,13 +459,31 @@ export default function PostpartumForm() {
       </View>
 
       <Modal visible={previewVisible} animationType="slide" onRequestClose={() => setPreviewVisible(false)}>
-        <View style={styles.previewContainer}>
-          <Text style={styles.previewTitle}>Formatted Note Preview</Text>
+        <View style={[styles.previewContainer, { backgroundColor: theme.background }]}>
+          <Text style={[styles.previewTitle, { color: theme.text }]}>Formatted Note Preview</Text>
           <ScrollView style={styles.previewScroll}>
-            <Text style={styles.previewText}>{formattedNote}</Text>
+            <Text style={[styles.previewText, { color: theme.text }]}>{formattedNote}</Text>
           </ScrollView>
           <Pressable style={styles.footerButton} onPress={() => setPreviewVisible(false)}>
             <Text style={styles.footerButtonText}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
+
+      <Modal visible={emrPreviewVisible} animationType="slide" onRequestClose={() => setEmrPreviewVisible(false)}>
+        <View style={[styles.previewContainer, { backgroundColor: theme.background }]}>
+          <Text style={[styles.previewTitle, { color: theme.text }]}>Copy for Plexia / EMR</Text>
+          <Text style={[styles.hint, { color: theme.textMuted, marginBottom: 8 }]}>
+            Review before pasting. Clipboard auto-clears per your security timeout.
+          </Text>
+          <ScrollView style={styles.previewScroll}>
+            <Text style={[styles.previewText, { color: theme.text }]}>{emrPreviewText}</Text>
+          </ScrollView>
+          <Pressable style={styles.footerButton} onPress={confirmEmrCopy}>
+            <Text style={styles.footerButtonText}>Copy plain text</Text>
+          </Pressable>
+          <Pressable style={[styles.footerButton, styles.secondaryButton]} onPress={() => setEmrPreviewVisible(false)}>
+            <Text style={styles.secondaryButtonText}>Close</Text>
           </Pressable>
         </View>
       </Modal>
@@ -251,65 +492,31 @@ export default function PostpartumForm() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f7fb',
-  },
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 120,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 8,
-    color: '#111827',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginTop: 16,
-    marginBottom: 8,
-    color: '#1f2937',
-  },
-  field: {
-    marginBottom: 10,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 6,
-    color: '#374151',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    fontSize: 15,
-  },
-  multiline: {
-    minHeight: 80,
-  },
+  container: { flex: 1 },
+  scrollContent: { padding: 16 },
+  title: { fontSize: 24, fontWeight: '700', marginBottom: 8 },
+  sectionTitle: { fontSize: 18, fontWeight: '700', marginTop: 16, marginBottom: 8 },
+  field: { marginBottom: 10 },
+  label: { fontSize: 14, fontWeight: '600', marginBottom: 6 },
+  subLabel: { fontSize: 12, marginBottom: 4 },
+  hint: { fontSize: 12, marginBottom: 8 },
+  input: { paddingHorizontal: 12, paddingVertical: 10, fontSize: 15, borderWidth: 0 },
+  multiline: { minHeight: 80 },
+  pairedRow: { flexDirection: 'row', gap: 8 },
+  pairedCol: { flex: 1 },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 12,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
   },
-  checkboxLabel: {
-    flex: 1,
-    paddingRight: 12,
-    color: '#374151',
-    fontSize: 14,
-  },
+  checkboxLabel: { flex: 1, paddingRight: 12, fontSize: 14 },
+  calcRow: { marginBottom: 8, gap: 4 },
+  calcLabel: { fontSize: 13, fontWeight: '600' },
+  calcValue: { fontSize: 15 },
   footer: {
     position: 'absolute',
     left: 0,
@@ -318,9 +525,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     padding: 12,
-    backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
   },
   footerButton: {
     flex: 1,
@@ -329,51 +534,21 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: 'center',
   },
-  saveButton: {
-    backgroundColor: '#059669',
-  },
-  secondaryButton: {
-    backgroundColor: '#e5e7eb',
-  },
-  footerButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 13,
-  },
-  secondaryButtonText: {
-    color: '#111827',
-    fontWeight: '600',
-    fontSize: 13,
-  },
+  saveButton: { backgroundColor: '#059669' },
+  secondaryButton: { backgroundColor: '#e5e7eb' },
+  footerButtonText: { color: '#fff', fontWeight: '600', fontSize: 13 },
+  secondaryButtonText: { color: '#111827', fontWeight: '600', fontSize: 13 },
   status: {
     position: 'absolute',
     left: 16,
     right: 16,
-    bottom: 78,
-    backgroundColor: '#ecfdf5',
-    color: '#047857',
     padding: 10,
     borderRadius: 8,
     textAlign: 'center',
     overflow: 'hidden',
   },
-  previewContainer: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  previewTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 12,
-  },
-  previewScroll: {
-    flex: 1,
-    marginBottom: 12,
-  },
-  previewText: {
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#111827',
-  },
+  previewContainer: { flex: 1, padding: 16 },
+  previewTitle: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
+  previewScroll: { flex: 1, marginBottom: 12 },
+  previewText: { fontSize: 14, lineHeight: 22 },
 });

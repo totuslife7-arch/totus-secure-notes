@@ -6,22 +6,52 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
+      }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
       }
     },
     "production": {
       "autoIncrement": true,
       "android": {
         "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
       }
     },
     "production-apk": {
       "extends": "production",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "store-review": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_STORE_REVIEW_MODE": "true"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
+      }
+    },
+    "store-review-apk": {
+      "extends": "store-review",
       "android": {
         "buildType": "apk"
       }
@@ -32,6 +62,11 @@
       "android": {
         "serviceAccountKeyPath": "./google-play-service-account.json",
         "track": "internal"
+      },
+      "ios": {
+        "appleId": "totuslife7@gmail.com",
+        "ascAppId": "REPLACE_WITH_APP_STORE_CONNECT_APP_ID",
+        "appleTeamId": "REPLACE_WITH_APPLE_TEAM_ID"
       }
     }
   }

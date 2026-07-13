@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Permissions — Totus Secure Notes</title>
+  <style>
+    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; line-height: 1.55; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: #111; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.5rem; }
+    h3 { font-size: 1rem; margin-top: 1.25rem; }
+    ul { padding-left: 1.25rem; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.95rem; margin: 1rem 0; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    a { color: #0b57d0; }
+    code { font-size: 0.9em; background: #f4f4f4; padding: 0 4px; border-radius: 3px; }
+    .meta { color: #555; font-size: 0.9rem; }
+    nav a { display: block; margin: 0.35rem 0; }
+  </style>
+</head>
+<body>
+  <p class="meta"><strong>Totus Secure Notes</strong> · Firebase Hosting · Built 2026-07-13</p>
+  <h1>Permissions — Totus Secure Notes</h1>
+<p><strong>Effective date:</strong> June 20, 2026</p>
+<p><strong>Last updated:</strong> June 20, 2026</p>
+<p><strong>App:</strong> Totus Secure Notes · <code>com.totuslife.TotusSecureNotes</code></p>
+<p><strong>Public URL:</strong> https://totus--notes.web.app/permissions</p>
+<p><strong>Contact:</strong> totuslife7@gmail.com</p>
+<h2>Summary</h2>
+<p>This document explains why Totus Secure Notes requests each Android/iOS permission, aligned with <a href="https://play.google.com/about/privacy-security-deception/permissions/">Google Play Permissions and APIs policy</a>. Permissions are requested <strong>at runtime</strong> with system dialogs. Sensitive access is <strong>optional</strong> unless noted.</p>
+<h2>Permission table</h2>
+<table><tbody>
+<tr><th>Permission</th><th>Required?</th><th>When requested</th><th>Purpose</th><th>Data destination</th></tr>
+<tr><td><strong>Location (when in use)</strong></td><td>Optional</td><td>Starting GPS trip / Trips tab</td><td>Record mileage between visits</td><td>Encrypted on device only</td></tr>
+<tr><td><strong>Location (background)</strong></td><td>Optional</td><td>Active GPS trip recording</td><td>Continue mileage if app backgrounded during trip</td><td>Encrypted on device only</td></tr>
+<tr><td><strong>Camera</strong></td><td>Optional</td><td>Adding photo attachment</td><td>Capture encrypted photo for a note</td><td>Encrypted on device only</td></tr>
+<tr><td><strong>Photos / media library</strong></td><td>Optional</td><td>Adding photo attachment</td><td>Import encrypted photo for a note</td><td>Encrypted on device only</td></tr>
+<tr><td><strong>Notifications</strong></td><td>Optional</td><td>Setting a note reminder</td><td>Local reminder alerts</td><td>On device; via OS notification service</td></tr>
+<tr><td><strong>Biometrics / Face ID</strong></td><td>Optional</td><td>Enabling biometric unlock</td><td>Unlock vault without typing password</td><td>Device secure enclave / Keychain</td></tr>
+<tr><td><strong>Foreground service (location)</strong></td><td>Optional</td><td>Active GPS trip</td><td>Android requirement for background trip GPS</td><td>On device</td></tr>
+<tr><td><strong>Internet</strong></td><td>Yes</td><td>App launch, ads, IAP, policy check</td><td>AdMob, Play Billing, Firebase Hosting/Firestore, maps API (Pro)</td><td>Third parties as described in Privacy Policy</td></tr>
+<tr><td><strong>Vibrate</strong></td><td>Optional</td><td>Reminders</td><td>Notification alert</td><td>On device</td></tr>
+</tbody></table>
+<p>We do <strong>not</strong> request: contacts, SMS, call logs, microphone (unless OS bundles with camera), calendar, or broad storage access beyond media picker.</p>
+<h2>Prominent disclosures (Google Play requirement)</h2>
+<p>Before sensitive access, the app explains usage in context:</p>
+<ul>
+<li><strong>Trips / GPS:</strong> “Totus Secure Notes records trip mileage between patient visits for reimbursement logs.” (also in system location dialog)</li>
+<li><strong>Camera / photos:</strong> “Allow Totus Secure Notes to attach encrypted photos to notes.”</li>
+<li><strong>Notifications:</strong> “Remind you about note follow-ups.”</li>
+<li><strong>Biometrics:</strong> “Allow Totus Secure Notes to use Face ID / fingerprint to unlock your encrypted vault.”</li>
+</ul>
+<p>Navigation away from a permission dialog <strong>does not</strong> count as consent.</p>
+<h2>Background location</h2>
+<p>Background location is used <strong>only while a trip you started is actively recording</strong>. It is not used for advertising or analytics. You can use the app without granting background location; GPS mileage will stop if the app is killed unless foreground service is allowed.</p>
+<h2>Maps and third-party APIs (Pro)</h2>
+<p>If you enable <strong>Trip Planner Pro</strong> and enter a <strong>Google Maps</strong> or <strong>Mapbox</strong> API key, addresses you enter are sent to that provider for geocoding and driving distance. Billing and data handling are between you and the provider.</p>
+<h2>Revoking permissions</h2>
+<p>Change permissions anytime in <strong>Android Settings → Apps → Totus Secure Notes → Permissions</strong> or <strong>iOS Settings → Totus Secure Notes</strong>.</p>
+<p><strong>Related:</strong> <a href="https://totus--notes.web.app/privacy">Privacy Policy</a> · <a href="https://totus--notes.web.app/data-safety">Data safety summary</a></p>
+  <p class="meta"><a href="https://totus--notes.web.app/">All policies</a> · <a href="mailto:totuslife7@gmail.com">totuslife7@gmail.com</a></p>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Totus Secure Notes
 
-Encrypted, local-first notes app built with Expo. Phase 1 MVP includes encrypted note storage, template gallery, and a postpartum nursing form designed for copy/paste into clinical work software.
+Encrypted, local-first notes app built with Expo SDK 56. **v1.2.9** adds the Totus Assist hub, Note Assist, secure attachment lifecycle, template library, task digest with optional AI summary, Assist chips across tabs, local note reminders, and Template AI readiness fixes — plus store review mode, iOS multi-stop Google Maps routes, Settings → **Sync to desktop**, three-layer encryption, built-in clinical templates, on-device Template AI (Pro Lifetime), Plexia/EMR copy, and a read-only web vault viewer.
 
 **Expo project:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 
@@ -8,89 +8,77 @@ Encrypted, local-first notes app built with Expo. Phase 1 MVP includes encrypted
 
 ## Install on Android (no Expo Go required)
 
-This app uses **SDK 56**. If your Expo Go app from Google Play is outdated, you do **not** need Expo Go. Install the standalone APK instead:
+This app uses **SDK 56** with native modules (location, maps, notifications, on-device AI). Install a standalone build — not Expo Go:
 
 1. Open the [Expo builds page](https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds)
-2. Download the latest **production-apk** or **preview** build
-3. On your phone: Settings → Security → allow installs from unknown sources (or per-browser install permission)
-4. Open the downloaded `.apk` and install
+2. Download the latest **production-apk** (APK) or **production** (AAB for Play Store)
+3. On your phone: allow installs from unknown sources if sideloading APK
+4. Open the downloaded file and install
 
-For Google Play Store submission, upload the **production** profile `.aab` file in Google Play Console.
+## Documentation
 
-## Features
+Store legal docs, build guides, and monetization roadmap: **[docs/README.md](./docs/README.md)**
 
-- AES-256-GCM encryption with PBKDF2 key derivation (100,000 iterations)
-- Master password with secure verifier stored in `expo-secure-store`
-- Encrypted vault stored locally via `expo-file-system`
-- Postpartum nursing template with preview and clipboard export
-- Markdown starter templates (Daily Journal, Prayer Log)
+- [User Guide](./docs/USER_GUIDE.md)
+- [Privacy Policy](./docs/PRIVACY_POLICY.md)
+- [Terms & Conditions](./docs/TERMS_AND_CONDITIONS.md)
+- [Development & iOS/Android builds](./docs/DEVELOPMENT_AND_BUILDS.md)
+- [On-device AI](./docs/ON_DEVICE_AI.md)
+- [Changelog](./CHANGELOG.md)
+- [Store listing & release notes](./store/README.md)
+
+## Features (v1.2.9)
+
+- Three-layer encryption: Argon2id KDF, hardware-backed session key, envelope + HMAC on `.totus` exports
+- Master password with biometrics, show/hide password, strong password policy
+- Light / dark / system theme
+- Markdown notes, flags, local reminders, task digest, encrypted photo/audio/video attachments
+- **Secure attachments:** gallery scrub after encrypt, in-app viewer, multi-pass secure delete
+- **Note Assist** (Pro Lifetime): bulletize, shorten, expand, summarize on-device
+- **Totus Assist hub** (Settings → Totus Assist): model status, capabilities, troubleshooting
+- **Assist chips** on Notes, Templates, and Trips tabs
+- Postpartum nursing template (featured at top of Templates gallery) with manual weight fields
+- **Built-in briefcase templates** (home visit, wound care, psychosocial, discharge, intake)
+- **Template library** — curated public templates (metadata only); import locally
+- **Template Studio + Template AI** (Pro Lifetime): paste forms, on-device SmolLM2 field suggestions, review before save
+- **Copy for Plexia / EMR:** plain `Label: value` export from templates
+- **Sync to desktop:** Settings → export encrypted `.totus` bundle, transfer manually, open https://totus--notes.web.app/vault (read-only; not live cloud sync)
+- **Trips tab:** GPS mileage logging, up to 50 patient stops, Open in Google/Apple Maps (multi-stop, no API key)
+- **Trip Planner Pro:** driving route distance (OSRM/Nominatim), in-app OpenStreetMap preview (Pro Lifetime)
+- Store review builds unlock Pro for app reviewers (see `docs/STORE_REVIEW_ACCESS.md`)
+- Auto-lock, local audit log, clipboard timeout, screenshot blocking
 - Encrypted vault export/import (`.enc` files)
-
-## Development (optional)
-
-```bash
-npm install
-npx expo start
-```
-
-Expo Go only works if your Expo Go app supports SDK 56. Otherwise use a standalone APK/AAB build.
 
 ## Build commands
 
-Logged in as `totuslife` on EAS. Project is already linked.
-
 ```bash
-# Installable APK (sideload on any Android phone)
-npm run build:apk-prod
-
-# Google Play AAB (App Bundle)
-npm run build:aab
-
-# Quick test APK (internal)
-npm run build:apk
+npm run build:aab              # Google Play AAB (production)
+npm run build:apk-prod         # Installable APK (production)
+npm run build:store-review     # Play review AAB (Pro unlocked)
+npm run build:store-review-apk # Play review APK (Pro unlocked)
+npm run build:android:dev      # Dev client (for expo start --dev-client)
+npm run vault:prepare          # Export web build + copy to firebase/public/vault/
 ```
 
-Or directly:
+Download builds: https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
 
-```bash
-eas build --platform android --profile production-apk   # APK
-eas build --platform android --profile production       # AAB
-eas build --platform android --profile preview          # test APK
-```
+## Current version
 
-Download finished builds from: https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
-
-## Google Play submission
-
-1. Build AAB: `npm run build:aab`
-2. Download the `.aab` from the Expo builds page
-3. In [Google Play Console](https://play.google.com/console), create an app with package `com.totuslife.securenotes`
-4. Upload the AAB under **Release → Production** (or Internal testing first)
-5. Complete store listing, privacy policy, and content rating
-
-Optional automated submit (requires Google Play service account JSON):
-
-```bash
-eas submit --platform android --profile production
-```
-
-Place your service account key at `./google-play-service-account.json` (not committed to git).
+| Field | Value |
+|-------|--------|
+| Version | **1.2.9** |
+| Android versionCode | **38** |
+| Package | `com.totuslife.TotusSecureNotes` |
 
 ## Security Notes
 
 - Master password is never stored in plaintext
-- Session password exists in memory only while the vault is unlocked
-- Exported vault files remain encrypted at rest
-- No analytics or telemetry
-
-## Privacy Policy Template
-
-Totus Secure Notes:
-
-- Stores all note data locally on your device
-- Does not collect personal information
-- Does not use third-party analytics
-- Does not transmit note content unless you explicitly export/share an encrypted file
+- Trip addresses and GPS tracks are encrypted locally
+- Template AI and Note Assist run on-device only; no note content sent to Totus servers
+- Web vault decrypts in the browser only; no cloud upload of vault contents
+- Default Trip Planner routing uses Nominatim/OSRM (addresses go from device to OSM services)
+- Optional Google/Mapbox API keys (Advanced) stored in SecureStore on device only
+- No developer-operated note database or analytics
 
 ## License
 

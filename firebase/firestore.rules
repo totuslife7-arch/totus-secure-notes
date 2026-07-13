@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    /** Public policy documents — read-only from clients; updates via Admin SDK / CLI seed script only. */
+    match /policies/{policyId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

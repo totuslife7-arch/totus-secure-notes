@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Security — Totus Secure Notes</title>
+  <style>
+    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; line-height: 1.55; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: #111; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.5rem; }
+    h3 { font-size: 1rem; margin-top: 1.25rem; }
+    ul { padding-left: 1.25rem; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.95rem; margin: 1rem 0; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    a { color: #0b57d0; }
+    code { font-size: 0.9em; background: #f4f4f4; padding: 0 4px; border-radius: 3px; }
+    .meta { color: #555; font-size: 0.9rem; }
+    nav a { display: block; margin: 0.35rem 0; }
+  </style>
+</head>
+<body>
+  <p class="meta"><strong>Totus Secure Notes</strong> · Firebase Hosting · Built 2026-07-13</p>
+  <h1>Security — Totus Secure Notes</h1>
+<p><strong>Effective date:</strong> June 20, 2026</p>
+<p><strong>Last updated:</strong> July 11, 2026</p>
+<p><strong>App:</strong> Totus Secure Notes · <code>com.totuslife.TotusSecureNotes</code></p>
+<p><strong>Public URL:</strong> https://totus--notes.web.app/security</p>
+<p><strong>Contact:</strong> totuslife7@gmail.com</p>
+<h2>Summary</h2>
+<p>Totus Secure Notes is designed as a <strong>local-first encrypted vault</strong>. This Security Policy describes <strong>technical safeguards</strong>. The app is a <strong>productivity tool</strong>, not a certified medical device or HIPAA/PIPEDA-certified platform.</p>
+<h2>1. Three-layer encryption (v1.2.4+)</h2>
+<table><tbody>
+<tr><th>Layer</th><th>Method</th><th>Implementation</th></tr>
+<tr><td><strong>1 — Key derivation</strong></td><td>Argon2id (memory-hard KDF)</td><td><code>@noble/hashes/argon2.js</code> — new vaults and saves after unlock</td></tr>
+<tr><td><strong>2 — Hardware key wrap</strong></td><td>Session DEK in Secure Enclave / Android Keystore</td><td><code>expo-secure-store</code> via <code>services/keyWrap.ts</code> — DEK not kept plaintext in app storage</td></tr>
+<tr><td><strong>3 — Envelope + integrity</strong></td><td>Per-vault random DEK, AES-256-GCM, HMAC on <code>.totus</code> exports</td><td><code>services/encryption.ts</code>, <code>services/vaultBundle.ts</code></td></tr>
+</tbody></table>
+<h3>Legacy migration</h3>
+<p>Vaults created before v1.2.4 use <strong>PBKDF2</strong> (100,000 iterations) with direct key encryption (<code>EncryptedPayload</code> v1). These vaults <strong>decrypt normally</strong>. On the next save (or password change), data is re-encrypted with <strong>Argon2id + envelope</strong> (<code>EncryptedPayload</code> v2).</p>
+<p>KDF parameters (salt, Argon2 <code>t</code>/<code>m</code>/<code>p</code>) are stored in the encrypted payload metadata.</p>
+<h3>Web vault viewer</h3>
+<p>The read-only browser path at <code>/vault</code> uses <strong>password-only</strong> envelope decryption. Hardware key wrap (Layer 2) is not available on web — this is expected.</p>
+<p>#### What the web vault protects</p>
+<ul>
+<li><code>.totus</code> bundles remain encrypted in transit (HTTPS) until you import them locally</li>
+<li>Decryption runs <strong>only in your browser</strong> — Totus servers do not receive vault contents or your master password</li>
+<li>Decrypted data is kept <strong>in memory only</strong> (not written to localStorage, sessionStorage, IndexedDB, or URL parameters)</li>
+<li>Session scrubs on <strong>Lock now</strong>, idle timeout (5 minutes), tab hide, and page unload</li>
+<li>Firebase Hosting serves <code>/vault/**</code> with <code>Cache-Control: no-store</code> and a baseline Content-Security-Policy</li>
+</ul>
+<p>#### What the web vault cannot protect</p>
+<ul>
+<li><strong>Malware, browser extensions, or compromised OS</strong> that read screen, memory, or clipboard</li>
+<li><strong>Screen capture</strong> or shoulder-surfing on shared displays</li>
+<li><strong>Clipboard exposure</strong> — copied text is visible to the OS until cleared (auto-clear after ~60s on web)</li>
+<li><strong>Browser memory</strong> until you lock or close the tab — we cannot zeroize all JS heap pages</li>
+<li><strong>Shared or public computers</strong> — do not use the web vault there</li>
+</ul>
+<p>#### Recommended use</p>
+<ul>
+<li><strong>Firefox or DuckDuck Go private/incognito window</strong> on desktop; close the tab when finished</li>
+<li>On Android, the app can try to open DuckDuck Go via intent when installed; desktop and iOS cannot be forced into a specific browser or private mode</li>
+<li>Treat <code>.totus</code> exports like sensitive backups; do not leave them on unsecured drives</li>
+</ul>
+<p>This viewer is a <strong>productivity tool</strong>, not HIPAA/PIPEDA-certified infrastructure.</p>
+<h2>2. Encryption details</h2>
+<table><tbody>
+<tr><th>Component</th><th>Method</th></tr>
+<tr><td>Vault file</td><td>AES-256-GCM</td></tr>
+<tr><td>Key derivation (new)</td><td>Argon2id (default: t=3, m=16384 KiB, p=1)</td></tr>
+<tr><td>Key derivation (legacy)</td><td>PBKDF2-SHA256 (100,000 iterations)</td></tr>
+<tr><td>Session</td><td>Derived keys zeroized on lock (<code>utils/zeroize.ts</code>)</td></tr>
+<tr><td>Attachments</td><td>Encrypted with vault session DEK</td></tr>
+<tr><td>Trip data</td><td>Separate encrypted store (<code>trips.enc</code>)</td></tr>
+<tr><td><code>.totus</code> bundle export</td><td>HMAC-SHA256 integrity tag (tamper detection)</td></tr>
+</tbody></table>
+<p>We <strong>cannot</strong> recover your master password or decrypt your vault.</p>
+<h2>3. Authentication</h2>
+<ul>
+<li>Master password (strong policy: 12+ chars, mixed case, number, symbol)</li>
+<li>Optional <strong>biometric unlock</strong> (device Keychain / Keystore)</li>
+<li>Auto-lock after configurable idle time</li>
+<li>Local <strong>audit log</strong> (encrypted) of security events — unlock/lock, export, clipboard, templates, biometrics, failed attempts</li>
+</ul>
+<h2>4. Device protections</h2>
+<ul>
+<li>Optional <strong>screenshot blocking</strong> while vault unlocked (<code>expo-screen-capture</code>)</li>
+<li><strong>Clipboard timeout</strong> for copied note text</li>
+<li>No cloud sync of plaintext notes</li>
+</ul>
+<h2>5. Template AI (Pro Lifetime)</h2>
+<ul>
+<li>Model weights downloaded on demand; inference on-device via <code>llama.rn</code></li>
+<li>No vault content uploaded for AI suggestions</li>
+<li>User must review all AI-suggested fields before save</li>
+</ul>
+<h2>6. Web vault export (desktop access)</h2>
+<ul>
+<li>Settings → <strong>Sync to desktop</strong> — manual export workflow; <strong>not live cloud sync</strong></li>
+<li><code>.totus</code> bundles are encrypted; decryption in browser only at <strong>https://totus--notes.web.app/vault</strong></li>
+<li>v2 bundles include HMAC integrity — tampered files are rejected</li>
+<li>Read-only viewer; no server-side vault storage</li>
+<li>In-memory session scrub on lock, idle, tab hide, and unload — see <strong>Web vault viewer</strong> above for limitations</li>
+<li>Treat exports like sensitive backups</li>
+</ul>
+<h2>7. Distribution integrity</h2>
+<p>Production builds are distributed via <strong>Google Play</strong> (AAB) and signed with our upload key registered in Play App Signing. We may verify install source using <strong>Google Play Integrity API</strong> to reduce piracy and protect IAP.</p>
+<p>We do not operate a backend that stores these tokens linked to your notes.</p>
+<h2>8. Third-party SDK security</h2>
+<p>SDKs (Firebase, AdMob, expo-iap, maps) are chosen from reputable providers and configured to <strong>minimize data collection</strong>. See <a href="https://totus--notes.web.app/privacy">Privacy Policy</a> and <a href="https://totus--notes.web.app/data-safety">Data safety summary</a>.</p>
+<h2>9. Export and backup risk</h2>
+<p>Encrypted exports (<code>.enc</code>, <code>.totus</code>) are only as secure as where you store them. Protect backup files like passwords.</p>
+<h2>10. Reporting vulnerabilities</h2>
+<p>Email <strong>totuslife7@gmail.com</strong> with subject “Security report — Totus Secure Notes”. We appreciate responsible disclosure.</p>
+<h2>11. Limitations</h2>
+<p>No system is 100% secure. You are responsible for device security, password choice, and compliance with workplace policies (e.g. PHI handling).</p>
+<p><strong>Organizational compliance</strong> (HIPAA BAA, PIPEDA accountability programs, FOIPPA records management) requires policies, training, and legal review beyond what any app alone can provide.</p>
+<p><strong>Related:</strong> <a href="https://totus--notes.web.app/privacy">Privacy Policy</a> · [Compliance roadmap](COMPLIANCE_ROADMAP.md) · [Health app review prep](HEALTH_APP_REVIEW.md) · <a href="https://totus--notes.web.app/permissions">Permissions</a></p>
+  <p class="meta"><a href="https://totus--notes.web.app/">All policies</a> · <a href="mailto:totuslife7@gmail.com">totuslife7@gmail.com</a></p>
+</body>
+</html>

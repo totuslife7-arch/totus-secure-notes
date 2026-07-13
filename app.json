@@ -2,19 +2,42 @@
   "expo": {
     "name": "Totus Secure Notes",
     "slug": "totus-secure-notes",
-    "version": "1.0.0",
+    "version": "1.2.11",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "totussecurenotes",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.totuslife.securenotes"
+      "bundleIdentifier": "com.totuslife.TotusSecureNotes",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Totus Secure Notes records trip mileage between patient visits for reimbursement logs.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Totus Secure Notes records trip mileage while the app is in the background during an active visit day.",
+        "UIBackgroundModes": [
+          "location"
+        ],
+        "LSApplicationQueriesSchemes": [
+          "comgooglemaps",
+          "maps"
+        ]
+      }
     },
     "android": {
-      "package": "com.totuslife.securenotes",
-      "versionCode": 4,
+      "package": "com.totuslife.TotusSecureNotes",
+      "versionCode": 43,
+      "googleServicesFile": "./google-services.json",
+      "softwareKeyboardLayoutMode": "resize",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -45,7 +68,67 @@
           "faceIDPermission": "Allow Totus Secure Notes to use Face ID to unlock your encrypted vault."
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#2563eb"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Totus Secure Notes to attach encrypted photos to notes.",
+          "cameraPermission": "Allow Totus Secure Notes to capture encrypted photos for notes."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Totus Secure Notes to remove imported photos from your gallery after encrypting them into your vault.",
+          "savePhotosPermission": "Allow Totus Secure Notes to manage encrypted note attachments.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Totus Secure Notes to record trip mileage for patient visit reimbursement.",
+          "locationWhenInUsePermission": "Allow Totus Secure Notes to record trip mileage between patient visits.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraProguardRules": "-keep class com.google.firebase.** { *; }\n-keep class com.google.android.gms.** { *; }\n-dontwarn com.google.firebase.**\n-keep class com.rnllama.** { *; }"
+          }
+        }
+      ],
+      "./plugins/withPlayServicesAdsPin.js",
+      [
+        "llama.rn",
+        {
+          "enableEntitlements": true,
+          "entitlementsProfile": "production",
+          "forceCxx20": true,
+          "enableOpenCL": true
+        }
+      ],
+      "expo-iap",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/analytics",
+      "@react-native-firebase/crashlytics"
     ],
     "experiments": {
       "typedRoutes": true

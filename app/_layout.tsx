@@ -1,16 +1,17 @@
 import { useFonts } from 'expo-font';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavigationThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import '../global.css';
 
+import { ThemeProvider, useAppTheme } from '@/context/ThemeContext';
+import { MonetizationProvider } from '@/context/MonetizationContext';
 import { VaultProvider } from '@/context/VaultContext';
-import { useColorScheme } from '@/components/useColorScheme';
+import { initializeFirebaseTelemetry } from '@/services/analytics';
 
-export {
-  ErrorBoundary,
-} from 'expo-router';
+export { ErrorBoundary } from 'expo-router';
 
 export const unstable_settings = {
   initialRouteName: '(tabs)',
@@ -30,6 +31,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      initializeFirebaseTelemetry().catch(() => undefined);
     }
   }, [loaded]);
 
@@ -38,21 +40,28 @@ export default function RootLayout() {
   }
 
   return (
-    <VaultProvider>
-      <RootLayoutNav />
-    </VaultProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <MonetizationProvider>
+          <VaultProvider>
+            <RootLayoutNav />
+          </VaultProvider>
+        </MonetizationProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const { isDark } = useAppTheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="vault" options={{ headerShown: false }} />
         <Stack.Screen name="note/[id]" options={{ title: 'Edit Note', presentation: 'card' }} />
       </Stack>
-    </ThemeProvider>
+    </NavigationThemeProvider>
   );
 }

@@ -2,6 +2,8 @@ export interface PostpartumFormData {
   visitDayWeek: string;
   birther: string;
   parent: string;
+  address: string;
+  addToTrip: boolean;
   gravida: string;
   para: string;
   deliveryDate: string;
@@ -28,7 +30,10 @@ export interface PostpartumFormData {
   phn: string;
   complications: string;
   bw: string;
+  lastVisitDate: string;
   previousWeight: string;
+  visitDate: string;
+  todaysWeight: string;
   tcbHours: string;
   tsbRisk: string;
   tsbDat: string;
@@ -50,6 +55,13 @@ export interface PostpartumFormData {
   ongoing2: string;
   appointmentDays: string;
   appointmentLocation: string;
+  linkedTripId?: string;
+  mileageSummary?: string;
+}
+
+function todayMdY(): string {
+  const d = new Date();
+  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
 }
 
 export function createEmptyPostpartumForm(): PostpartumFormData {
@@ -57,6 +69,8 @@ export function createEmptyPostpartumForm(): PostpartumFormData {
     visitDayWeek: '',
     birther: '',
     parent: '',
+    address: '',
+    addToTrip: false,
     gravida: '',
     para: '',
     deliveryDate: '',
@@ -83,7 +97,10 @@ export function createEmptyPostpartumForm(): PostpartumFormData {
     phn: '',
     complications: '',
     bw: '',
+    lastVisitDate: '',
     previousWeight: '',
+    visitDate: todayMdY(),
+    todaysWeight: '',
     tcbHours: '',
     tsbRisk: '',
     tsbDat: '',

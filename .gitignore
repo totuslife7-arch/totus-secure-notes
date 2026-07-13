@@ -35,8 +35,11 @@ yarn-error.*
 # local env files
 .env*.local
 
-# Play Store credentials (never commit)
+# Play Store / Firebase credentials (never commit)
 google-play-service-account.json
+firebase/service-account.json
+totus--notes-*.json
+*-firebase-adminsdk-*.json
 
 # typescript
 *.tsbuildinfo

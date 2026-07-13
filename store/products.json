@@ -1,0 +1,44 @@
+{
+  "description": "Product IDs must match Google Play Console and App Store Connect exactly.",
+  "androidPackage": "com.totuslife.TotusSecureNotes",
+  "iosBundleId": "com.totuslife.TotusSecureNotes",
+  "products": {
+    "pro_monthly": {
+      "type": "subscription",
+      "androidProductId": "pro_monthly",
+      "iosProductId": "pro_monthly",
+      "displayName": "Pro Monthly",
+      "description": "Remove banner ads. Subscribe monthly; cancel anytime in the store.",
+      "tier": "pro",
+      "grants": ["no_ads"]
+    },
+    "pro_lifetime": {
+      "type": "non_consumable",
+      "androidProductId": "pro_lifetime",
+      "iosProductId": "pro_lifetime",
+      "displayName": "Pro Lifetime",
+      "description": "One payment — no ads, Trip Planner Pro, Template Studio, Template AI, and all premium features forever.",
+      "tier": "pro",
+      "grants": ["no_ads", "premium_templates", "trip_planner", "template_studio", "template_ai"]
+    }
+  },
+  "promotions": {
+    "notes": "Configure intro offers and promo codes in Play Console / App Store Connect."
+  },
+  "ads": {
+    "enabledInFreeTier": true,
+    "androidAdMobAppId": "ca-app-pub-3940256099942544~3347511713",
+    "iosAdMobAppId": "ca-app-pub-3940256099942544~1458002511",
+    "bannerUnitIdAndroid": "ca-app-pub-3940256099942544/6300978111",
+    "bannerUnitIdIos": "ca-app-pub-3940256099942544/2934735716",
+    "notes": "Replace with production AdMob IDs before release. Current IDs are Google test units."
+  },
+  "entitlements": {
+    "pro_monthly": {
+      "grants": ["no_ads"]
+    },
+    "pro_lifetime": {
+      "grants": ["no_ads", "premium_templates", "trip_planner", "template_studio", "template_ai"]
+    }
+  }
+}

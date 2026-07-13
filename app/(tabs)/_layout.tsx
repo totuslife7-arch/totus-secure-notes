@@ -1,21 +1,36 @@
 import { SymbolView } from 'expo-symbols';
 import { Tabs } from 'expo-router';
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
+import { useAppTheme } from '@/context/ThemeContext';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { theme, isDark } = useAppTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
         name="index"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color }) => (
+            <SymbolView name={{ ios: 'house', android: 'home', web: 'home' }} tintColor={color} size={26} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="notes"
         options={{
           title: 'Notes',
           tabBarIcon: ({ color }) => (
@@ -34,9 +49,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="trips"
+        options={{
+          title: 'Trips',
+          tabBarIcon: ({ color }) => (
+            <SymbolView name={{ ios: 'car', android: 'directions_car', web: 'directions_car' }} tintColor={color} size={26} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <SymbolView name={{ ios: 'gearshape', android: 'settings', web: 'settings' }} tintColor={color} size={26} />
           ),

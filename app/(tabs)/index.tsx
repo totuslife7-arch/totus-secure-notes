@@ -1,21 +1,6 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Redirect } from 'expo-router';
 
-import AuthGate from '@/components/AuthGate';
-import NoteList from '@/components/NoteList';
-
-export default function NotesScreen() {
-  return (
-    <AuthGate title="Unlock Notes">
-      <View style={styles.container}>
-        <NoteList />
-      </View>
-    </AuthGate>
-  );
+/** Default tab entry — Home is the front door. */
+export default function TabsIndexRedirect() {
+  return <Redirect href={'/home' as never} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
