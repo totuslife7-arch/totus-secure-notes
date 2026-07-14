@@ -2,9 +2,9 @@
 
 Read the exact versioned docs at https://docs.expo.dev/versions/v56.0.0/ before writing any code.
 
-## Project: Totus Secure Notes (v1.2.12)
+## Project: Totus Secure Notes (v1.2.13)
 
-**Expo SDK 56** · **Package:** `com.totuslife.TotusSecureNotes` · **EAS owner:** `totuslife` · **Android versionCode:** 52
+**Expo SDK 56** · **Package:** `com.totuslife.TotusSecureNotes` · **EAS owner:** `totuslife` · **Android versionCode:** 54
 
 ### Architecture
 
@@ -14,7 +14,7 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v56.0.0/ before 
 - Web vault viewer (`app/vault/`, `services/vaultCrypto.web.ts`) — read-only browser decryption of `.totus` export at https://totus--notes.web.app/vault
 - Firebase client configs gitignored; EAS file secrets + `scripts/inject-firebase-config.mjs` for cloud builds
 
-### Key features (v1.2.12)
+### Key features (v1.2.13)
 
 | Area | Paths |
 |------|--------|

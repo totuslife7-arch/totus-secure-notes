@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AuthGate from '@/components/AuthGate';
@@ -56,6 +56,13 @@ function HomeContent() {
       <ScreenHeader
         title="Home"
         subtitle="Your encrypted vault — local-first, nothing in the cloud."
+        right={
+          <Image
+            source={require('@/assets/images/icon.png')}
+            style={styles.appIcon}
+            accessibilityLabel="Totus Secure Notes"
+          />
+        }
       />
 
       <ProUpgradeBanner context="home" />
@@ -142,6 +149,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appIcon: { width: 48, height: 48, borderRadius: 10 },
   vaultCard: { marginHorizontal: 16, borderRadius: 12, borderWidth: 1, padding: 14, marginBottom: 16, gap: 6 },
   sectionTitle: { fontSize: 16, fontWeight: '600', paddingHorizontal: 16, marginBottom: 8 },
   actionGrid: {

@@ -1,4 +1,4 @@
-# UI Navigation Tree — Totus Secure Notes v1.2.12
+# UI Navigation Tree — Totus Secure Notes v1.2.13
 
 Complete map of screens, tabs, settings controls, and deep links. Routes use Expo Router file-based paths.
 
@@ -31,6 +31,7 @@ Complete map of screens, tabs, settings controls, and deep links. Routes use Exp
 
 | Element | Action / destination |
 |---------|----------------------|
+| App icon | Header (right of title) |
 | Vault status chip | Shows unlock + task digest |
 | Pro upgrade banner | Opens paywall |
 | Totus Assist compact card | → `/settings/totus-ai` |
@@ -58,7 +59,7 @@ Complete map of screens, tabs, settings controls, and deep links. Routes use Exp
 | Preview toggle | Markdown preview |
 | Flag / Follow-up / Extra notes | Draft fields |
 | Note Assist chips | bulletize, shorten, expand, summarize |
-| **Photo** | Camera or gallery → encrypted attachment |
+| **Photo** | Camera or system photo picker → encrypted attachment |
 | **Import** | Gallery audio/video import |
 | **Voice memo recorder** | Record → encrypt → `voice_memo` attachment |
 | Attachment list | Tap view; Shred secure delete |
@@ -232,7 +233,7 @@ Hosted copy: https://totus--notes.web.app/vault
 | Template AI | EAS build, Pro/dev/review, model download, llama init |
 | Voice memos | Microphone permission, `expo-audio` |
 | GPS trips | Location permissions |
-| Photos | Camera / gallery permissions |
+| Photos | Camera / system photo picker permissions |
 
 ---
 

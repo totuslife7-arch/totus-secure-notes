@@ -6,6 +6,19 @@ All notable changes to Totus Secure Notes.
 
 
 
+## [1.2.13] — 2026-07-13
+
+### Fixed
+
+- **Google Play photo policy** — Removed `expo-media-library`; blocked `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO` in manifest; photos via system photo picker only
+- **Attachment import** — Audio and video import via document picker; no broad media-library access
+
+### Changed
+
+- **Gallery scrub removed** — Best-effort gallery deletion dropped (required broad media access incompatible with Play policy)
+- **Home screen** — App icon shown in header after vault unlock
+- Version **1.2.13** (Android versionCode **54**)
+
 ## [1.2.12] — 2026-07-13
 
 ### Added

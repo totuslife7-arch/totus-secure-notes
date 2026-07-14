@@ -1,4 +1,6 @@
-# Founder Follow-Up — Totus Secure Notes v1.2.12
+# Founder Follow-Up — Totus Secure Notes v1.2.13
+
+**Latest release:** v1.2.13 (versionCode 54) — Play photo policy fix. See [RELEASE_NOTES.md](../store/RELEASE_NOTES.md) v1.2.13 section.
 
 **After the Master Development Audit** — step-by-step actions for the founder.  
 **Audit report:** [AUDIT_REPORT.md](./AUDIT_REPORT.md)  

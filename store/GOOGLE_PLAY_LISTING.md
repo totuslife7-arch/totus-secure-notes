@@ -1,6 +1,6 @@
 # Google Play Store Listing — Totus Secure Notes
 
-**Version:** 1.2.12  
+**Version:** 1.2.13  
 **Package:** `com.totuslife.TotusSecureNotes`  
 **Category:** Productivity (recommended) or Medical (only if listing emphasizes templates carefully)  
 **Contact:** totuslife7@gmail.com
@@ -49,7 +49,7 @@ SECURITY
 • Strong password requirements for new vaults
 • Auto-lock when the app is in the background
 • Optional screenshot blocking while unlocked
-• Secure attachments: gallery scrub after encrypt, in-app viewer, multi-pass secure delete
+• Secure attachments: system photo picker (Android), document picker for audio/video, in-app viewer, multi-pass secure delete
 • Encrypted export/import backup files (.enc)
 • Sync to desktop: export encrypted .totus bundle, transfer manually, open web vault at totus--notes.web.app/vault (read-only; not live sync)
 • No developer-operated note database or analytics

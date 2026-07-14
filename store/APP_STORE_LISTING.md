@@ -1,6 +1,6 @@
 # Apple App Store Listing — Totus Secure Notes
 
-**Version:** 1.2.12  
+**Version:** 1.2.13  
 **Bundle ID:** `com.totuslife.TotusSecureNotes`  
 **Category:** Productivity  
 **Secondary category (optional):** Medical  
@@ -39,7 +39,7 @@ Secure notes for mobile work
 **Character count:** 169
 
 ```
-v1.2.12: SoFo Postpartum HV template, encrypted voice memos, About & Legal in Settings, Save/vault-locked alerts, and Template AI readiness fixes. On-device AI optional (Pro).
+v1.2.13: Google Play photo policy fix — system photo picker, document picker for audio/video, no broad gallery access. App icon on Home.
 ```
 
 ---
@@ -57,7 +57,7 @@ SECURE NOTE-TAKING
 • Master password plus optional Face ID / Touch ID unlock
 • Show or hide password while entering credentials
 • Light, dark, and system appearance
-• Encrypted photo, audio, and video attachments with gallery scrub and secure delete
+• Encrypted photo, audio, and video attachments via system picker; in-app viewer and secure delete
 • In-app attachment viewer with screenshot blocking
 • Export and import encrypted backup files
 
@@ -134,7 +134,7 @@ https://totus--notes.web.app/privacy
 
 See [../docs/APP_STORE_REQUIREMENTS.md](../docs/APP_STORE_REQUIREMENTS.md).
 
-**v1.2.12:** Data not collected by developer for notes. Location optional, on-device for GPS mileage. Voice memos and attachments local-only. Template AI and Note Assist on-device only.
+**v1.2.13:** Data not collected by developer for notes. Location optional, on-device for GPS mileage. Voice memos and attachments local-only. Photo picker only (no broad media access). Template AI and Note Assist on-device only.
 
 ---
 

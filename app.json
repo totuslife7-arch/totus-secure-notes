@@ -2,7 +2,7 @@
   "expo": {
     "name": "Totus Secure Notes",
     "slug": "totus-secure-notes",
-    "version": "1.2.12",
+    "version": "1.2.13",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "totussecurenotes",
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.totuslife.TotusSecureNotes",
-      "versionCode": 52,
+      "versionCode": 54,
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "resize",
       "permissions": [
@@ -38,6 +38,13 @@
         "ACCESS_BACKGROUND_LOCATION",
         "FOREGROUND_SERVICE",
         "FOREGROUND_SERVICE_LOCATION"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -82,14 +89,6 @@
         {
           "photosPermission": "Allow Totus Secure Notes to attach encrypted photos to notes.",
           "cameraPermission": "Allow Totus Secure Notes to capture encrypted photos for notes."
-        }
-      ],
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Allow Totus Secure Notes to remove imported photos from your gallery after encrypting them into your vault.",
-          "savePhotosPermission": "Allow Totus Secure Notes to manage encrypted note attachments.",
-          "isAccessMediaLocationEnabled": false
         }
       ],
       [

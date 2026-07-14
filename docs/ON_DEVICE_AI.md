@@ -7,7 +7,7 @@
 | **Hermes** | JavaScript engine bundled with React Native/Expo. Already in use. Not an AI model. |
 | **On-device AI** | Native `llama.rn` + SmolLM2-360M for Template AI and Note Assist. **Requires EAS/dev build — not Expo Go.** |
 
-## Capability matrix (v1.2.12)
+## Capability matrix (v1.2.13)
 
 | Feature | Where | Tech | Tier |
 |---------|-------|------|------|
@@ -113,6 +113,6 @@ See `docs/MASTER_GUI_ARCHITECT_PROMPT.md` and the Master AI Architect plan for r
 3. Settings → Totus Assist → download model (~240 MB Wi‑Fi)
 4. Template Studio → paste form → AI assist → review shows AI badge → save template
 5. Note editor → Note Assist → verify on-device edit
-6. Attach photo → confirm gallery scrub prompt/behavior; secure delete attachment
+6. Attach photo → confirm system picker flow; secure delete attachment
 
 Build: `eas build --profile store-review --platform android`

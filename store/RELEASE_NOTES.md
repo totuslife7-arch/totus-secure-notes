@@ -1,3 +1,58 @@
+# Release Notes — Totus Secure Notes v1.2.13
+
+Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
+
+| Field | Value |
+|-------|--------|
+| Version | **1.2.13** |
+| Android versionCode | **54** |
+| Build date | July 13, 2026 |
+| Package | `com.totuslife.TotusSecureNotes` |
+| Web vault URL | https://totus--notes.web.app/vault |
+| Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
+
+### EAS build URLs (v1.2.13)
+
+| Build | Profile | URL |
+|-------|---------|-----|
+| Android AAB (Play review) | `store-review` | _Pending — run `npm run build:store-review`_ |
+
+**EAS dashboard:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
+
+---
+
+## Google Play — Release notes (1.2.13)
+
+**Limit:** 500 characters per language (en-US below ≈ 380 chars)
+
+```
+What's new in 1.2.13:
+
+• Google Play photo policy fix — no broad gallery access; system photo picker for attachments
+• Audio and video import via document picker
+• Gallery scrub removed (was best-effort; required media permissions)
+• App icon on Home screen
+• Permissions and policy docs updated
+```
+
+---
+
+## Apple App Store — What's New (1.2.13)
+
+**Limit:** 4000 characters (en-US below ≈ 350 chars)
+
+```
+What's New in 1.2.13
+
+• Google Play photo policy compliance — system photo picker for attachments
+• Audio and video import via document picker
+• Gallery scrub removed for policy compliance
+• App icon on Home screen
+• Updated permissions and policy documentation
+```
+
+---
+
 # Release Notes — Totus Secure Notes v1.2.12
 
 Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.

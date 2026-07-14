@@ -1,4 +1,4 @@
-# User Guide — Totus Secure Notes (v1.2.12)
+# User Guide — Totus Secure Notes (v1.2.13)
 
 Totus Secure Notes is a **local-first encrypted notes app** for mobile work. Your vault stays on your device. This guide covers everyday use, premium features, and **desktop access** via manual export (not live cloud sync).
 
@@ -28,7 +28,7 @@ Settings → **Appearance** → Light, Dark, or System.
 
 - Tap **+** on the Notes tab to create a markdown note.
 - Use **flags**, **reminders**, **follow-up status**, and **extra notes** for workflow tracking.
-- Attach **encrypted photos, audio, video, or voice memos** from the note editor. **Voice memos** use the in-app recorder (microphone permission). After import, Totus **removes the original from your gallery** when the OS allows (best-effort per platform).
+- Attach **encrypted photos, audio, video, or voice memos** from the note editor. **Photos** use the system photo picker (Android) or library picker (iOS) — no broad gallery access. **Audio and video** import via the system document picker. **Voice memos** use the in-app recorder (microphone permission).
 - View attachments in-app only; screenshots are blocked while viewing. **Secure delete** shreds the encrypted vault copy.
 - **Note Assist** (Pro Lifetime): bulletize, shorten, expand, or summarize note text on-device. Rules fallback when AI unavailable.
 - Set **reminders** with an ISO date/time; Totus requests notification permission in context when you add one.
@@ -283,7 +283,7 @@ Hosted policies at https://totus--notes.web.app/
 - Privacy, Terms, Data deletion, Permissions, Data safety, Ads, Security, Legal disclaimer
 - **Web vault viewer:** https://totus--notes.web.app/vault
 
-**Support:** totuslife7@gmail.com (include app version from About & Legal — currently **1.2.12** / Android **49** — device model, OS — never send master password or unencrypted notes).
+**Support:** totuslife7@gmail.com (include app version from About & Legal — currently **1.2.13** / Android **54** — device model, OS — never send master password or unencrypted notes).
 
 **GitHub issues:** https://github.com/totuslife7-arch/totus-secure-notes/issues
 
@@ -303,4 +303,4 @@ See [DEVELOPMENT_AND_BUILDS.md](./DEVELOPMENT_AND_BUILDS.md) for full build matr
 
 ---
 
-*Last updated: July 13, 2026 · v1.2.12 · Android versionCode 52*
+*Last updated: July 13, 2026 · v1.2.13 · Android versionCode 54*

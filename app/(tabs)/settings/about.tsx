@@ -31,7 +31,7 @@ export default function AboutScreen() {
   );
   const [policyCheckStatus, setPolicyCheckStatus] = useState<string | null>(null);
 
-  const version = Constants.expoConfig?.version ?? '1.2.12';
+  const version = Constants.expoConfig?.version ?? '1.2.13';
   const versionCode = Constants.expoConfig?.android?.versionCode;
   const packageName =
     Platform.OS === 'android'

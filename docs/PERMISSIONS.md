@@ -22,14 +22,26 @@ This document explains why Totus Secure Notes requests each Android/iOS permissi
 | **Location (background)** | Optional | Active GPS trip recording | Continue mileage if app backgrounded during trip | Encrypted on device only |
 | **Microphone** | Optional | Recording voice memo in note editor | Encrypted voice memo attachment | Encrypted on device only |
 | **Camera** | Optional | Adding photo attachment | Capture encrypted photo for a note | Encrypted on device only |
-| **Photos / media library** | Optional | Adding photo attachment | Import encrypted photo for a note | Encrypted on device only |
+| **Photos / media library** | Optional | Adding photo attachment | System photo picker (Android) / library picker (iOS) — no `READ_MEDIA_*` permissions | Encrypted on device only |
+| **Documents (audio/video)** | Optional | Adding audio or video attachment | System document picker | Encrypted on device only |
 | **Notifications** | Optional | Setting a note reminder | Local reminder alerts | On device; via OS notification service |
 | **Biometrics / Face ID** | Optional | Enabling biometric unlock | Unlock vault without typing password | Device secure enclave / Keychain |
 | **Foreground service (location)** | Optional | Active GPS trip | Android requirement for background trip GPS | On device |
 | **Internet** | Yes | App launch, ads, IAP, policy check | AdMob, Play Billing, Firebase Hosting/Firestore, maps API (Pro) | Third parties as described in Privacy Policy |
 | **Vibrate** | Optional | Reminders | Notification alert | On device |
 
-We do **not** request: contacts, SMS, call logs, calendar, or broad storage access beyond media picker. Microphone is used **only** when you tap Record on a voice memo in the note editor.
+We do **not** request: contacts, SMS, call logs, calendar, `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO`, or broad storage access. Microphone is used **only** when you tap Record on a voice memo in the note editor.
+
+---
+
+## Photo and media policy (v1.2.13)
+
+To comply with [Google Play photo and video permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180):
+
+- **Android photos** — system photo picker only (`expo-image-picker`); manifest blocks `READ_MEDIA_IMAGES` and `READ_MEDIA_VIDEO`
+- **Audio / video import** — system document picker (`expo-document-picker`); no media-library scanning
+- **Gallery scrub removed** — prior best-effort deletion of originals after encrypt required broad media access; removed in v1.2.13
+- **`expo-media-library` removed** — no dependency on broad gallery APIs
 
 ---
 

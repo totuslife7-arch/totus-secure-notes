@@ -2,7 +2,7 @@
 
 **App:** Totus Secure Notes  
 **Package / Bundle ID:** `com.totuslife.TotusSecureNotes`  
-**Version:** 1.2.12 (Android versionCode **52**)  
+**Version:** 1.2.13 (Android versionCode **54**)  
 **Privacy policy:** https://totus--notes.web.app/privacy
 
 Use this document when submitting builds for Google Play and Apple App Store review.

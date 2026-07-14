@@ -37,6 +37,10 @@ Use these **public HTTPS links** in Google Play Console, App Store Connect, and 
 
 ---
 
+## v1.2.13 policy updates
+
+Google Play photo policy compliance: no `READ_MEDIA_IMAGES` / `READ_MEDIA_VIDEO`; system photo picker for attachments; audio/video via document picker; gallery scrub removed; `expo-media-library` removed. Permissions and privacy docs updated.
+
 ## v1.2.12 policy updates
 
 SoFo Postpartum HV clinical template, encrypted **voice memos** (microphone permission), Settings → **About & Legal** hub (policies + tester unlock). Template AI readiness gated on GGUF verification. Firebase client configs removed from git — hosted policy URLs unchanged.

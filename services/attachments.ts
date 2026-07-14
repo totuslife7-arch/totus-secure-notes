@@ -1,6 +1,7 @@
+import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
+import { Platform } from 'react-native';
 
 import { appendAuditEvent } from '@/services/auditLog';
 import { secureDeleteFile } from '@/services/secureDelete';
@@ -14,7 +15,7 @@ import { base64ToBytes, bytesToBase64 } from '@/utils/base64';
 
 export type AttachmentPickResult = {
   attachment: EncryptedAttachment;
-  /** True when source was removed from device gallery (best-effort). */
+  /** Legacy: gallery scrub removed for Play policy compliance (photo picker only). */
   sourceScrubbed: boolean;
 };
 
@@ -38,23 +39,6 @@ async function deleteTempFile(uri: string): Promise<void> {
     }
   } catch {
     // Best-effort temp cleanup
-  }
-}
-
-/** Remove asset from device gallery when assetId is known. Best-effort per platform. */
-async function scrubGalleryAsset(assetId: string | null | undefined): Promise<boolean> {
-  if (!assetId) {
-    return false;
-  }
-  try {
-    const permission = await MediaLibrary.requestPermissionsAsync();
-    if (!permission.granted) {
-      return false;
-    }
-    await MediaLibrary.deleteAssetsAsync([assetId]);
-    return true;
-  } catch {
-    return false;
   }
 }
 
@@ -190,17 +174,11 @@ export async function pickAndEncryptPhoto(
       'image/jpeg',
     );
 
-    const sourceScrubbed = await scrubGalleryAsset(asset.assetId);
-
     if (auditPassword) {
-      await appendAuditEvent(
-        auditPassword,
-        'attachment_add',
-        `${attachment.type}:${attachment.id}${sourceScrubbed ? ':gallery_scrubbed' : ''}`,
-      );
+      await appendAuditEvent(auditPassword, 'attachment_add', `${attachment.type}:${attachment.id}`);
     }
 
-    return { attachment, sourceScrubbed };
+    return { attachment, sourceScrubbed: false };
   } catch {
     await deleteTempFile(tempUri);
     return null;
@@ -212,9 +190,11 @@ export async function pickAndEncryptPhotoFromLibrary(
   noteId: string,
   auditPassword?: string,
 ): Promise<AttachmentPickResult | null> {
-  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (!permission.granted) {
-    return null;
+  if (Platform.OS === 'ios') {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      return null;
+    }
   }
 
   const result = await ImagePicker.launchImageLibraryAsync({
@@ -240,17 +220,11 @@ export async function pickAndEncryptPhotoFromLibrary(
       'image/jpeg',
     );
 
-    const sourceScrubbed = await scrubGalleryAsset(asset.assetId);
-
     if (auditPassword) {
-      await appendAuditEvent(
-        auditPassword,
-        'attachment_add',
-        `${attachment.type}:${attachment.id}${sourceScrubbed ? ':gallery_scrubbed' : ''}`,
-      );
+      await appendAuditEvent(auditPassword, 'attachment_add', `${attachment.type}:${attachment.id}`);
     }
 
-    return { attachment, sourceScrubbed };
+    return { attachment, sourceScrubbed: false };
   } catch {
     await deleteTempFile(tempUri);
     return null;
@@ -262,46 +236,34 @@ export async function pickAndEncryptAudio(
   noteId: string,
   auditPassword?: string,
 ): Promise<AttachmentPickResult | null> {
-  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (!permission.granted) {
-    return null;
-  }
-
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['videos', 'images'],
-    quality: 1,
+  const result = await DocumentPicker.getDocumentAsync({
+    type: ['audio/*', 'video/*'],
+    copyToCacheDirectory: true,
   });
 
   if (result.canceled || !result.assets?.[0]?.uri) {
     return null;
   }
 
-  const asset = result.assets[0];
-  const tempUri = asset.uri;
-  const isVideo = (asset.mimeType ?? '').startsWith('video/');
+  const file = result.assets[0];
+  const tempUri = file.uri;
+  const isVideo = (file.mimeType ?? '').startsWith('video/');
   const type: EncryptedAttachment['type'] = isVideo ? 'video' : 'audio';
 
   try {
-    const attachment = await encryptAssetToVault(
+    const attachment = await encryptFileUriToVault(
       password,
       noteId,
-      asset,
+      tempUri,
       type,
-      isVideo ? `video_${Date.now()}.mp4` : `audio_${Date.now()}.m4a`,
-      isVideo ? 'video/mp4' : 'audio/mp4',
+      file.name ?? (isVideo ? `video_${Date.now()}.mp4` : `audio_${Date.now()}.m4a`),
+      file.mimeType ?? (isVideo ? 'video/mp4' : 'audio/mp4'),
+      auditPassword,
     );
-
-    const sourceScrubbed = await scrubGalleryAsset(asset.assetId);
-
-    if (auditPassword) {
-      await appendAuditEvent(
-        auditPassword,
-        'attachment_add',
-        `${attachment.type}:${attachment.id}${sourceScrubbed ? ':gallery_scrubbed' : ''}`,
-      );
+    if (!attachment) {
+      return null;
     }
-
-    return { attachment, sourceScrubbed };
+    return { attachment, sourceScrubbed: false };
   } finally {
     await deleteTempFile(tempUri);
   }

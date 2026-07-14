@@ -121,7 +121,7 @@ We may use **Google Play Integrity API** on-device to verify app licensing. Inte
 Per Google Play requirements, the app shows runtime permission dialogs **before** accessing:
 
 - **Location** — for GPS trip mileage (with explanation in the Trips tab)  
-- **Camera / photos** — for encrypted note attachments  
+- **Camera / photos** — for encrypted note attachments (system photo picker on Android; no broad media-library access)  
 - **Microphone** — for encrypted voice memos in notes (optional)  
 - **Notifications** — for note reminders  
 - **Biometrics** — optional unlock convenience  
