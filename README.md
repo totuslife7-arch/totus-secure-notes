@@ -1,6 +1,6 @@
 # Totus Secure Notes
 
-Encrypted, local-first notes app built with Expo SDK 56. **v1.2.13** fixes Google Play photo policy compliance (system photo picker, no broad media access), removes gallery scrub, and adds the app icon on Home — plus SoFo Postpartum HV, encrypted voice memos, Totus Assist, Note Assist, secure attachments, Template Studio AI, trip planner, and read-only web vault at https://totus--notes.web.app/vault.
+Encrypted, local-first notes app built with Expo SDK 56. **v1.2.14** hardens Google Play photo policy compliance (GMS Photo Picker backport, no `READ_MEDIA_*` permissions) — plus SoFo Postpartum HV, encrypted voice memos, Totus Assist, Note Assist, secure attachments, Template Studio AI, trip planner, and read-only web vault at https://totus--notes.web.app/vault.
 
 **Expo project:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 
@@ -27,7 +27,7 @@ Store legal docs, build guides, and monetization roadmap: **[docs/README.md](./d
 - [Changelog](./CHANGELOG.md)
 - [Store listing & release notes](./store/README.md)
 
-## Features (v1.2.13)
+## Features (v1.2.14)
 
 - Three-layer encryption: Argon2id KDF, hardware-backed session key, envelope + HMAC on `.totus` exports
 - Master password with biometrics, show/hide password, strong password policy
@@ -67,8 +67,8 @@ Download builds: https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 
 | Field | Value |
 |-------|--------|
-| Version | **1.2.13** |
-| Android versionCode | **54** |
+| Version | **1.2.14** |
+| Android versionCode | **56** |
 | Package | `com.totuslife.TotusSecureNotes` |
 
 ## Security Notes

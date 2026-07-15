@@ -2,7 +2,7 @@
 
 **App:** Totus Secure Notes  
 **Package / Bundle ID:** `com.totuslife.TotusSecureNotes`  
-**Version:** 1.2.13 (Android versionCode **54**)  
+**Version:** 1.2.14 (Android versionCode **56**)  
 **Privacy policy:** https://totus--notes.web.app/privacy
 
 Use this document when submitting builds for Google Play and Apple App Store review.
@@ -154,7 +154,7 @@ If reviewers need to test purchase flow instead of pre-unlocked Pro:
 | Template Studio | Templates tab | Create / edit custom templates |
 | Template AI | Template Studio → paste flow | On-device model download + field suggestions (device-dependent) |
 | Template library | Templates → Template library | Curated imports; local review only |
-| Secure attachments | Note editor | Gallery scrub, in-app viewer, secure delete |
+| Secure attachments | Note editor | System photo picker (Android), document picker, in-app viewer, secure delete |
 | Local reminders | Note editor | Set reminder; notification permission in context |
 | Trip Planner Pro | Trips tab | Driving routes, in-app OSM map, external Google/Apple Maps (no API key) |
 | Built-in templates | Templates | Home visit, wound care, etc. |

@@ -1,6 +1,6 @@
 # Google Play Store Listing — Totus Secure Notes
 
-**Version:** 1.2.13  
+**Version:** 1.2.14  
 **Package:** `com.totuslife.TotusSecureNotes`  
 **Category:** Productivity (recommended) or Medical (only if listing emphasizes templates carefully)  
 **Contact:** totuslife7@gmail.com

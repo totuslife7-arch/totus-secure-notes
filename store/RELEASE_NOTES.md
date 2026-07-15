@@ -1,3 +1,59 @@
+# Release Notes — Totus Secure Notes v1.2.14
+
+Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
+
+| Field | Value |
+|-------|--------|
+| Version | **1.2.14** |
+| Android versionCode | **56** (local; EAS auto-increment may apply) |
+| Build date | July 15, 2026 |
+| Package | `com.totuslife.TotusSecureNotes` |
+| Web vault URL | https://totus--notes.web.app/vault |
+| Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
+
+### EAS build URLs (v1.2.14)
+
+| Build | Profile | URL |
+|-------|---------|-----|
+| Android AAB (Play review) | `store-review` | _Pending — run `npm run build:store-review -- --non-interactive`_ |
+
+**AAB artifact:** _Pending — fill after build completes_
+
+**EAS dashboard:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
+
+---
+
+## Google Play — Release notes (1.2.14)
+
+**Limit:** 500 characters per language (en-US below ≈ 380 chars)
+
+```
+What's new in 1.2.14:
+
+• Android Photo Picker GMS backport for older devices — no READ_MEDIA permissions
+• Manifest hardened: READ_MEDIA_IMAGES/VIDEO stripped via config plugin
+• Play photo permissions declaration doc for Console review
+• System photo picker + document picker for attachments (unchanged from 1.2.13)
+• Permissions and policy docs updated
+```
+
+---
+
+## Apple App Store — What's New (1.2.14)
+
+**Limit:** 4000 characters (en-US below ≈ 350 chars)
+
+```
+What's New in 1.2.14
+
+• Android Photo Picker compliance patch — GMS backport, no broad gallery access
+• READ_MEDIA permissions stripped from manifest
+• Updated Play photo permissions declaration and hosted policy docs
+• System photo picker for attachments; document picker for audio/video
+```
+
+---
+
 # Release Notes — Totus Secure Notes v1.2.13
 
 Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
@@ -5,7 +61,7 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 | Field | Value |
 |-------|--------|
 | Version | **1.2.13** |
-| Android versionCode | **54** |
+| Android versionCode | **55** (EAS auto-increment from local 54) |
 | Build date | July 13, 2026 |
 | Package | `com.totuslife.TotusSecureNotes` |
 | Web vault URL | https://totus--notes.web.app/vault |
@@ -15,7 +71,9 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 
 | Build | Profile | URL |
 |-------|---------|-----|
-| Android AAB (Play review) | `store-review` | _Pending — run `npm run build:store-review`_ |
+| Android AAB (Play review) | `store-review` | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/4852d23b-24bd-4ff2-8fcb-4ac9a37523f9 |
+
+**AAB artifact:** https://expo.dev/artifacts/eas/JX3PiChbVPY9T1ZYRw2aK6_W6bgMGitEf0XC7eLGdzk.aab
 
 **EAS dashboard:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
 

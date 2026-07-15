@@ -1,6 +1,6 @@
 # Policy Index — Totus Secure Notes (Play Store URLs)
 
-**Last updated:** July 13, 2026  
+**Last updated:** July 15, 2026  
 **Base URL:** https://totus--notes.web.app
 
 Use these **public HTTPS links** in Google Play Console, App Store Connect, and in-app Settings.
@@ -36,6 +36,10 @@ Use these **public HTTPS links** in Google Play Console, App Store Connect, and 
 | **Web vault viewer** | https://totus--notes.web.app/vault | Read-only `.totus` import (not live sync) |
 
 ---
+
+## v1.2.14 policy updates
+
+Android Photo Picker GMS backport (`plugins/withAndroidPhotoPicker.js`); `READ_MEDIA_*` stripped from manifest; Play photo permissions declaration doc. No broad gallery access — system photo picker + document picker only. Gallery scrub removed (v1.2.13+).
 
 ## v1.2.13 policy updates
 

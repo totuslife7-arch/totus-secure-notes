@@ -19,10 +19,10 @@
   </style>
 </head>
 <body>
-  <p class="meta"><strong>Totus Secure Notes</strong> · Firebase Hosting · Built 2026-07-14</p>
+  <p class="meta"><strong>Totus Secure Notes</strong> · Firebase Hosting · Built 2026-07-15</p>
   <h1>Permissions — Totus Secure Notes</h1>
 <p><strong>Effective date:</strong> June 20, 2026</p>
-<p><strong>Last updated:</strong> July 13, 2026</p>
+<p><strong>Last updated:</strong> July 15, 2026</p>
 <p><strong>App:</strong> Totus Secure Notes · <code>com.totuslife.TotusSecureNotes</code></p>
 <p><strong>Public URL:</strong> https://totus--notes.web.app/permissions</p>
 <p><strong>Contact:</strong> totuslife7@gmail.com</p>
@@ -44,12 +44,12 @@
 <tr><td><strong>Vibrate</strong></td><td>Optional</td><td>Reminders</td><td>Notification alert</td><td>On device</td></tr>
 </tbody></table>
 <p>We do <strong>not</strong> request: contacts, SMS, call logs, calendar, <code>READ_MEDIA_IMAGES</code>, <code>READ_MEDIA_VIDEO</code>, or broad storage access. Microphone is used <strong>only</strong> when you tap Record on a voice memo in the note editor.</p>
-<h2>Photo and media policy (v1.2.13)</h2>
-<p>To comply with <a href="https://support.google.com/googleplay/android-developer/answer/14115180">Google Play photo and video permissions policy</a>:</p>
+<h2>Photo and media policy (v1.2.14)</h2>
+<p>To comply with <a href="https://support.google.com/googleplay/android-developer/answer/14115180">Google Play photo and video permissions policy</a> and the <a href="https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html">Android Photo Picker</a>:</p>
 <ul>
-<li><strong>Android photos</strong> — system photo picker only (<code>expo-image-picker</code>); manifest blocks <code>READ_MEDIA_IMAGES</code> and <code>READ_MEDIA_VIDEO</code></li>
+<li><strong>Android photos</strong> — system <strong>Photo Picker</strong> via <code>expo-image-picker</code> (no <code>READ_MEDIA_*</code>); Google Play services <strong>GMS backport</strong> via <code>plugins/withAndroidPhotoPicker.js</code> (v1.2.14)</li>
 <li><strong>Audio / video import</strong> — system document picker (<code>expo-document-picker</code>); no media-library scanning</li>
-<li><strong>Gallery scrub removed</strong> — prior best-effort deletion of originals after encrypt required broad media access; removed in v1.2.13</li>
+<li><strong>Gallery scrub removed</strong> — prior best-effort deletion of originals after encrypt required broad media access; removed in v1.2.13+</li>
 <li><strong><code>expo-media-library</code> removed</strong> — no dependency on broad gallery APIs</li>
 </ul>
 <h2>Prominent disclosures (Google Play requirement)</h2>

@@ -1,7 +1,7 @@
 # Permissions — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** July 13, 2026  
+**Last updated:** July 15, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/permissions  
 **Contact:** totuslife7@gmail.com
@@ -34,13 +34,13 @@ We do **not** request: contacts, SMS, call logs, calendar, `READ_MEDIA_IMAGES`, 
 
 ---
 
-## Photo and media policy (v1.2.13)
+## Photo and media policy (v1.2.14)
 
-To comply with [Google Play photo and video permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180):
+To comply with [Google Play photo and video permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180) and the [Android Photo Picker](https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html):
 
-- **Android photos** — system photo picker only (`expo-image-picker`); manifest blocks `READ_MEDIA_IMAGES` and `READ_MEDIA_VIDEO`
+- **Android photos** — system **Photo Picker** via `expo-image-picker` (no `READ_MEDIA_*`); Google Play services **GMS backport** via `plugins/withAndroidPhotoPicker.js` (v1.2.14)
 - **Audio / video import** — system document picker (`expo-document-picker`); no media-library scanning
-- **Gallery scrub removed** — prior best-effort deletion of originals after encrypt required broad media access; removed in v1.2.13
+- **Gallery scrub removed** — prior best-effort deletion of originals after encrypt required broad media access; removed in v1.2.13+
 - **`expo-media-library` removed** — no dependency on broad gallery APIs
 
 ---

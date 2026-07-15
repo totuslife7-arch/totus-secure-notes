@@ -35,8 +35,8 @@ Install the **development** build on your device first (see build commands below
 
 | | |
 |--|--|
-| **Version** | 1.2.13 |
-| **Android versionCode** | 54 |
+| **Version** | 1.2.14 |
+| **Android versionCode** | 56 |
 | **Package** | com.totuslife.TotusSecureNotes |
 
 ## Developer unlock (testing only — not for store listings)

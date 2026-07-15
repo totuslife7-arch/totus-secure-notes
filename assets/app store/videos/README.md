@@ -1,7 +1,54 @@
-# Google Play — Background Location Video
+# Google Play — Permission demonstration videos
+
+All videos: **1080×1920** portrait · **MP4** · upload to YouTube as **Unlisted**.
+
+---
+
+## Media playback (`FOREGROUND_SERVICE_MEDIA_PLAYBACK`)
+
+**File:** `google-play-foreground-service-media-playback.mp4`  
+**Duration:** ~35 seconds
+
+Regenerate:
+```bash
+python scripts/generate_media_playback_video.py
+```
+
+### What the video shows
+
+1. **Note editor** — Record encrypted voice memo  
+2. **Disclosure** — why media playback foreground service is used  
+3. User taps **Play** on saved voice memo attachment  
+4. **Notification** — “Playing voice memo · Foreground service · Media playback”  
+5. User briefly leaves app — playback continues via notification  
+6. User **Pause** / closes viewer — playback stops  
+
+### YouTube upload (media playback form)
+
+**Title:**
+```
+Totus Secure Notes — Media Playback Foreground Service (Voice Memo)
+```
+
+**Description:**
+```
+In-app walkthrough for Google Play review: how Totus Secure Notes uses 
+FOREGROUND_SERVICE_MEDIA_PLAYBACK only when the user taps Play on an 
+encrypted voice memo attachment. Not music streaming or PiP.
+
+App: Totus Secure Notes (com.totuslife.TotusSecureNotes)
+Privacy: https://totus--notes.web.app/privacy
+Permissions: https://totus--notes.web.app/permissions
+```
+
+Paste the unlisted YouTube URL into Play Console → **Media playback** → **Video link**.
+
+---
+
+## Background location
 
 **File:** `google-play-background-location-walkthrough.mp4`  
-**Duration:** ~30 seconds · **1080×1920** (phone portrait) · **MP4**
+**Duration:** ~30 seconds
 
 Regenerate:
 ```bash

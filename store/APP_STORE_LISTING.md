@@ -1,6 +1,6 @@
 # Apple App Store Listing — Totus Secure Notes
 
-**Version:** 1.2.13  
+**Version:** 1.2.14  
 **Bundle ID:** `com.totuslife.TotusSecureNotes`  
 **Category:** Productivity  
 **Secondary category (optional):** Medical  
@@ -39,7 +39,7 @@ Secure notes for mobile work
 **Character count:** 169
 
 ```
-v1.2.13: Google Play photo policy fix — system photo picker, document picker for audio/video, no broad gallery access. App icon on Home.
+v1.2.14: Android Photo Picker GMS backport — no READ_MEDIA permissions; manifest hardened via config plugin. System photo picker + document picker for attachments.
 ```
 
 ---
@@ -134,7 +134,7 @@ https://totus--notes.web.app/privacy
 
 See [../docs/APP_STORE_REQUIREMENTS.md](../docs/APP_STORE_REQUIREMENTS.md).
 
-**v1.2.13:** Data not collected by developer for notes. Location optional, on-device for GPS mileage. Voice memos and attachments local-only. Photo picker only (no broad media access). Template AI and Note Assist on-device only.
+**v1.2.14:** Data not collected by developer for notes. Location optional, on-device for GPS mileage. Voice memos and attachments local-only. Photo picker only (no READ_MEDIA; GMS backport on Android). Template AI and Note Assist on-device only.
 
 ---
 

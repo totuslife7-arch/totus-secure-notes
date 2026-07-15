@@ -6,6 +6,21 @@ All notable changes to Totus Secure Notes.
 
 
 
+## [1.2.14] — 2026-07-15
+
+### Fixed
+
+- **Android Photo Picker GMS backport** — `plugins/withAndroidPhotoPicker.js` adds Google Play services `ModuleDependencies` photopicker service for older Android devices
+- **Manifest hardening** — Plugin strips `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO`, and legacy storage permissions; `blockedPermissions` in `app.json` reinforces Play policy compliance
+
+### Added
+
+- **Play photo permissions declaration** — `docs/PLAY_PHOTO_PERMISSIONS_DECLARATION.md` with Console copy for photo-picker-only access
+
+### Changed
+
+- Version **1.2.14** (Android versionCode **56** local; EAS may auto-increment)
+
 ## [1.2.13] — 2026-07-13
 
 ### Fixed

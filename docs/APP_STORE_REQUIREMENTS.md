@@ -22,7 +22,7 @@
 
 ## App Privacy (Nutrition Labels)
 
-For **current v1.2.13** (local-only notes/trips, optional location on device, encrypted voice memos, system photo picker for attachments, ads + IAP, on-device Template AI, web vault export, no-API-key maps):
+For **current v1.2.14** (local-only notes/trips, optional location on device, encrypted voice memos, system photo picker for attachments, ads + IAP, on-device Template AI, web vault export, no-API-key maps):
 
 - **Data Not Collected** by developer — notes and trip data stay on device  
 - **Location** — optional, for GPS mileage; not sent to Totus Life servers  

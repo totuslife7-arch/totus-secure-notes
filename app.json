@@ -2,7 +2,7 @@
   "expo": {
     "name": "Totus Secure Notes",
     "slug": "totus-secure-notes",
-    "version": "1.2.13",
+    "version": "1.2.14",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "totussecurenotes",
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.totuslife.TotusSecureNotes",
-      "versionCode": 54,
+      "versionCode": 56,
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "resize",
       "permissions": [
@@ -37,7 +37,8 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",
         "FOREGROUND_SERVICE",
-        "FOREGROUND_SERVICE_LOCATION"
+        "FOREGROUND_SERVICE_LOCATION",
+        "RECORD_AUDIO"
       ],
       "blockedPermissions": [
         "android.permission.READ_MEDIA_IMAGES",
@@ -109,6 +110,7 @@
         }
       ],
       "./plugins/withPlayServicesAdsPin.js",
+      "./plugins/withAndroidPhotoPicker.js",
       [
         "llama.rn",
         {

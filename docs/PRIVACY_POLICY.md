@@ -1,7 +1,7 @@
 # Privacy Policy — Totus Secure Notes
 
 **Effective date:** June 19, 2026  
-**Last updated:** July 13, 2026  
+**Last updated:** July 15, 2026  
 **App name:** Totus Secure Notes  
 **Developer:** Totus Life (`totuslife7@gmail.com`)  
 **Package / Bundle ID:** `com.totuslife.TotusSecureNotes`  

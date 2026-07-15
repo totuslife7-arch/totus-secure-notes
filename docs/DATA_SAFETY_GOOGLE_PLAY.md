@@ -13,7 +13,7 @@ Use this when filling out **Google Play Console → App content → Data safety*
 
 ---
 
-## Data types — current release (v1.2.13)
+## Data types — current release (v1.2.14)
 
 | Data type | Collected by developer? | Shared? | Purpose | Required? |
 |-----------|-------------------------|---------|---------|-----------|
