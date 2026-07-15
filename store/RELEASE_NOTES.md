@@ -5,7 +5,7 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 | Field | Value |
 |-------|--------|
 | Version | **1.2.14** |
-| Android versionCode | **56** (local; EAS auto-increment may apply) |
+| Android versionCode | **58** (EAS auto-increment from local 56) |
 | Build date | July 15, 2026 |
 | Package | `com.totuslife.TotusSecureNotes` |
 | Web vault URL | https://totus--notes.web.app/vault |
@@ -15,9 +15,9 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 
 | Build | Profile | URL |
 |-------|---------|-----|
-| Android AAB (Play review) | `store-review` | _Pending — run `npm run build:store-review -- --non-interactive`_ |
+| Android AAB (Play review) | `store-review` | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/2bbcb2bc-0270-468c-acc5-299350c92e45 |
 
-**AAB artifact:** _Pending — fill after build completes_
+**AAB artifact:** https://expo.dev/artifacts/eas/TlbA3mzx0IkGbYFcwwLFrDDxwLbPsAvjTxTUaxivCDg.aab
 
 **EAS dashboard:** https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds
 
