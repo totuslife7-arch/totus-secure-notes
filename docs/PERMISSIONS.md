@@ -1,7 +1,7 @@
 # Permissions — Totus Secure Notes
 
 **Effective date:** June 20, 2026  
-**Last updated:** July 15, 2026  
+**Last updated:** July 16, 2026  
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Public URL:** https://totus--notes.web.app/permissions  
 **Contact:** totuslife7@gmail.com
@@ -34,11 +34,13 @@ We do **not** request: contacts, SMS, call logs, calendar, `READ_MEDIA_IMAGES`, 
 
 ---
 
-## Photo and media policy (v1.2.14)
+## Photo and media policy (v1.2.15)
 
 To comply with [Google Play photo and video permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180) and the [Android Photo Picker](https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html):
 
-- **Android photos** — system **Photo Picker** via `expo-image-picker` (no `READ_MEDIA_*`); Google Play services **GMS backport** via `plugins/withAndroidPhotoPicker.js` (v1.2.14)
+- **Android photos** — system **Photo Picker** via `expo-image-picker` → ActivityX `PickVisualMedia` (SDK 56+; no custom Kotlin). No `READ_MEDIA_*` permissions.
+- **GMS backport** — `plugins/withAndroidPhotoPicker.js` ensures the `ModuleDependencies` manifest snippet on devices without a built-in picker (Android 4.4+ via Google Play services). `expo-image-picker` ships the same snippet; our plugin dedupes and strips legacy permissions.
+- **ActivityX 1.7.0+** — handled inside `expo-image-picker` dependencies; no app-level Gradle changes required.
 - **Audio / video import** — system document picker (`expo-document-picker`); no media-library scanning
 - **Gallery scrub removed** — prior best-effort deletion of originals after encrypt required broad media access; removed in v1.2.13+
 - **`expo-media-library` removed** — no dependency on broad gallery APIs

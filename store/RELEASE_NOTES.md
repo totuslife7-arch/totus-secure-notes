@@ -1,3 +1,46 @@
+# Release Notes — Totus Secure Notes v1.2.15
+
+Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
+
+| Field | Value |
+|-------|--------|
+| Version | **1.2.15** |
+| Android versionCode | **59** |
+| Build date | July 16, 2026 |
+| Package | `com.totuslife.TotusSecureNotes` |
+| Web vault URL | https://totus--notes.web.app/vault |
+| Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
+
+---
+
+## Google Play — Release notes (1.2.15)
+
+**Limit:** 500 characters per language (en-US below ≈ 320 chars)
+
+```
+What's new in 1.2.15:
+
+• Photo picker audit: confirmed PickVisualMedia via expo-image-picker (no READ_MEDIA)
+• GMS backport manifest verified; READ_MEDIA_AUDIO added to blockedPermissions
+• Permissions and Play photo declaration docs updated for versionCode 59
+```
+
+---
+
+## Apple App Store — What's New (1.2.15)
+
+**Limit:** 4000 characters (en-US below ≈ 280 chars)
+
+```
+What's New in 1.2.15
+
+• Android photo picker compliance audit — documentation and manifest hardening
+• Confirmed system Photo Picker (no broad gallery permissions)
+• Updated hosted permissions policy page
+```
+
+---
+
 # Release Notes — Totus Secure Notes v1.2.14
 
 Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.

@@ -42,6 +42,10 @@
 
 | [GOOGLE_PLAY_POLICY_COMPLIANCE.md](./GOOGLE_PLAY_POLICY_COMPLIANCE.md) | Policy checkbox & advance notice guidance |
 
+| [ANDROID_17_PLAY_READINESS.md](./ANDROID_17_PLAY_READINESS.md) | Android 16/17 & Play target SDK checklist (2025–2026) |
+
+| [PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md) | Play Console photo/video permissions form |
+
 | [APP_STORE_REQUIREMENTS.md](./APP_STORE_REQUIREMENTS.md) | Apple App Store Connect checklist |
 
 | [STORE_LISTING_CHECKLIST.md](./STORE_LISTING_CHECKLIST.md) | Screenshots, descriptions, pre-launch |
@@ -93,7 +97,7 @@
 
 
 
-**Current version:** 1.2.14 · Android versionCode 56 · `com.totuslife.TotusSecureNotes`  
+**Current version:** 1.2.15 · Android versionCode 59 · `com.totuslife.TotusSecureNotes`  
 
 **Web vault viewer:** https://totus--notes.web.app/vault  
 

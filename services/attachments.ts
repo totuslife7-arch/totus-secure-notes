@@ -190,6 +190,7 @@ export async function pickAndEncryptPhotoFromLibrary(
   noteId: string,
   auditPassword?: string,
 ): Promise<AttachmentPickResult | null> {
+  // Android: expo-image-picker uses system Photo Picker (PickVisualMedia) — no READ_MEDIA_* permission.
   if (Platform.OS === 'ios') {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {

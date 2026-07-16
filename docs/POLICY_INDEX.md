@@ -1,6 +1,6 @@
 # Policy Index — Totus Secure Notes (Play Store URLs)
 
-**Last updated:** July 15, 2026  
+**Last updated:** July 16, 2026  
 **Base URL:** https://totus--notes.web.app
 
 Use these **public HTTPS links** in Google Play Console, App Store Connect, and in-app Settings.
@@ -37,9 +37,15 @@ Use these **public HTTPS links** in Google Play Console, App Store Connect, and 
 
 ---
 
+## v1.2.15 policy updates
+
+Photo picker audit complete — `expo-image-picker` uses ActivityX `PickVisualMedia`; GMS backport manifest verified; `READ_MEDIA_AUDIO` added to `blockedPermissions`. See [ANDROID_17_PLAY_READINESS.md](./ANDROID_17_PLAY_READINESS.md) for ActivityX / Android 17 notes.
+
 ## v1.2.14 policy updates
 
 Android Photo Picker GMS backport (`plugins/withAndroidPhotoPicker.js`); `READ_MEDIA_*` stripped from manifest; Play photo permissions declaration doc. No broad gallery access — system photo picker + document picker only. Gallery scrub removed (v1.2.13+).
+
+**Also see:** [ANDROID_17_PLAY_READINESS.md](./ANDROID_17_PLAY_READINESS.md) — target SDK 36, Play Console declarations, GET_CONTENT takeover.
 
 ## v1.2.13 policy updates
 

@@ -12,7 +12,14 @@ const STRIP = new Set([
 const PHOTO_PICKER_SERVICE = 'com.google.android.gms.metadata.ModuleDependencies';
 
 /**
- * Google Play photo policy + Android Photo Picker backport (ActivityX / GMS).
+ * Google Play photo policy + Android Photo Picker GMS backport manifest snippet.
+ *
+ * Gallery picking uses expo-image-picker, which already invokes ActivityX
+ * PickVisualMedia (no custom Kotlin in this app). This plugin:
+ * 1. Strips READ_MEDIA_* and legacy storage permissions from the merged manifest
+ * 2. Ensures the GMS ModuleDependencies backport service is present (also declared
+ *    by expo-image-picker; we dedupe if already added)
+ *
  * @see https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html
  */
 function withAndroidPhotoPicker(config) {

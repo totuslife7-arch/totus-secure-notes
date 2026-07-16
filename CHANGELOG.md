@@ -6,6 +6,15 @@ All notable changes to Totus Secure Notes.
 
 
 
+## [1.2.15] — 2026-07-16
+
+### Changed
+
+- **Photo picker audit** — Confirmed v1.2.14/v58 implementation complete: `expo-image-picker` uses ActivityX `PickVisualMedia`; GMS backport manifest verified via prebuild; no custom Kotlin required
+- **Manifest hardening** — Added `READ_MEDIA_AUDIO` to `blockedPermissions` in `app.json`
+- **Docs** — Updated Play photo permissions declaration, PERMISSIONS, GOOGLE_PLAY_POLICY_COMPLIANCE, and hosted permissions page for versionCode **59**
+- Version **1.2.15** (Android versionCode **59**)
+
 ## [1.2.14] — 2026-07-15
 
 ### Fixed

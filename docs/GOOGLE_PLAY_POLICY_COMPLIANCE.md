@@ -4,7 +4,7 @@ Use this before checking **“The application meets Developer Program Policies�
 
 **App:** Totus Secure Notes  
 **Package:** `com.totuslife.TotusSecureNotes`  
-**Current version:** 1.2.8 (versionCode 34)  
+**Current version:** 1.2.15 (versionCode 59)  
 **Contact:** totuslife7@gmail.com  
 
 ---
@@ -59,7 +59,7 @@ Totus Secure Notes is an **independent productivity app** with optional clinical
 | **Privacy policy URL** | ⚠️ Required | Host at public HTTPS (not draft-only) |
 | **Deceptive behavior** | ✅ OK if listing honest | Don’t claim “HIPAA certified” or “FDA approved” |
 | **Health / medical claims** | ⚠️ Careful wording | Template is a **writing aid**, not medical advice |
-| **Permissions** | ⚠️ Declare | Location (optional GPS mileage), camera (attachments), notifications (reminders) |
+| **Permissions** | ✅ OK | Location (optional GPS mileage), camera (attachments), notifications (reminders). **No `READ_MEDIA_*`** — Android Photo Picker only (v1.2.15) |
 | **Restricted permissions** | ✅ N/A | No SMS, call log, accessibility abuse |
 | **Monetization** | ✅ N/A now | When ads/IAP ship, use Play Billing + declare ads |
 | **Families / children** | ✅ OK | Target **13+** / general audience; not Designed for Families |
