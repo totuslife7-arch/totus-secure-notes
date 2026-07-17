@@ -32,7 +32,7 @@ See [ANDROID_SIGNING_SETUP.md](./ANDROID_SIGNING_SETUP.md).
 ## Phase 3 — App content declarations
 
 - [ ] **Privacy policy** URL live (Firebase Hosting)
-- [ ] **Photo and video permissions** — see [`PLAY_PHOTO_PERMISSIONS_DECLARATION.md`](PLAY_PHOTO_PERMISSIONS_DECLARATION.md) (v1.2.15 uses photo picker only; no `READ_MEDIA_*`; versionCode **59**)
+- [ ] **Photo and video permissions** — see [`PLAY_PHOTO_PERMISSIONS_DECLARATION.md`](PLAY_PHOTO_PERMISSIONS_DECLARATION.md) (v1.2.16 uses photo picker only; no `READ_MEDIA_*`; versionCode **61**)
 - [ ] **Data safety** — follow [`DATA_SAFETY_GOOGLE_PLAY.md`](DATA_SAFETY_GOOGLE_PLAY.md) (Firebase Analytics/Crashlytics + AdMob when enabled)
 - [ ] **Ads** — **Yes** when production AdMob is in the build; **No** for ad-free test builds
 - [ ] **Content rating** questionnaire

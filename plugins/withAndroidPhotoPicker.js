@@ -31,13 +31,50 @@ function withAndroidPhotoPicker(config) {
 function withStripMediaPermissions(config) {
   return withAndroidManifest(config, (config) => {
     const manifest = config.modResults;
-    const permissions = manifest.manifest['uses-permission'];
-    if (Array.isArray(permissions)) {
-      manifest.manifest['uses-permission'] = permissions.filter((entry) => {
-        const name = entry?.$?.['android:name'];
-        return !name || !STRIP.has(name);
-      });
+
+    // tools:node="remove" survives Gradle manifest merge; filtering alone does not.
+    if (!manifest.manifest.$) {
+      manifest.manifest.$ = {};
     }
+    if (!manifest.manifest.$['xmlns:tools']) {
+      manifest.manifest.$['xmlns:tools'] = 'http://schemas.android.com/tools';
+    }
+
+    let permissions = manifest.manifest['uses-permission'];
+    if (!permissions) {
+      permissions = [];
+    }
+    if (!Array.isArray(permissions)) {
+      permissions = [permissions];
+    }
+
+    // Drop positive declarations; keep existing tools:node="remove" entries.
+    permissions = permissions.filter((entry) => {
+      const name = entry?.$?.['android:name'];
+      const node = entry?.$?.['tools:node'];
+      if (!name || !STRIP.has(name)) {
+        return true;
+      }
+      return node === 'remove';
+    });
+
+    for (const permission of STRIP) {
+      const alreadyBlocked = permissions.some(
+        (entry) =>
+          entry?.$?.['android:name'] === permission &&
+          entry?.$?.['tools:node'] === 'remove',
+      );
+      if (!alreadyBlocked) {
+        permissions.push({
+          $: {
+            'android:name': permission,
+            'tools:node': 'remove',
+          },
+        });
+      }
+    }
+
+    manifest.manifest['uses-permission'] = permissions;
     return config;
   });
 }

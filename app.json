@@ -2,7 +2,7 @@
   "expo": {
     "name": "Totus Secure Notes",
     "slug": "totus-secure-notes",
-    "version": "1.2.15",
+    "version": "1.2.16",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "totussecurenotes",
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.totuslife.TotusSecureNotes",
-      "versionCode": 59,
+      "versionCode": 61,
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "resize",
       "permissions": [
@@ -111,7 +111,6 @@
         }
       ],
       "./plugins/withPlayServicesAdsPin.js",
-      "./plugins/withAndroidPhotoPicker.js",
       [
         "llama.rn",
         {
@@ -138,7 +137,8 @@
           "microphonePermission": "Allow Totus Secure Notes to record encrypted voice memos for notes."
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "./plugins/withAndroidPhotoPicker.js"
     ],
     "experiments": {
       "typedRoutes": true

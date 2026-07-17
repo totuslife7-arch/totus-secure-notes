@@ -1,6 +1,6 @@
-# Founder Follow-Up — Totus Secure Notes v1.2.14
+# Founder Follow-Up — Totus Secure Notes v1.2.16
 
-**Latest release:** v1.2.14 (versionCode 56) — Android Photo Picker GMS backport + READ_MEDIA stripped. See [RELEASE_NOTES.md](../store/RELEASE_NOTES.md) v1.2.14 section.
+**Latest release:** v1.2.16 (versionCode 61) — READ_MEDIA manifest merge fix + Photo Picker compliance. See [RELEASE_NOTES.md](../store/RELEASE_NOTES.md) v1.2.16 section.
 
 **After the Master Development Audit** — step-by-step actions for the founder.  
 **Audit report:** [AUDIT_REPORT.md](./AUDIT_REPORT.md)  

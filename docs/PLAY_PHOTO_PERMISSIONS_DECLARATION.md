@@ -3,7 +3,7 @@
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Policy:** [Photo and video permissions](https://support.google.com/googleplay/android-developer/answer/14115180)  
 **Android Photo Picker:** [Google developers blog](https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html)  
-**Current release:** v1.2.15 · Android versionCode **59**
+**Current release:** v1.2.16 · Android versionCode **61**
 
 ---
 
@@ -20,7 +20,7 @@ Totus Secure Notes follows Google’s **permission-less photo picker** approach:
 
 **Native config (`plugins/withAndroidPhotoPicker.js`):**
 
-1. Removes `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO`, `READ_MEDIA_AUDIO`, and legacy storage permissions from the manifest  
+1. Removes `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO`, `READ_MEDIA_AUDIO`, and legacy storage permissions from the manifest via `tools:node="remove"` (survives Gradle manifest merge)  
 2. Ensures Google Play services **backported Photo Picker** module dependency (works on Android 4.4+ via GMS). `expo-image-picker` (SDK 56+) also declares this snippet and uses ActivityX `PickVisualMedia` — no custom Kotlin in this app.
 
 ```xml
@@ -57,7 +57,7 @@ Gallery scrub after import was **removed** in v1.2.13 (required broad media APIs
 
 ### Step 1 — Upload AAB with photo-picker manifest
 
-Use the latest **store-review** AAB (versionCode **59+**).
+Use the latest **store-review** AAB (versionCode **61+**).
 
 Remove older builds (e.g. versionCode **52**) from the release track.
 
@@ -76,7 +76,7 @@ Use **“Not used — photo picker only”** wording:
 **READ_MEDIA_IMAGES:**
 
 ```
-Not used. v1.2.15 attaches photos via the Android system Photo Picker (expo-image-picker / PickVisualMedia) with no READ_MEDIA_IMAGES permission. User picks one image per note; file is encrypted on device only.
+Not used. v1.2.16 attaches photos via the Android system Photo Picker (expo-image-picker / PickVisualMedia) with no READ_MEDIA_IMAGES permission. User picks one image per note; file is encrypted on device only.
 ```
 
 **READ_MEDIA_VIDEO:**
@@ -124,13 +124,13 @@ Play scans **every track**, not only Production:
 
 1. **Release → Testing** — open **Internal testing**, **Closed testing**, **Open testing** (each one)
 2. For each track: **Releases** → if an old release still lists versionCode **52, 55, 57**, either:
-   - **Promote nothing** — create a **new release** with **only versionCode 59**, or  
+   - **Promote nothing** — create a **new release** with **only versionCode 61**, or  
    - **Discard draft** (⋮ menu on draft releases you never published)
-3. **Release → Production** — same: only **59** in the release you send for review
+3. **Release → Production** — same: only **61** in the release you send for review
 
-**Artifact library:** **Release → App bundle explorer** (or **Latest releases and bundles**) → click versionCode **59** → **Permissions** tab → confirm **no** `READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO`.
+**Artifact library:** **Release → App bundle explorer** (or **Latest releases and bundles**) → click versionCode **61** → **Permissions** tab → confirm **no** `READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO`.
 
-If **59** still shows those permissions, do not publish — contact support or rebuild. v1.2.15 builds should **not** list them.
+If **61** still shows those permissions, do not publish — contact support or rebuild. v1.2.16 builds should **not** list them.
 
 ### B. Make a NEW declaration (update, not delete)
 
@@ -143,7 +143,7 @@ If **59** still shows those permissions, do not publish — contact support or r
 | How does your app use photos/videos? | **One-time or infrequent** access |
 | Core functionality needs all photos on device? | **No** |
 | How will you access media? | **Android photo picker** / system picker |
-| Remove READ_MEDIA from app? | **Yes** — permissions removed in versionCode **59** |
+| Remove READ_MEDIA from app? | **Yes** — permissions removed in versionCode **61** |
 
 4. **Save** → **Submit for review** (App content review, separate from release review)
 
@@ -154,8 +154,8 @@ Do **not** fill “describe use of READ_MEDIA_IMAGES” as if you need the permi
 | Situation | What to do |
 |-----------|------------|
 | **Draft release** (never published) | Release page → **Discard changes** / **Discard draft** |
-| **Published release** on a test track | Upload **59** as a **new release** on that track; old version stays in history but is not “active” if superseded |
-| **Production** old version | You cannot delete history; ensure the **current submission** only includes **59** |
+| **Published release** on a test track | Upload **61** as a **new release** on that track; old version stays in history but is not “active” if superseded |
+| **Production** old version | You cannot delete history; ensure the **current submission** only includes **61** |
 
 You cannot remove old version codes from Google’s history — you only ensure **no old APK/AAB is active** on any track’s **current** rollout.
 
@@ -172,7 +172,7 @@ If the release page still blocks you, the banner usually links to the unfinished
 **Help → Contact support** → **Policy / App content** → mention:
 
 - Package: `com.totuslife.TotusSecureNotes`  
-- Only versionCode **59** is active; uses Android Photo Picker; `READ_MEDIA_*` removed per v1.2.15  
+- Only versionCode **61** is active; uses Android Photo Picker; `READ_MEDIA_*` removed per v1.2.16  
 - Cannot clear Photo and video permissions declaration  
 
 ---

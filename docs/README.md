@@ -54,7 +54,7 @@
 
 | [../store/APP_STORE_LISTING.md](../store/APP_STORE_LISTING.md) | Apple App Store listing copy |
 
-| [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) | Release notes / What's New (v1.2.14) |
+| [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) | Release notes / What's New (v1.2.16) |
 
 
 
@@ -97,7 +97,7 @@
 
 
 
-**Current version:** 1.2.15 · Android versionCode 59 · `com.totuslife.TotusSecureNotes`  
+**Current version:** 1.2.16 · Android versionCode 61 · `com.totuslife.TotusSecureNotes`  
 
 **Web vault viewer:** https://totus--notes.web.app/vault  
 

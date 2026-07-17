@@ -1,7 +1,7 @@
 # Android 16 / 17 & Google Play Readiness (2025–2026)
 
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
-**Current app version:** 1.2.15 (versionCode 59)  
+**Current app version:** 1.2.16 (versionCode 61)  
 **Expo SDK:** 56 (`expo` ~56.0.12)  
 **Last reviewed:** July 16, 2026  
 **Scope:** Research checklist only — no code changes in this document.
@@ -94,7 +94,7 @@ Expo SDK 56 sets **compileSdk 36 / targetSdk 36** by default ([SDK 56 reference]
 
 - [ ] Verify merged manifest in release AAB: **no** `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO`, `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`
 - [ ] Complete **Photo and video permissions** App content form — see [PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md)
-- [ ] Ensure **every active track** (internal/closed/open/production) ships only compliant AABs (versionCode 59+)
+- [ ] Ensure **every active track** (internal/closed/open/production) ships only compliant AABs (versionCode 61+)
 
 **Nice-to-have:**
 
@@ -187,7 +187,7 @@ Expo SDK 56 sets **compileSdk 36 / targetSdk 36** by default ([SDK 56 reference]
   - Core functionality needs all photos on device: **No**
 - [ ] Remove / supersede any old declaration that claims `READ_MEDIA_*` usage
 - [ ] **Release → each testing track + Production:** only AABs without `READ_MEDIA_*` (see [PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md))
-- [ ] **App bundle explorer → Permissions tab** on versionCode 59: confirm stripped permissions
+- [ ] **App bundle explorer → Permissions tab** on versionCode 61: confirm stripped permissions
 
 ### Nice-to-have
 
@@ -267,7 +267,7 @@ This is **native Android (Gradle) dependency**, not an npm package.
 
 ### Must-do before Play publish (P0)
 
-1. **Photo/video policy:** Complete App content declaration; confirm versionCode **59+** on all tracks; verify no `READ_MEDIA_*` in bundle explorer ([PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md)).
+1. **Photo/video policy:** Complete App content declaration; confirm versionCode **61+** on all tracks; verify no `READ_MEDIA_*` in bundle explorer ([PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md)).
 2. **Foreground services:** Complete Play Console FGS declaration for **location** (trip GPS) with demo video ([FGS requirements](https://support.google.com/googleplay/android-developer/answer/13392821)).
 3. **Target SDK proof:** Confirm production AAB shows **targetSdkVersion 36** (Expo SDK 56 default).
 4. **Data safety & privacy:** Align with Firebase/AdMob/IAP as in [DATA_SAFETY_GOOGLE_PLAY.md](./DATA_SAFETY_GOOGLE_PLAY.md) and [PLAY_FIRST_UPLOAD_CHECKLIST.md](./PLAY_FIRST_UPLOAD_CHECKLIST.md).

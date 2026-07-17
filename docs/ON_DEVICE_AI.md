@@ -7,7 +7,7 @@
 | **Hermes** | JavaScript engine bundled with React Native/Expo. Already in use. Not an AI model. |
 | **On-device AI** | Native `llama.rn` + SmolLM2-360M for Template AI and Note Assist. **Requires EAS/dev build — not Expo Go.** |
 
-## Capability matrix (v1.2.14)
+## Capability matrix (v1.2.16)
 
 | Feature | Where | Tech | Tier |
 |---------|-------|------|------|

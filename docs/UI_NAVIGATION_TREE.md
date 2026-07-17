@@ -1,4 +1,4 @@
-# UI Navigation Tree — Totus Secure Notes v1.2.14
+# UI Navigation Tree — Totus Secure Notes v1.2.16
 
 Complete map of screens, tabs, settings controls, and deep links. Routes use Expo Router file-based paths.
 

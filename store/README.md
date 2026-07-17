@@ -10,7 +10,7 @@ Ready-to-paste text for Google Play and Apple App Store.
 | [products.json](./products.json) | IAP product IDs (Pro Monthly, Pro Lifetime) |
 | [IAP_SETUP.md](./IAP_SETUP.md) | Step-by-step Play Console & App Store Connect setup |
 
-**Current version:** 1.2.14 · Android versionCode **56** · `com.totuslife.TotusSecureNotes`
+**Current version:** 1.2.16 · Android versionCode **61** · `com.totuslife.TotusSecureNotes`
 
 **Web vault:** https://totus--notes.web.app/vault
 

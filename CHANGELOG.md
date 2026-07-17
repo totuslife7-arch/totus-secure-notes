@@ -6,6 +6,16 @@ All notable changes to Totus Secure Notes.
 
 
 
+## [1.2.16] — 2026-07-17
+
+### Fixed
+
+- **READ_MEDIA manifest merge** — `plugins/withAndroidPhotoPicker.js` now preserves `tools:node="remove"` entries during manifest merge (v60 AAB still leaked `READ_MEDIA_IMAGES`); plugin moved to last position in `app.json` plugins array
+
+### Changed
+
+- Version **1.2.16** (Android versionCode **61**)
+
 ## [1.2.15] — 2026-07-16
 
 ### Changed

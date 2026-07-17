@@ -1,3 +1,48 @@
+# Release Notes — Totus Secure Notes v1.2.16
+
+Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
+
+| Field | Value |
+|-------|--------|
+| Version | **1.2.16** |
+| Android versionCode | **61** |
+| Build date | July 17, 2026 |
+| Package | `com.totuslife.TotusSecureNotes` |
+| **Production AAB** | *(pending EAS build)* |
+| EAS build | *(pending EAS build)* |
+| Web vault URL | https://totus--notes.web.app/vault |
+| Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
+
+---
+
+## Google Play — Release notes (1.2.16)
+
+**Limit:** 500 characters per language (en-US below ≈ 280 chars)
+
+```
+What's new in 1.2.16:
+
+• Fixed READ_MEDIA manifest merge — tools:node="remove" now survives Gradle merge
+• Photo picker plugin runs last in prebuild; no READ_MEDIA_IMAGES in v61 AAB
+• Play photo permissions declaration docs updated for versionCode 61
+```
+
+---
+
+## Apple App Store — What's New (1.2.16)
+
+**Limit:** 4000 characters (en-US below ≈ 220 chars)
+
+```
+What's New in 1.2.16
+
+• Android manifest hardening — READ_MEDIA permissions stripped via tools:node="remove"
+• Photo picker compliance fix for Google Play (no broad gallery access)
+• Updated hosted permissions policy page
+```
+
+---
+
 # Release Notes — Totus Secure Notes v1.2.15
 
 Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
@@ -5,9 +50,11 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 | Field | Value |
 |-------|--------|
 | Version | **1.2.15** |
-| Android versionCode | **59** |
+| Android versionCode | **60** |
 | Build date | July 16, 2026 |
 | Package | `com.totuslife.TotusSecureNotes` |
+| **Production AAB** | https://expo.dev/artifacts/eas/529ZUQj11hTDx4qBaugHHOcpzGGBLZK-KlTkN-pggu8.aab |
+| EAS build | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/d87fb617-170d-41d8-8513-ed19ed8c17f3 |
 | Web vault URL | https://totus--notes.web.app/vault |
 | Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
 
@@ -22,7 +69,7 @@ What's new in 1.2.15:
 
 • Photo picker audit: confirmed PickVisualMedia via expo-image-picker (no READ_MEDIA)
 • GMS backport manifest verified; READ_MEDIA_AUDIO added to blockedPermissions
-• Permissions and Play photo declaration docs updated for versionCode 59
+• Permissions and Play photo declaration docs updated for versionCode 60
 ```
 
 ---

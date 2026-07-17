@@ -34,7 +34,7 @@ We do **not** request: contacts, SMS, call logs, calendar, `READ_MEDIA_IMAGES`, 
 
 ---
 
-## Photo and media policy (v1.2.15)
+## Photo and media policy (v1.2.16)
 
 To comply with [Google Play photo and video permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180) and the [Android Photo Picker](https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html):
 

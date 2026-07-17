@@ -1,4 +1,4 @@
-# User Guide — Totus Secure Notes (v1.2.14)
+# User Guide — Totus Secure Notes (v1.2.16)
 
 Totus Secure Notes is a **local-first encrypted notes app** for mobile work. Your vault stays on your device. This guide covers everyday use, premium features, and **desktop access** via manual export (not live cloud sync).
 
@@ -283,7 +283,7 @@ Hosted policies at https://totus--notes.web.app/
 - Privacy, Terms, Data deletion, Permissions, Data safety, Ads, Security, Legal disclaimer
 - **Web vault viewer:** https://totus--notes.web.app/vault
 
-**Support:** totuslife7@gmail.com (include app version from About & Legal — currently **1.2.14** / Android **56** — device model, OS — never send master password or unencrypted notes).
+**Support:** totuslife7@gmail.com (include app version from About & Legal — currently **1.2.16** / Android **61** — device model, OS — never send master password or unencrypted notes).
 
 **GitHub issues:** https://github.com/totuslife7-arch/totus-secure-notes/issues
 
@@ -303,4 +303,4 @@ See [DEVELOPMENT_AND_BUILDS.md](./DEVELOPMENT_AND_BUILDS.md) for full build matr
 
 ---
 
-*Last updated: July 15, 2026 · v1.2.14 · Android versionCode 56*
+*Last updated: July 17, 2026 · v1.2.16 · Android versionCode 61*

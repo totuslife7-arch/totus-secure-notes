@@ -37,6 +37,10 @@ Use these **public HTTPS links** in Google Play Console, App Store Connect, and 
 
 ---
 
+## v1.2.16 policy updates
+
+Fixed READ_MEDIA manifest merge — `withAndroidPhotoPicker.js` preserves `tools:node="remove"` entries; plugin runs last in prebuild. v61 AAB must not declare `READ_MEDIA_IMAGES`.
+
 ## v1.2.15 policy updates
 
 Photo picker audit complete — `expo-image-picker` uses ActivityX `PickVisualMedia`; GMS backport manifest verified; `READ_MEDIA_AUDIO` added to `blockedPermissions`. See [ANDROID_17_PLAY_READINESS.md](./ANDROID_17_PLAY_READINESS.md) for ActivityX / Android 17 notes.
