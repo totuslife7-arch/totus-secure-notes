@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import GenericCustomForm from '@/components/templates/GenericCustomForm';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useVault } from '@/context/VaultContext';
+import { usePinnedTemplates } from '@/hooks/usePinnedTemplates';
 import { copyToClipboard } from '@/services/export';
 import { upsertCustomTemplate } from '@/services/templateStudio/templateStorage';
 import {
@@ -19,8 +20,12 @@ export default function BuiltinTemplateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { theme } = useAppTheme();
   const { sessionPassword } = useVault();
+  const { refs: pinnedRefs, pin, unpin } = usePinnedTemplates(sessionPassword);
   const insets = useSafeAreaInsets();
   const template = useMemo(() => (id ? getBuiltinTemplate(id) : undefined), [id]);
+  const isPinned = template
+    ? pinnedRefs.some((ref) => ref.kind === 'builtin' && ref.id === template.id)
+    : false;
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewText, setPreviewText] = useState('');
 
@@ -72,6 +77,15 @@ export default function BuiltinTemplateScreen() {
     });
   };
 
+  const handleTogglePin = () => {
+    const ref = { kind: 'builtin' as const, id: template.id };
+    if (isPinned) {
+      unpin(ref).catch(() => undefined);
+    } else {
+      pin(ref).catch(() => undefined);
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={[styles.toolbar, { borderBottomColor: theme.border, paddingTop: insets.top > 0 ? 0 : 8 }]}>
@@ -80,6 +94,11 @@ export default function BuiltinTemplateScreen() {
         </Pressable>
         <Pressable style={[styles.toolButton, { backgroundColor: theme.surfaceSecondary }]} onPress={handleSaveToBriefcase}>
           <Text style={{ color: theme.text, fontWeight: '600', fontSize: 13 }}>Save to briefcase</Text>
+        </Pressable>
+        <Pressable style={[styles.toolButton, { backgroundColor: theme.surfaceSecondary }]} onPress={handleTogglePin}>
+          <Text style={{ color: theme.text, fontWeight: '600', fontSize: 13 }}>
+            {isPinned ? 'Unpin from Home' : 'Pin to Home'}
+          </Text>
         </Pressable>
         <Pressable style={[styles.toolButton, { backgroundColor: theme.primary }]} onPress={handleAdapt}>
           <Text style={{ color: theme.primaryText, fontWeight: '600', fontSize: 13 }}>Adapt form</Text>

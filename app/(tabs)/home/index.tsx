@@ -10,6 +10,7 @@ import ScreenHeader from '@/components/ui/ScreenHeader';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useVault } from '@/context/VaultContext';
+import { usePinnedTemplates } from '@/hooks/usePinnedTemplates';
 import { buildTaskDigest } from '@/services/taskDigest';
 import { buildEnhancedTaskDigest } from '@/services/templateAi/taskDigestAi';
 
@@ -25,7 +26,8 @@ function formatDate(iso: string): string {
 function HomeContent() {
   const { theme } = useAppTheme();
   const insets = useSafeAreaInsets();
-  const { notes, isUnlocked, createNote } = useVault();
+  const { notes, isUnlocked, createNote, sessionPassword } = useVault();
+  const { displays: pinnedTemplates } = usePinnedTemplates(sessionPassword);
   const [aiDigest, setAiDigest] = useState<string | null>(null);
 
   const digest = useMemo(() => buildTaskDigest(notes), [notes]);
@@ -76,12 +78,15 @@ function HomeContent() {
       </View>
 
       <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick actions</Text>
-      <View style={styles.actionGrid}>
+      {pinnedTemplates.map((tpl) => (
         <Pressable
+          key={`${tpl.kind}:${tpl.id}`}
           style={[styles.action, styles.actionFeatured, { backgroundColor: theme.surface, borderColor: theme.primary }]}
-          onPress={() => router.push('/templates/postpartum' as never)}>
-          <Text style={{ color: theme.primary, fontWeight: '700' }}>SoFo Postpartum HV</Text>
+          onPress={() => router.push(tpl.route as never)}>
+          <Text style={{ color: theme.primary, fontWeight: '700' }}>{tpl.title}</Text>
         </Pressable>
+      ))}
+      <View style={styles.actionGrid}>
         <Pressable
           style={[styles.action, { backgroundColor: theme.surface, borderColor: theme.border }]}
           onPress={handleNewNote}>

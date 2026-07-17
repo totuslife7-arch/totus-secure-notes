@@ -4,7 +4,7 @@ Use this before checking **â€œThe application meets Developer Program Policiesâ€
 
 **App:** Totus Secure Notes  
 **Package:** `com.totuslife.TotusSecureNotes`  
-**Current version:** 1.2.16 (versionCode 62)  
+**Current version:** 1.2.17 (versionCode 63)  
 **Contact:** totuslife7@gmail.com  
 
 ---

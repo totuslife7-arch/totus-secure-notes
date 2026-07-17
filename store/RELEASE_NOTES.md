@@ -1,3 +1,47 @@
+# Release Notes — Totus Secure Notes v1.2.17
+
+Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.
+
+| Field | Value |
+|-------|--------|
+| Version | **1.2.17** |
+| Android versionCode | **63** |
+| Build date | July 17, 2026 |
+| Package | `com.totuslife.TotusSecureNotes` |
+| **Production AAB** | *(pending — build after commit)* |
+| Web vault URL | https://totus--notes.web.app/vault |
+| Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
+
+---
+
+## Google Play — Release notes (1.2.17)
+
+**Limit:** 500 characters per language (en-US below ≈ 280 chars)
+
+```
+What's new in 1.2.17:
+
+• Pin your favorite templates to Home for faster access
+• Subscription entitlements stay in sync after renewals or expiry
+• Production readiness and Play Console checklist docs updated
+```
+
+---
+
+## Apple App Store — What's New (1.2.17)
+
+**Limit:** 4000 characters (en-US below ≈ 220 chars)
+
+```
+What's New in 1.2.17
+
+• Pin templates to Home from the template gallery and studio
+• Improved in-app purchase restore and subscription entitlement sync
+• Stability and monetization fixes from production audit
+```
+
+---
+
 # Release Notes — Totus Secure Notes v1.2.16
 
 Copy into **Google Play Console → Release notes** and **App Store Connect → What's New**.

@@ -303,4 +303,4 @@ See [DEVELOPMENT_AND_BUILDS.md](./DEVELOPMENT_AND_BUILDS.md) for full build matr
 
 ---
 
-*Last updated: July 17, 2026 · v1.2.16 · Android versionCode 62*
+*Last updated: July 17, 2026 · v1.2.17 · Android versionCode 63*

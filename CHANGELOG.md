@@ -6,6 +6,21 @@ All notable changes to Totus Secure Notes.
 
 
 
+## [1.2.17] - 2026-07-17
+
+### Fixed
+
+- **IAP entitlements** - `syncOwnedProductIdsFromStore` reconciles SecureStore with Play/App Store purchases and drops expired subscriptions from cache (P0 audit)
+
+### Added
+
+- **Pinned templates** - pin built-in and custom templates to Home (`services/pinnedTemplates.ts`, `hooks/usePinnedTemplates.ts`); gallery, studio, and built-in template screens
+
+### Changed
+
+- **Production audit** - `PRODUCTION_READINESS_AUDIT_2026-07.md`, `GOOGLE_PLAY_PRODUCTION_CHECKLIST_2026.md`, `GUI_PRODUCTION_AUDIT_2026-07.md`, `docs/README.md`
+- Version **1.2.17** (Android versionCode **63**)
+
 ## [1.2.16] — 2026-07-17
 
 ### Fixed

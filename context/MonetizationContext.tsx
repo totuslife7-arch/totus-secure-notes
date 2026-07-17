@@ -11,7 +11,7 @@ import { ErrorCode, useIAP, type Product, type Purchase } from 'expo-iap';
 
 import {
   addOwnedProductId,
-  mergeOwnedProductIds,
+  syncOwnedProductIdsFromStore,
 } from '@/services/iapEntitlements';
 import {
   buildMonetizationState,
@@ -114,13 +114,12 @@ export function MonetizationProvider({ children }: { children: React.ReactNode }
   }, [refresh]);
 
   useEffect(() => {
-    if (availablePurchases.length === 0) return;
+    if (!connected || availablePurchases.length === 0) return;
     const ids = availablePurchases
       .map((p) => purchaseProductId(p))
       .filter((id): id is string => id != null);
-    if (ids.length === 0) return;
-    mergeOwnedProductIds(ids).then(syncFromOwned).catch(() => undefined);
-  }, [availablePurchases, syncFromOwned]);
+    syncOwnedProductIdsFromStore(ids).then(syncFromOwned).catch(() => undefined);
+  }, [availablePurchases, connected, syncFromOwned]);
 
   const restore = useCallback(async () => {
     if (iapSupported && connected) {
@@ -214,8 +213,7 @@ export function useMonetization(): MonetizationContextValue {
 
 /** Sync restored purchase IDs from expo-iap available purchases into SecureStore. */
 export async function syncRestoredPurchaseIds(purchaseIds: string[]): Promise<void> {
-  const owned = await mergeOwnedProductIds(purchaseIds.filter(Boolean));
-  return;
+  await syncOwnedProductIdsFromStore(purchaseIds.filter(Boolean));
 }
 
 export { ALL_STORE_SKUS };

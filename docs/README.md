@@ -42,6 +42,8 @@
 
 | [GOOGLE_PLAY_POLICY_COMPLIANCE.md](./GOOGLE_PLAY_POLICY_COMPLIANCE.md) | Policy checkbox & advance notice guidance |
 
+| [GOOGLE_PLAY_PRODUCTION_CHECKLIST_2026.md](./GOOGLE_PLAY_PRODUCTION_CHECKLIST_2026.md) | **July 2026** — IAP, AdMob, Data safety, Play publish sequence |
+
 | [ANDROID_17_PLAY_READINESS.md](./ANDROID_17_PLAY_READINESS.md) | Android 16/17 & Play target SDK checklist (2025–2026) |
 
 | [PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md) | Play Console photo/video permissions form |
@@ -54,7 +56,7 @@
 
 | [../store/APP_STORE_LISTING.md](../store/APP_STORE_LISTING.md) | Apple App Store listing copy |
 
-| [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) | Release notes / What's New (v1.2.16) |
+| [../store/RELEASE_NOTES.md](../store/RELEASE_NOTES.md) | Release notes / What's New (v1.2.17) |
 
 
 
@@ -70,12 +72,16 @@
 
 | [MASTER_GUI_ARCHITECT_PROMPT.md](./MASTER_GUI_ARCHITECT_PROMPT.md) | **Copy-paste prompt** — full-app GUI/UX redesign (Home tab, design system, IA) |
 
+| [GUI_PRODUCTION_AUDIT_2026-07.md](./GUI_PRODUCTION_AUDIT_2026-07.md) | **July 2026 GUI audit** — clutter, IA, permanent-template UX gaps, P0 screens |
+
 | [MASTER_DEVELOPMENT_AUDIT_PROMPT.md](./MASTER_DEVELOPMENT_AUDIT_PROMPT.md) | **Copy-paste prompt** — full audit: Template AI, IAP, GUI Phase 0, builds |
 | [MASTER_SOFO_PRODUCTION_RESCUE_PROMPT.md](./MASTER_SOFO_PRODUCTION_RESCUE_PROMPT.md) | **Copy-paste prompt** — P0 rescue: SoFo Postpartum HV, About, saves, AI unlock, voice, ship tomorrow |
 | [MASTER_PRODUCTION_ENGINE_PROMPT.md](./MASTER_PRODUCTION_ENGINE_PROMPT.md) | **Copy-paste prompt** — 4-agent production engine: navigation map, saves, AI readiness, voice memos |
 | [UI_NAVIGATION_TREE.md](./UI_NAVIGATION_TREE.md) | Full app navigation map (tabs, settings, About, deep links) |
 | [PRODUCTION_ENGINE_DELIVERABLES.md](./PRODUCTION_ENGINE_DELIVERABLES.md) | Production engine run — files changed and verification checklist |
 | [AUDIT_REPORT.md](./AUDIT_REPORT.md) | **v1.2.11 audit** — feature matrix (Works/Gated/Broken), root causes, fixes |
+
+| [PRODUCTION_READINESS_AUDIT_2026-07.md](./PRODUCTION_READINESS_AUDIT_2026-07.md) | **July 2026** — P0/P1/P2 blockers, AI/IAP/Play, device test script |
 | [FOUNDER_FOLLOWUP.md](./FOUNDER_FOLLOWUP.md) | **Founder handoff** — device test, Play Console, build artifact table |
 
 | [MEMORY.md](./MEMORY.md) | Architecture, vault schema, security |
@@ -97,7 +103,7 @@
 
 
 
-**Current version:** 1.2.16 · Android versionCode 62 · `com.totuslife.TotusSecureNotes`  
+**Current version:** 1.2.17 · Android versionCode 63 · `com.totuslife.TotusSecureNotes`  
 
 **Web vault viewer:** https://totus--notes.web.app/vault  
 

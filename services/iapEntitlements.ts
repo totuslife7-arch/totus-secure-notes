@@ -2,7 +2,12 @@ import * as SecureStore from 'expo-secure-store';
 
 
 
-import { grantsForProductIds } from '@/services/productCatalog';
+import {
+  ALL_STORE_SKUS,
+  grantsForProductIds,
+  LIFETIME_SKUS,
+  SUBSCRIPTION_SKUS,
+} from '@/services/productCatalog';
 
 import type { Entitlement } from '@/services/monetization';
 
@@ -73,6 +78,30 @@ export async function mergeOwnedProductIds(productIds: string[]): Promise<string
   await saveOwnedProductIds(merged);
 
   return merged;
+
+}
+
+
+
+/** Reconcile SecureStore with Play/App Store purchase state (drops expired subscriptions). */
+
+export async function syncOwnedProductIdsFromStore(storeProductIds: string[]): Promise<string[]> {
+
+  const fromStore = storeProductIds.filter((id) => ALL_STORE_SKUS.includes(id));
+
+  const current = await loadOwnedProductIds();
+
+  const lifetimeCached = current.filter((id) => LIFETIME_SKUS.includes(id));
+
+  const lifetimeFromStore = fromStore.filter((id) => LIFETIME_SKUS.includes(id));
+
+  const activeSubscriptions = fromStore.filter((id) => SUBSCRIPTION_SKUS.includes(id));
+
+  const next = [...new Set([...lifetimeFromStore, ...lifetimeCached, ...activeSubscriptions])];
+
+  await saveOwnedProductIds(next);
+
+  return next;
 
 }
 

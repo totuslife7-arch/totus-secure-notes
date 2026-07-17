@@ -1,12 +1,16 @@
-import { router } from 'expo-router';
-import React from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import ProUpgradeBanner from '@/components/ProUpgradeBanner';
 import { useAppTheme } from '@/context/ThemeContext';
 import TotusAssistChip from '@/components/TotusAssistChip';
 import { useMonetization } from '@/context/MonetizationContext';
+import { useVault } from '@/context/VaultContext';
+import { usePinnedTemplates } from '@/hooks/usePinnedTemplates';
 import { hasTemplateStudio } from '@/services/monetization';
+import { listCustomTemplates } from '@/services/templateStudio/templateStorage';
+import { CustomTemplateDefinition } from '@/store/customTemplateSchema';
 import {
   ALL_TEMPLATES,
   BUILTIN_CATEGORIES,
@@ -21,7 +25,37 @@ interface TemplateGalleryProps {
 export default function TemplateGallery({ onSelectMarkdown }: TemplateGalleryProps) {
   const { theme } = useAppTheme();
   const { state } = useMonetization();
+  const { sessionPassword } = useVault();
+  const { refs: pinnedRefs, pin, unpin } = usePinnedTemplates(sessionPassword);
   const studioUnlocked = hasTemplateStudio(state);
+  const [briefcaseTemplates, setBriefcaseTemplates] = useState<CustomTemplateDefinition[]>([]);
+
+  const loadBriefcase = useCallback(async () => {
+    if (!sessionPassword || !studioUnlocked) {
+      setBriefcaseTemplates([]);
+      return;
+    }
+    const list = await listCustomTemplates(sessionPassword);
+    setBriefcaseTemplates(list);
+  }, [sessionPassword, studioUnlocked]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadBriefcase().catch(() => undefined);
+    }, [loadBriefcase]),
+  );
+
+  const isPinned = (kind: 'form' | 'builtin' | 'custom', id: string) =>
+    pinnedRefs.some((ref) => ref.kind === kind && ref.id === id);
+
+  const togglePin = (kind: 'form' | 'builtin' | 'custom', id: string) => {
+    const ref = { kind, id };
+    if (isPinned(kind, id)) {
+      unpin(ref).catch(() => undefined);
+    } else {
+      pin(ref).catch(() => undefined);
+    }
+  };
 
   const handlePress = (template: TemplateDefinition) => {
     if ((template.type === 'form' || template.type === 'builtin') && template.route) {
@@ -59,7 +93,9 @@ export default function TemplateGallery({ onSelectMarkdown }: TemplateGalleryPro
               onPress={() => handlePress(item)}>
               <View style={styles.rowHeader}>
                 <Text style={[styles.title, { color: theme.text }]}>{item.title}</Text>
-                <Text style={[styles.badge, styles.badgeFeatured]}>★ Pinned</Text>
+                {isPinned('form', item.id) ? (
+                  <Text style={[styles.badge, styles.badgeFeatured]}>★ Pinned</Text>
+                ) : null}
               </View>
               <Text style={[styles.description, { color: theme.textMuted }]}>{item.description}</Text>
               {item.id === 'sofo_postpartum_hv' ? (
@@ -67,6 +103,16 @@ export default function TemplateGallery({ onSelectMarkdown }: TemplateGalleryPro
                   Used by SoFo nurses — voice fill, copy to EMR
                 </Text>
               ) : null}
+              <Pressable
+                style={styles.pinAction}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  togglePin('form', item.id);
+                }}>
+                <Text style={{ color: theme.primary, fontWeight: '600', fontSize: 13 }}>
+                  {isPinned('form', item.id) ? 'Unpin from Home' : 'Pin to Home'}
+                </Text>
+              </Pressable>
             </Pressable>
           ))}
         </>
@@ -85,6 +131,43 @@ export default function TemplateGallery({ onSelectMarkdown }: TemplateGalleryPro
           Paste intake forms, build reusable templates, organize your briefcase.
         </Text>
       </Pressable>
+
+      {studioUnlocked && briefcaseTemplates.length > 0 ? (
+        <>
+          <Text style={[styles.sectionHeading, { color: theme.text }]}>My briefcase</Text>
+          <Text style={[styles.sectionHint, { color: theme.textMuted }]}>
+            Saved templates — pin any to Home for one-tap access.
+          </Text>
+          {briefcaseTemplates.map((item) => (
+            <Pressable
+              key={item.id}
+              style={[styles.row, { backgroundColor: theme.surface, borderColor: theme.border }]}
+              onPress={() => router.push(`/templates/studio/${item.id}` as never)}>
+              <View style={styles.rowHeader}>
+                <Text style={[styles.title, { color: theme.text }]}>{item.title}</Text>
+                {isPinned('custom', item.id) ? (
+                  <Text style={[styles.badge, styles.badgeFeatured]}>★ Pinned</Text>
+                ) : (
+                  <Text style={[styles.badge, styles.badgePro]}>Custom</Text>
+                )}
+              </View>
+              <Text style={[styles.description, { color: theme.textMuted }]}>
+                {item.category ?? 'Other'} · {item.sections.length} section(s)
+              </Text>
+              <Pressable
+                style={styles.pinAction}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  togglePin('custom', item.id);
+                }}>
+                <Text style={{ color: theme.primary, fontWeight: '600', fontSize: 13 }}>
+                  {isPinned('custom', item.id) ? 'Unpin from Home' : 'Pin to Home'}
+                </Text>
+              </Pressable>
+            </Pressable>
+          ))}
+        </>
+      ) : null}
 
       <Text style={[styles.sectionHeading, { color: theme.text }]}>Built-in briefcase</Text>
       <Text style={[styles.sectionHint, { color: theme.textMuted }]}>
@@ -232,5 +315,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     marginTop: 6,
+  },
+  pinAction: {
+    marginTop: 8,
   },
 });

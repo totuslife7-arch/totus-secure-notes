@@ -8,6 +8,7 @@ import PaywallSheet from '@/components/PaywallSheet';
 import { useAppTheme } from '@/context/ThemeContext';
 import { useMonetization } from '@/context/MonetizationContext';
 import { useVault } from '@/context/VaultContext';
+import { usePinnedTemplates } from '@/hooks/usePinnedTemplates';
 import { hasTemplateStudio } from '@/services/monetization';
 import { listCustomTemplates } from '@/services/templateStudio/templateStorage';
 import { CustomTemplateDefinition } from '@/store/customTemplateSchema';
@@ -16,6 +17,7 @@ export default function TemplateStudioHomeScreen() {
   const { theme } = useAppTheme();
   const { state } = useMonetization();
   const { sessionPassword } = useVault();
+  const { refs: pinnedRefs, pin, unpin } = usePinnedTemplates(sessionPassword);
   const [templates, setTemplates] = useState<CustomTemplateDefinition[]>([]);
   const [paywallVisible, setPaywallVisible] = useState(false);
 
@@ -79,17 +81,36 @@ export default function TemplateStudioHomeScreen() {
           </Pressable>
         </View>
       ) : (
-        templates.map((tpl) => (
+        templates.map((tpl) => {
+          const pinned = pinnedRefs.some((ref) => ref.kind === 'custom' && ref.id === tpl.id);
+          return (
           <Pressable
             key={tpl.id}
             style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}
             onPress={() => router.push(`/templates/studio/${tpl.id}` as never)}>
-            <Text style={[styles.cardTitle, { color: theme.text }]}>{tpl.title}</Text>
+            <View style={styles.cardHeader}>
+              <Text style={[styles.cardTitle, { color: theme.text }]}>{tpl.title}</Text>
+              <Pressable
+                onPress={(event) => {
+                  event.stopPropagation();
+                  const ref = { kind: 'custom' as const, id: tpl.id };
+                  if (pinned) {
+                    unpin(ref).catch(() => undefined);
+                  } else {
+                    pin(ref).catch(() => undefined);
+                  }
+                }}>
+                <Text style={{ color: theme.primary, fontWeight: '600', fontSize: 13 }}>
+                  {pinned ? 'Unpin from Home' : 'Pin to Home'}
+                </Text>
+              </Pressable>
+            </View>
             <Text style={{ color: theme.textMuted, fontSize: 13 }}>
               {tpl.category ?? 'Other'} · {tpl.sections.length} section(s)
             </Text>
           </Pressable>
-        ))
+        );
+        })
       )}
     </KeyboardAwareScrollView>
   );
@@ -102,5 +123,6 @@ const styles = StyleSheet.create({
   body: { fontSize: 15, lineHeight: 22, marginBottom: 16 },
   cta: { borderRadius: 10, paddingVertical: 14, alignItems: 'center', marginBottom: 8 },
   card: { borderRadius: 12, borderWidth: 1, padding: 14, marginBottom: 10 },
-  cardTitle: { fontSize: 16, fontWeight: '600', marginBottom: 4 },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, marginBottom: 4 },
+  cardTitle: { fontSize: 16, fontWeight: '600', flex: 1 },
 });
