@@ -97,7 +97,7 @@
 
 
 
-**Current version:** 1.2.16 · Android versionCode 61 · `com.totuslife.TotusSecureNotes`  
+**Current version:** 1.2.16 · Android versionCode 62 · `com.totuslife.TotusSecureNotes`  
 
 **Web vault viewer:** https://totus--notes.web.app/vault  
 

@@ -12,7 +12,7 @@ We aim to respond within **3–5 business days**.
 
 ## What to include in support requests
 
-1. App version (**Settings → About & Legal** — currently **1.2.16**, Android versionCode **61**)  
+1. App version (**Settings → About & Legal** — currently **1.2.16**, Android versionCode **62**)  
 2. Device model and OS version (Android / iOS)  
 3. Description of the issue  
 4. Steps to reproduce  

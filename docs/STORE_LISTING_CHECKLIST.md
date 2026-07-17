@@ -2,7 +2,7 @@
 
 Complete before **production** release on Google Play and Apple App Store.
 
-**Current release:** v1.2.16 (versionCode 61) — **Totus Secure Notes**
+**Current release:** v1.2.16 (versionCode 62) — **Totus Secure Notes**
 
 ---
 

@@ -5,11 +5,12 @@ Copy into **Google Play Console → Release notes** and **App Store Connect → 
 | Field | Value |
 |-------|--------|
 | Version | **1.2.16** |
-| Android versionCode | **61** |
+| Android versionCode | **62** (EAS auto-increment from local 61) |
 | Build date | July 17, 2026 |
 | Package | `com.totuslife.TotusSecureNotes` |
-| **Production AAB** | *(pending EAS build)* |
-| EAS build | *(pending EAS build)* |
+| **Production AAB** | *(pending — build in progress)* |
+| EAS build (AAB) | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/dab6cfff-f03b-48c1-905a-48d8f936de2c |
+| EAS build (store-review APK) | https://expo.dev/accounts/totuslife/projects/totus-secure-notes/builds/80d309bf-f228-4f75-8966-80f367aa7005 |
 | Web vault URL | https://totus--notes.web.app/vault |
 | Store review build | EAS profiles `store-review` (AAB) / `store-review-apk` (sideload) — Pro unlocked for QA |
 
@@ -24,7 +25,7 @@ What's new in 1.2.16:
 
 • Fixed READ_MEDIA manifest merge — tools:node="remove" now survives Gradle merge
 • Photo picker plugin runs last in prebuild; no READ_MEDIA_IMAGES in v61 AAB
-• Play photo permissions declaration docs updated for versionCode 61
+• Play photo permissions declaration docs updated for versionCode 62
 ```
 
 ---

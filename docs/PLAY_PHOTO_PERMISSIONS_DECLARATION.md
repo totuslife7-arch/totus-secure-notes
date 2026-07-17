@@ -3,7 +3,7 @@
 **App:** Totus Secure Notes · `com.totuslife.TotusSecureNotes`  
 **Policy:** [Photo and video permissions](https://support.google.com/googleplay/android-developer/answer/14115180)  
 **Android Photo Picker:** [Google developers blog](https://android-developers.googleblog.com/2023/04/photo-picker-everywhere.html)  
-**Current release:** v1.2.16 · Android versionCode **61**
+**Current release:** v1.2.16 · Android versionCode **62**
 
 ---
 
@@ -124,11 +124,11 @@ Play scans **every track**, not only Production:
 
 1. **Release → Testing** — open **Internal testing**, **Closed testing**, **Open testing** (each one)
 2. For each track: **Releases** → if an old release still lists versionCode **52, 55, 57**, either:
-   - **Promote nothing** — create a **new release** with **only versionCode 61**, or  
+   - **Promote nothing** — create a **new release** with **only versionCode 62**, or  
    - **Discard draft** (⋮ menu on draft releases you never published)
 3. **Release → Production** — same: only **61** in the release you send for review
 
-**Artifact library:** **Release → App bundle explorer** (or **Latest releases and bundles**) → click versionCode **61** → **Permissions** tab → confirm **no** `READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO`.
+**Artifact library:** **Release → App bundle explorer** (or **Latest releases and bundles**) → click versionCode **62** → **Permissions** tab → confirm **no** `READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO`.
 
 If **61** still shows those permissions, do not publish — contact support or rebuild. v1.2.16 builds should **not** list them.
 
@@ -143,7 +143,7 @@ If **61** still shows those permissions, do not publish — contact support or r
 | How does your app use photos/videos? | **One-time or infrequent** access |
 | Core functionality needs all photos on device? | **No** |
 | How will you access media? | **Android photo picker** / system picker |
-| Remove READ_MEDIA from app? | **Yes** — permissions removed in versionCode **61** |
+| Remove READ_MEDIA from app? | **Yes** — permissions removed in versionCode **62** |
 
 4. **Save** → **Submit for review** (App content review, separate from release review)
 
@@ -172,7 +172,7 @@ If the release page still blocks you, the banner usually links to the unfinished
 **Help → Contact support** → **Policy / App content** → mention:
 
 - Package: `com.totuslife.TotusSecureNotes`  
-- Only versionCode **61** is active; uses Android Photo Picker; `READ_MEDIA_*` removed per v1.2.16  
+- Only versionCode **62** is active; uses Android Photo Picker; `READ_MEDIA_*` removed per v1.2.16  
 - Cannot clear Photo and video permissions declaration  
 
 ---

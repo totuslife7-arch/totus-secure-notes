@@ -14,7 +14,7 @@ All notable changes to Totus Secure Notes.
 
 ### Changed
 
-- Version **1.2.16** (Android versionCode **61**)
+- Version **1.2.16** (Android versionCode **62**; EAS auto-increment from local 61)
 
 ## [1.2.15] — 2026-07-16
 

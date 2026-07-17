@@ -68,7 +68,7 @@ Download builds: https://expo.dev/accounts/totuslife/projects/totus-secure-notes
 | Field | Value |
 |-------|--------|
 | Version | **1.2.16** |
-| Android versionCode | **61** |
+| Android versionCode | **62** |
 | Package | `com.totuslife.TotusSecureNotes` |
 
 ## Security Notes

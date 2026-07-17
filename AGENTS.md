@@ -4,7 +4,7 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v56.0.0/ before 
 
 ## Project: Totus Secure Notes (v1.2.16)
 
-**Expo SDK 56** · **Package:** `com.totuslife.TotusSecureNotes` · **EAS owner:** `totuslife` · **Android versionCode:** 61
+**Expo SDK 56** · **Package:** `com.totuslife.TotusSecureNotes` · **EAS owner:** `totuslife` · **Android versionCode:** 62
 
 ### Architecture
 
