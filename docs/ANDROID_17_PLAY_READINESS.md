@@ -267,7 +267,7 @@ This is **native Android (Gradle) dependency**, not an npm package.
 
 ### Must-do before Play publish (P0)
 
-1. **Photo/video policy:** Complete App content declaration; confirm versionCode **61+** on all tracks; verify no `READ_MEDIA_*` in bundle explorer ([PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md)).
+1. **Photo/video policy:** Complete App content declaration; confirm versionCode **62+** on all tracks; verify no `READ_MEDIA_*` in bundle explorer ([PLAY_PHOTO_PERMISSIONS_DECLARATION.md](./PLAY_PHOTO_PERMISSIONS_DECLARATION.md)).
 2. **Foreground services:** Complete Play Console FGS declaration for **location** (trip GPS) with demo video ([FGS requirements](https://support.google.com/googleplay/android-developer/answer/13392821)).
 3. **Target SDK proof:** Confirm production AAB shows **targetSdkVersion 36** (Expo SDK 56 default).
 4. **Data safety & privacy:** Align with Firebase/AdMob/IAP as in [DATA_SAFETY_GOOGLE_PLAY.md](./DATA_SAFETY_GOOGLE_PLAY.md) and [PLAY_FIRST_UPLOAD_CHECKLIST.md](./PLAY_FIRST_UPLOAD_CHECKLIST.md).

@@ -57,7 +57,7 @@ Gallery scrub after import was **removed** in v1.2.13 (required broad media APIs
 
 ### Step 1 — Upload AAB with photo-picker manifest
 
-Use the latest **store-review** AAB (versionCode **61+**).
+Use the latest **store-review** AAB (versionCode **62+**).
 
 Remove older builds (e.g. versionCode **52**) from the release track.
 
